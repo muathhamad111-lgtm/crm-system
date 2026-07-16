@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import Card from '@/Components/ui/Card.vue';
@@ -18,6 +18,12 @@ import TableBody from '@/Components/ui/TableBody.vue';
 import TableRow from '@/Components/ui/TableRow.vue';
 import TableHead from '@/Components/ui/TableHead.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
+import Dialog from '@/Components/ui/Dialog.vue';
+import Button from '@/Components/ui/Button.vue';
+import Input from '@/Components/ui/Input.vue';
+import Textarea from '@/Components/ui/Textarea.vue';
+import Label from '@/Components/ui/Label.vue';
+import Select from '@/Components/ui/Select.vue';
 import CustomerJourneyCard from '@/Components/customer/CustomerJourneyCard.vue';
 import CustomerHealthCard from '@/Components/customer/CustomerHealthCard.vue';
 import CustomerTimelineTab from '@/Components/customer/CustomerTimelineTab.vue';
@@ -28,7 +34,7 @@ import {
     ArrowLeft, Mail, Phone, MapPin, Briefcase, Hash, FileText, Users, Package, Star,
     Activity, AlertTriangle, UserCircle2, Gauge, Lightbulb, TrendingUp, Building2,
     Globe, UserCheck, Award, Compass, ThumbsUp, Calendar, Clock, Video, Paperclip,
-    StickyNote, CheckCircle2,
+    StickyNote, CheckCircle2, Pencil, Plus, Trash2, Upload, Save, CheckSquare, Square,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -91,6 +97,14 @@ const TIER = { vip: 'VIP', gold: 'ذهبي', silver: 'فضي', standard: 'قيا
 const ACCOUNT_STATUS = { active: { label: 'نشط', tone: 'success' }, suspended: { label: 'معلّق', tone: 'warning' }, archived: { label: 'مؤرشف', tone: 'muted' } };
 function accountStatus() { return ACCOUNT_STATUS[props.profile.account_status] ?? { label: props.profile.account_status || 'نشط', tone: 'success' }; }
 
+const JOURNEY_STAGE = {
+    new: 'جديد', onboarding: 'تأهيل', active: 'نشط', needs_follow_up: 'بحاجة متابعة',
+    at_risk: 'في خطر', expansion: 'نمو / توسّع', churned: 'منتهٍ',
+};
+const TASK_STATUS = { todo: 'قيد الانتظار', in_progress: 'قيد التنفيذ', blocked: 'متوقفة', done: 'مكتملة', cancelled: 'ملغاة' };
+function taskStatusLabel(s) { return TASK_STATUS[s] ?? (s || '—'); }
+function isTaskDone(s) { return s === 'done' || s === 'completed'; }
+
 const EVENT_TYPE = { visit: 'زيارة', meeting: 'اجتماع', call: 'اتصال', reminder: 'تذكير', task: 'مهمة', other: 'أخرى' };
 const EVENT_STATUS = { scheduled: { label: 'مجدول', tone: 'default' }, completed: { label: 'مكتمل', tone: 'success' }, cancelled: { label: 'ملغى', tone: 'muted' }, rescheduled: { label: 'أعيدت جدولته', tone: 'warning' } };
 function eventStatus(s) { return EVENT_STATUS[s] ?? { label: s ?? '—', tone: 'muted' }; }
@@ -108,6 +122,164 @@ const summaryRows = computed(() => [
     { label: 'المؤيدون (4-5★)', value: num(sat.value.promoters ?? 0) },
     { label: 'غير الراضين (1-2★)', value: num(sat.value.detractors ?? 0) },
 ]);
+
+// ---------------------------------------------------------------------------
+// Editable panels (staff-only writes). All routes are literal URLs to avoid
+// depending on Ziggy having the freshly-added named routes at build time.
+// ---------------------------------------------------------------------------
+const base = computed(() => `/customers/${props.profile.id}`);
+function dateInput(v) { return v ? String(v).slice(0, 10) : ''; }
+
+// --- Account ---
+const accountOpen = ref(false);
+const accountForm = useForm({
+    full_name: '', phone: '', business_field: '', region: '', city: '',
+    website: '', tier: '', journey_stage: '', account_status: '', internal_notes: '',
+});
+function openAccount() {
+    const p = props.profile;
+    accountForm.clearErrors();
+    accountForm.full_name = p.full_name ?? '';
+    accountForm.phone = p.phone ?? '';
+    accountForm.business_field = p.business_field ?? '';
+    accountForm.region = p.region ?? '';
+    accountForm.city = p.city ?? '';
+    accountForm.website = p.website ?? '';
+    accountForm.tier = p.tier ?? '';
+    accountForm.journey_stage = p.journey_stage ?? '';
+    accountForm.account_status = p.account_status ?? '';
+    accountForm.internal_notes = p.internal_notes ?? '';
+    accountOpen.value = true;
+}
+function submitAccount() {
+    accountForm.post(`${base.value}/account`, { preserveScroll: true, onSuccess: () => { accountOpen.value = false; } });
+}
+
+// --- Internal notes (dedicated editor) ---
+const notesForm = useForm({ internal_notes: props.profile.internal_notes ?? '' });
+function submitNotes() {
+    notesForm.post(`${base.value}/notes`, { preserveScroll: true });
+}
+
+// --- Contacts ---
+const contactOpen = ref(false);
+const editingContact = ref(null);
+const contactForm = useForm({
+    full_name: '', job_title: '', department: '', email: '', phone: '', mobile: '',
+    role_type: '', status: '', is_primary: false, has_portal_access: false,
+});
+function openContact(c = null) {
+    editingContact.value = c;
+    contactForm.clearErrors();
+    contactForm.full_name = c?.full_name ?? '';
+    contactForm.job_title = c?.job_title ?? '';
+    contactForm.department = c?.department ?? '';
+    contactForm.email = c?.email ?? '';
+    contactForm.phone = c?.phone ?? '';
+    contactForm.mobile = c?.mobile ?? '';
+    contactForm.role_type = c?.role_type ?? '';
+    contactForm.status = c?.status ?? '';
+    contactForm.is_primary = !!c?.is_primary;
+    contactForm.has_portal_access = !!c?.has_portal_access;
+    contactOpen.value = true;
+}
+function submitContact() {
+    const opts = { preserveScroll: true, onSuccess: () => { contactOpen.value = false; } };
+    if (editingContact.value) contactForm.patch(`${base.value}/contacts/${editingContact.value.id}`, opts);
+    else contactForm.post(`${base.value}/contacts`, opts);
+}
+function deleteContact(c) {
+    if (!confirm(`حذف جهة التواصل "${c.full_name}"؟`)) return;
+    router.delete(`${base.value}/contacts/${c.id}`, { preserveScroll: true });
+}
+
+// --- Subscriptions ---
+const subOpen = ref(false);
+const editingSub = ref(null);
+const subForm = useForm({ product_name: '', plan_name: '', status: 'active', external_id: '', start_date: '', end_date: '' });
+function openSub(s = null) {
+    editingSub.value = s;
+    subForm.clearErrors();
+    subForm.product_name = s?.product_name ?? '';
+    subForm.plan_name = s?.plan_name ?? '';
+    subForm.status = s?.status ?? 'active';
+    subForm.external_id = s?.external_id ?? '';
+    subForm.start_date = dateInput(s?.start_date);
+    subForm.end_date = dateInput(s?.end_date);
+    subOpen.value = true;
+}
+function submitSub() {
+    const opts = { preserveScroll: true, onSuccess: () => { subOpen.value = false; } };
+    if (editingSub.value) subForm.patch(`${base.value}/subscriptions/${editingSub.value.id}`, opts);
+    else subForm.post(`${base.value}/subscriptions`, opts);
+}
+function deleteSub(s) {
+    if (!confirm(`حذف الاشتراك "${s.product_name}"؟`)) return;
+    router.delete(`${base.value}/subscriptions/${s.id}`, { preserveScroll: true });
+}
+
+// --- Activation tasks ---
+const taskOpen = ref(false);
+const editingTask = ref(null);
+const taskForm = useForm({ title: '', description: '', status: 'todo', due_date: '', sort_order: 0 });
+function openTask(t = null) {
+    editingTask.value = t;
+    taskForm.clearErrors();
+    taskForm.title = t?.title ?? '';
+    taskForm.description = t?.description ?? '';
+    taskForm.status = t?.status ?? 'todo';
+    taskForm.due_date = dateInput(t?.due_date);
+    taskForm.sort_order = t?.sort_order ?? 0;
+    taskOpen.value = true;
+}
+function submitTask() {
+    const opts = { preserveScroll: true, onSuccess: () => { taskOpen.value = false; } };
+    if (editingTask.value) taskForm.patch(`${base.value}/activation-tasks/${editingTask.value.id}`, opts);
+    else taskForm.post(`${base.value}/activation-tasks`, opts);
+}
+function toggleTask(t) {
+    router.patch(`${base.value}/activation-tasks/${t.id}`, {
+        title: t.title,
+        description: t.description,
+        status: isTaskDone(t.status) ? 'todo' : 'done',
+        due_date: dateInput(t.due_date),
+        sort_order: t.sort_order ?? 0,
+    }, { preserveScroll: true });
+}
+function deleteTask(t) {
+    if (!confirm(`حذف المهمة "${t.title}"؟`)) return;
+    router.delete(`${base.value}/activation-tasks/${t.id}`, { preserveScroll: true });
+}
+
+// --- Activities ---
+const activityOpen = ref(false);
+const activityForm = useForm({ activity_type: 'call', subject: '', summary: '' });
+function openActivity() {
+    activityForm.clearErrors();
+    activityForm.activity_type = 'call';
+    activityForm.subject = '';
+    activityForm.summary = '';
+    activityOpen.value = true;
+}
+function submitActivity() {
+    activityForm.post(`${base.value}/activities`, { preserveScroll: true, onSuccess: () => { activityOpen.value = false; } });
+}
+
+// --- Attachments ---
+const fileRef = ref(null);
+const attForm = useForm({ file: null, category: 'general', description: '' });
+function onFile(e) { attForm.file = e.target.files?.[0] ?? null; }
+function submitAttachment() {
+    attForm.post(`${base.value}/attachments`, {
+        forceFormData: true,
+        preserveScroll: true,
+        onSuccess: () => { attForm.reset(); if (fileRef.value) fileRef.value.value = ''; },
+    });
+}
+function deleteAttachment(at) {
+    if (!confirm(`حذف المرفق "${at.file_name}"؟`)) return;
+    router.delete(`${base.value}/attachments/${at.id}`, { preserveScroll: true });
+}
 </script>
 
 <template>
@@ -172,10 +344,16 @@ const summaryRows = computed(() => [
                                 <div class="mt-0.5 text-lg font-extrabold tabular-nums text-white">{{ chip.value }}</div>
                             </div>
                         </div>
-                        <Link :href="route('customers.index')"
-                            class="inline-flex items-center gap-1.5 self-start rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20">
-                            <ArrowLeft class="size-4" /> رجوع للعملاء
-                        </Link>
+                        <div class="flex flex-col gap-2 self-start">
+                            <button v-if="isStaff" type="button" @click="openAccount"
+                                class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20">
+                                <Pencil class="size-4" /> تعديل البيانات
+                            </button>
+                            <Link :href="route('customers.index')"
+                                class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20">
+                                <ArrowLeft class="size-4" /> رجوع للعملاء
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -202,6 +380,7 @@ const summaryRows = computed(() => [
                     <TabsTrigger value="account" :class="TAB_CLS">بيانات العميل</TabsTrigger>
                     <TabsTrigger value="contacts" :class="TAB_CLS">جهات التواصل ({{ num(contacts.length) }})</TabsTrigger>
                     <TabsTrigger value="subscriptions" :class="TAB_CLS">المنتجات والاشتراكات ({{ num(subscriptions.length) }})</TabsTrigger>
+                    <TabsTrigger v-if="isStaff" value="activation" :class="TAB_CLS">مهام التفعيل ({{ num(activationTasks.length) }})</TabsTrigger>
                     <TabsTrigger value="requests" :class="TAB_CLS">الطلبات ({{ num(req.total ?? 0) }})</TabsTrigger>
                     <TabsTrigger value="suggestions" :class="TAB_CLS">المقترحات ({{ num(sug.total ?? 0) }})</TabsTrigger>
                     <TabsTrigger value="meetings" :class="TAB_CLS">المواعيد</TabsTrigger>
@@ -267,11 +446,12 @@ const summaryRows = computed(() => [
                 <!-- Account details -->
                 <TabsContent value="account">
                     <Card>
-                        <CardHeader class="pb-3">
+                        <CardHeader class="flex flex-row items-center justify-between pb-3">
                             <CardTitle class="flex items-center gap-2 text-base">
                                 <span class="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-primary"><Building2 class="size-4" /></span>
                                 بيانات الحساب
                             </CardTitle>
+                            <Button v-if="isStaff" size="sm" variant="outline" @click="openAccount"><Pencil class="size-3.5" /> تعديل</Button>
                         </CardHeader>
                         <CardContent class="space-y-2.5 text-sm">
                             <div class="flex items-center justify-between gap-3 border-b border-dashed pb-1.5">
@@ -289,6 +469,10 @@ const summaryRows = computed(() => [
                             <div class="flex items-center justify-between gap-3 border-b border-dashed pb-1.5">
                                 <span class="text-muted-foreground">التصنيف</span>
                                 <Badge variant="outline" class="gap-1"><Award class="size-3" /> {{ TIER[profile.tier] ?? profile.tier ?? '—' }}</Badge>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 border-b border-dashed pb-1.5">
+                                <span class="text-muted-foreground">مرحلة الرحلة</span>
+                                <span class="font-semibold text-foreground">{{ JOURNEY_STAGE[profile.journey_stage] ?? profile.journey_stage ?? '—' }}</span>
                             </div>
                             <div class="flex items-center justify-between gap-3 border-b border-dashed pb-1.5">
                                 <span class="text-muted-foreground">القطاع</span>
@@ -323,7 +507,10 @@ const summaryRows = computed(() => [
                 <!-- Contacts -->
                 <TabsContent value="contacts">
                     <Card>
-                        <CardHeader><CardTitle class="flex items-center gap-2 text-base"><UserCircle2 class="size-5 text-primary" /> جهات التواصل</CardTitle></CardHeader>
+                        <CardHeader class="flex flex-row items-center justify-between">
+                            <CardTitle class="flex items-center gap-2 text-base"><UserCircle2 class="size-5 text-primary" /> جهات التواصل</CardTitle>
+                            <Button v-if="isStaff" size="sm" @click="openContact()"><Plus class="size-3.5" /> إضافة جهة تواصل</Button>
+                        </CardHeader>
                         <CardContent class="p-0">
                             <Table v-if="contacts.length">
                                 <TableHeader>
@@ -334,6 +521,7 @@ const summaryRows = computed(() => [
                                         <TableHead>البريد</TableHead>
                                         <TableHead>الجوال</TableHead>
                                         <TableHead class="text-center">أساسي</TableHead>
+                                        <TableHead v-if="isStaff" class="text-center">إجراءات</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -347,6 +535,12 @@ const summaryRows = computed(() => [
                                             <Badge v-if="ct.is_primary" variant="accent">أساسي</Badge>
                                             <span v-else class="text-muted-foreground">—</span>
                                         </TableCell>
+                                        <TableCell v-if="isStaff" class="text-center">
+                                            <div class="flex items-center justify-center gap-1">
+                                                <Button size="icon-sm" variant="ghost" @click="openContact(ct)"><Pencil class="size-3.5" /></Button>
+                                                <Button size="icon-sm" variant="ghost" class="text-destructive" @click="deleteContact(ct)"><Trash2 class="size-3.5" /></Button>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
@@ -358,7 +552,10 @@ const summaryRows = computed(() => [
                 <!-- Subscriptions -->
                 <TabsContent value="subscriptions">
                     <Card>
-                        <CardHeader><CardTitle class="flex items-center gap-2 text-base"><Package class="size-5 text-primary" /> الاشتراكات في المنتجات</CardTitle></CardHeader>
+                        <CardHeader class="flex flex-row items-center justify-between">
+                            <CardTitle class="flex items-center gap-2 text-base"><Package class="size-5 text-primary" /> الاشتراكات في المنتجات</CardTitle>
+                            <Button v-if="isStaff" size="sm" @click="openSub()"><Plus class="size-3.5" /> إضافة اشتراك</Button>
+                        </CardHeader>
                         <CardContent class="p-0">
                             <Table v-if="subscriptions.length">
                                 <TableHeader>
@@ -369,6 +566,7 @@ const summaryRows = computed(() => [
                                         <TableHead class="text-center">البداية</TableHead>
                                         <TableHead class="text-center">النهاية</TableHead>
                                         <TableHead class="text-center">المصدر</TableHead>
+                                        <TableHead v-if="isStaff" class="text-center">إجراءات</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -379,11 +577,51 @@ const summaryRows = computed(() => [
                                         <TableCell class="text-center text-xs">{{ fmtDateAr(s.start_date) }}</TableCell>
                                         <TableCell class="text-center text-xs">{{ s.end_date ? fmtDateAr(s.end_date) : '—' }}</TableCell>
                                         <TableCell class="text-center text-xs text-muted-foreground">{{ s.source || '—' }}</TableCell>
+                                        <TableCell v-if="isStaff" class="text-center">
+                                            <div class="flex items-center justify-center gap-1">
+                                                <Button size="icon-sm" variant="ghost" @click="openSub(s)"><Pencil class="size-3.5" /></Button>
+                                                <Button size="icon-sm" variant="ghost" class="text-destructive" @click="deleteSub(s)"><Trash2 class="size-3.5" /></Button>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
                             <div v-else class="p-8 text-center text-sm text-muted-foreground">
                                 لا توجد اشتراكات مسجّلة لهذا العميل. ستظهر هنا تلقائياً عند ربط منصة العملاء.
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <!-- Activation tasks (staff) -->
+                <TabsContent v-if="isStaff" value="activation">
+                    <Card>
+                        <CardHeader class="flex flex-row items-center justify-between">
+                            <CardTitle class="flex items-center gap-2 text-base"><Compass class="size-5 text-primary" /> مهام التفعيل</CardTitle>
+                            <Button size="sm" @click="openTask()"><Plus class="size-3.5" /> إضافة مهمة</Button>
+                        </CardHeader>
+                        <CardContent class="space-y-2">
+                            <div v-if="!activationTasks.length" class="p-8 text-center text-sm text-muted-foreground">لا توجد مهام تفعيل.</div>
+                            <div v-for="t in activationTasks" :key="t.id"
+                                class="flex items-start justify-between gap-3 rounded-lg border border-border p-3">
+                                <div class="flex min-w-0 items-start gap-2.5">
+                                    <button type="button" @click="toggleTask(t)" class="mt-0.5 shrink-0 text-primary">
+                                        <CheckSquare v-if="isTaskDone(t.status)" class="size-5" />
+                                        <Square v-else class="size-5 text-muted-foreground" />
+                                    </button>
+                                    <div class="min-w-0">
+                                        <div class="font-medium" :class="isTaskDone(t.status) ? 'text-muted-foreground line-through' : 'text-foreground'">{{ t.title }}</div>
+                                        <div v-if="t.description" class="mt-0.5 text-xs text-muted-foreground">{{ t.description }}</div>
+                                        <div class="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                                            <Badge variant="outline" class="text-[10px]">{{ taskStatusLabel(t.status) }}</Badge>
+                                            <span v-if="t.due_date">⏳ {{ fmtDateAr(t.due_date) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex shrink-0 items-center gap-1">
+                                    <Button size="icon-sm" variant="ghost" @click="openTask(t)"><Pencil class="size-3.5" /></Button>
+                                    <Button size="icon-sm" variant="ghost" class="text-destructive" @click="deleteTask(t)"><Trash2 class="size-3.5" /></Button>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -494,32 +732,58 @@ const summaryRows = computed(() => [
                     </Card>
                 </TabsContent>
 
-                <!-- Internal notes (staff) -->
+                <!-- Internal notes (staff, editable) -->
                 <TabsContent v-if="isStaff" value="internal_notes">
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><StickyNote class="size-5 text-warning" /> الملاحظات الداخلية</CardTitle></CardHeader>
-                        <CardContent>
-                            <div v-if="profile.internal_notes" class="whitespace-pre-wrap rounded-lg border border-warning/20 bg-warning/5 p-3 text-sm text-foreground">{{ profile.internal_notes }}</div>
-                            <div v-else class="p-8 text-center text-sm text-muted-foreground">لا توجد ملاحظات داخلية مسجّلة.</div>
+                        <CardContent class="space-y-3">
+                            <Textarea v-model="notesForm.internal_notes" class="min-h-[160px]" placeholder="اكتب ملاحظات داخلية عن العميل (تظهر للموظفين فقط)..." />
+                            <div v-if="notesForm.errors.internal_notes" class="text-xs text-destructive">{{ notesForm.errors.internal_notes }}</div>
+                            <div class="flex justify-end">
+                                <Button :disabled="notesForm.processing" @click="submitNotes"><Save class="size-4" /> حفظ الملاحظات</Button>
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
 
-                <!-- Attachments (staff) -->
+                <!-- Attachments (staff, editable) -->
                 <TabsContent v-if="isStaff" value="attachments">
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><Paperclip class="size-5 text-primary" /> المرفقات</CardTitle></CardHeader>
-                        <CardContent class="space-y-2">
+                        <CardContent class="space-y-3">
+                            <div class="rounded-lg border border-dashed border-border p-3">
+                                <div class="grid gap-2 sm:grid-cols-2">
+                                    <div class="space-y-1">
+                                        <Label>التصنيف</Label>
+                                        <Input v-model="attForm.category" placeholder="عام / عقد / فاتورة..." />
+                                    </div>
+                                    <div class="space-y-1">
+                                        <Label>وصف مختصر</Label>
+                                        <Input v-model="attForm.description" placeholder="وصف اختياري" />
+                                    </div>
+                                </div>
+                                <div class="mt-2 flex flex-wrap items-center gap-2">
+                                    <input ref="fileRef" type="file" class="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm" @change="onFile" />
+                                    <Button :disabled="!attForm.file || attForm.processing" @click="submitAttachment"><Upload class="size-4" /> رفع الملف</Button>
+                                </div>
+                                <div v-if="attForm.errors.file" class="mt-1 text-xs text-destructive">{{ attForm.errors.file }}</div>
+                                <div v-if="attForm.progress" class="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
+                                    <div class="h-full bg-primary" :style="{ width: `${attForm.progress.percentage}%` }"></div>
+                                </div>
+                            </div>
                             <div v-if="!attachments.length" class="p-8 text-center text-sm text-muted-foreground">لا توجد مرفقات.</div>
                             <div v-for="at in attachments" :key="at.id" class="flex items-center justify-between gap-3 rounded-lg border border-border p-2.5 text-sm">
-                                <div class="flex min-w-0 items-center gap-2">
+                                <a :href="at.storage_path" target="_blank" rel="noreferrer" class="flex min-w-0 items-center gap-2 hover:underline">
                                     <CheckCircle2 class="size-4 shrink-0 text-primary" />
                                     <div class="min-w-0">
                                         <div class="truncate font-medium">{{ at.file_name }}</div>
                                         <div class="text-xs text-muted-foreground">{{ at.category }}<span v-if="at.description"> · {{ at.description }}</span></div>
                                     </div>
+                                </a>
+                                <div class="flex shrink-0 items-center gap-2">
+                                    <span class="whitespace-nowrap text-xs text-muted-foreground">{{ fmtDateAr(at.created_at) }}</span>
+                                    <Button size="icon-sm" variant="ghost" class="text-destructive" @click="deleteAttachment(at)"><Trash2 class="size-3.5" /></Button>
                                 </div>
-                                <span class="whitespace-nowrap text-xs text-muted-foreground">{{ fmtDateAr(at.created_at) }}</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -527,7 +791,12 @@ const summaryRows = computed(() => [
 
                 <!-- Unified timeline -->
                 <TabsContent value="timeline">
-                    <CustomerTimelineTab :activities="activities" :requests="requests" :suggestions="suggestions" :ratings="ratings" />
+                    <div class="space-y-3">
+                        <div v-if="isStaff" class="flex justify-end">
+                            <Button size="sm" @click="openActivity"><Plus class="size-3.5" /> تسجيل نشاط</Button>
+                        </div>
+                        <CustomerTimelineTab :activities="activities" :requests="requests" :suggestions="suggestions" :ratings="ratings" />
+                    </div>
                 </TabsContent>
 
                 <!-- Ratings -->
@@ -553,5 +822,227 @@ const summaryRows = computed(() => [
                 </TabsContent>
             </Tabs>
         </div>
+
+        <!-- ===================== Dialogs (staff) ===================== -->
+
+        <!-- Account edit -->
+        <Dialog v-model:open="accountOpen" title="تعديل بيانات الحساب" class="max-w-2xl">
+            <form class="space-y-3" @submit.prevent="submitAccount">
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="space-y-1">
+                        <Label>الاسم الكامل</Label>
+                        <Input v-model="accountForm.full_name" />
+                        <div v-if="accountForm.errors.full_name" class="text-xs text-destructive">{{ accountForm.errors.full_name }}</div>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الهاتف</Label>
+                        <Input v-model="accountForm.phone" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>القطاع</Label>
+                        <Input v-model="accountForm.business_field" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الموقع الإلكتروني</Label>
+                        <Input v-model="accountForm.website" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>المدينة</Label>
+                        <Input v-model="accountForm.city" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>المنطقة</Label>
+                        <Input v-model="accountForm.region" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>التصنيف</Label>
+                        <Select v-model="accountForm.tier">
+                            <option value="">—</option>
+                            <option v-for="(lbl, key) in TIER" :key="key" :value="key">{{ lbl }}</option>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>حالة الحساب</Label>
+                        <Select v-model="accountForm.account_status">
+                            <option value="">—</option>
+                            <option value="active">نشط</option>
+                            <option value="suspended">معلّق</option>
+                            <option value="archived">مؤرشف</option>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>مرحلة الرحلة</Label>
+                        <Select v-model="accountForm.journey_stage">
+                            <option value="">—</option>
+                            <option v-for="(lbl, key) in JOURNEY_STAGE" :key="key" :value="key">{{ lbl }}</option>
+                        </Select>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <Label>ملاحظات داخلية (للموظفين فقط)</Label>
+                    <Textarea v-model="accountForm.internal_notes" class="min-h-[90px]" />
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" @click="accountOpen = false">إلغاء</Button>
+                    <Button type="submit" :disabled="accountForm.processing"><Save class="size-4" /> حفظ</Button>
+                </div>
+            </form>
+        </Dialog>
+
+        <!-- Contact create/edit -->
+        <Dialog v-model:open="contactOpen" :title="editingContact ? 'تعديل جهة تواصل' : 'إضافة جهة تواصل'" class="max-w-xl">
+            <form class="space-y-3" @submit.prevent="submitContact">
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="space-y-1">
+                        <Label>الاسم الكامل</Label>
+                        <Input v-model="contactForm.full_name" />
+                        <div v-if="contactForm.errors.full_name" class="text-xs text-destructive">{{ contactForm.errors.full_name }}</div>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>المسمى الوظيفي</Label>
+                        <Input v-model="contactForm.job_title" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>القسم</Label>
+                        <Input v-model="contactForm.department" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>البريد الإلكتروني</Label>
+                        <Input v-model="contactForm.email" type="email" dir="ltr" />
+                        <div v-if="contactForm.errors.email" class="text-xs text-destructive">{{ contactForm.errors.email }}</div>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الهاتف</Label>
+                        <Input v-model="contactForm.phone" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الجوال</Label>
+                        <Input v-model="contactForm.mobile" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>نوع الدور</Label>
+                        <Input v-model="contactForm.role_type" placeholder="مثال: مسؤول تقني" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الحالة</Label>
+                        <Input v-model="contactForm.status" placeholder="نشط / غير نشط" />
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-4 pt-1">
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" v-model="contactForm.is_primary" class="size-4" /> جهة تواصل أساسية</label>
+                    <label class="flex items-center gap-2 text-sm"><input type="checkbox" v-model="contactForm.has_portal_access" class="size-4" /> لديه وصول للبوابة</label>
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" @click="contactOpen = false">إلغاء</Button>
+                    <Button type="submit" :disabled="contactForm.processing"><Save class="size-4" /> حفظ</Button>
+                </div>
+            </form>
+        </Dialog>
+
+        <!-- Subscription create/edit -->
+        <Dialog v-model:open="subOpen" :title="editingSub ? 'تعديل اشتراك' : 'إضافة اشتراك'" class="max-w-xl">
+            <form class="space-y-3" @submit.prevent="submitSub">
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="space-y-1">
+                        <Label>اسم المنتج</Label>
+                        <Input v-model="subForm.product_name" />
+                        <div v-if="subForm.errors.product_name" class="text-xs text-destructive">{{ subForm.errors.product_name }}</div>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الباقة</Label>
+                        <Input v-model="subForm.plan_name" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الحالة</Label>
+                        <Select v-model="subForm.status">
+                            <option v-for="(v, key) in SUB_STATUS" :key="key" :value="key">{{ v.label }}</option>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>المعرّف الخارجي</Label>
+                        <Input v-model="subForm.external_id" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>تاريخ البداية</Label>
+                        <Input v-model="subForm.start_date" type="date" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>تاريخ النهاية</Label>
+                        <Input v-model="subForm.end_date" type="date" dir="ltr" />
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" @click="subOpen = false">إلغاء</Button>
+                    <Button type="submit" :disabled="subForm.processing"><Save class="size-4" /> حفظ</Button>
+                </div>
+            </form>
+        </Dialog>
+
+        <!-- Activation task create/edit -->
+        <Dialog v-model:open="taskOpen" :title="editingTask ? 'تعديل مهمة تفعيل' : 'إضافة مهمة تفعيل'" class="max-w-xl">
+            <form class="space-y-3" @submit.prevent="submitTask">
+                <div class="space-y-1">
+                    <Label>العنوان</Label>
+                    <Input v-model="taskForm.title" />
+                    <div v-if="taskForm.errors.title" class="text-xs text-destructive">{{ taskForm.errors.title }}</div>
+                </div>
+                <div class="space-y-1">
+                    <Label>الوصف</Label>
+                    <Textarea v-model="taskForm.description" class="min-h-[80px]" />
+                </div>
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="space-y-1">
+                        <Label>الحالة</Label>
+                        <Select v-model="taskForm.status">
+                            <option v-for="(lbl, key) in TASK_STATUS" :key="key" :value="key">{{ lbl }}</option>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>تاريخ الاستحقاق</Label>
+                        <Input v-model="taskForm.due_date" type="date" dir="ltr" />
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الترتيب</Label>
+                        <Input v-model="taskForm.sort_order" type="number" dir="ltr" />
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" @click="taskOpen = false">إلغاء</Button>
+                    <Button type="submit" :disabled="taskForm.processing"><Save class="size-4" /> حفظ</Button>
+                </div>
+            </form>
+        </Dialog>
+
+        <!-- Activity log -->
+        <Dialog v-model:open="activityOpen" title="تسجيل نشاط" class="max-w-xl">
+            <form class="space-y-3" @submit.prevent="submitActivity">
+                <div class="grid gap-3 sm:grid-cols-2">
+                    <div class="space-y-1">
+                        <Label>نوع النشاط</Label>
+                        <Select v-model="activityForm.activity_type">
+                            <option value="call">اتصال</option>
+                            <option value="email">بريد إلكتروني</option>
+                            <option value="meeting">اجتماع</option>
+                            <option value="visit">زيارة</option>
+                            <option value="note">ملاحظة</option>
+                            <option value="other">أخرى</option>
+                        </Select>
+                    </div>
+                    <div class="space-y-1">
+                        <Label>الموضوع</Label>
+                        <Input v-model="activityForm.subject" />
+                        <div v-if="activityForm.errors.subject" class="text-xs text-destructive">{{ activityForm.errors.subject }}</div>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <Label>التفاصيل</Label>
+                    <Textarea v-model="activityForm.summary" class="min-h-[90px]" />
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" @click="activityOpen = false">إلغاء</Button>
+                    <Button type="submit" :disabled="activityForm.processing"><Save class="size-4" /> تسجيل</Button>
+                </div>
+            </form>
+        </Dialog>
     </AppShell>
 </template>

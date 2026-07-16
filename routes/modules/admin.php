@@ -17,6 +17,9 @@ Route::post('/admin/categories/{category}', [AdminController::class, 'updateCate
 Route::post('/admin/priority-multiplier', [AdminController::class, 'setPriorityMultiplier'])
     ->middleware('admin')->name('admin.multiplier');
 
+Route::post('/admin/templates/{template}', [AdminController::class, 'updateTemplate'])
+    ->middleware('admin')->name('admin.template.update');
+
 Route::post('/admin/staff', [AdminController::class, 'storeStaff'])->middleware('admin')->name('admin.staff.store');
 Route::post('/admin/roles/assign', [AdminController::class, 'assignRole'])
     ->middleware('admin')->name('admin.role.assign');

@@ -109,7 +109,7 @@ class AdminController extends Controller
 
         $notificationTemplates = NotificationTemplate::query()
             ->orderBy('name_ar')
-            ->get(['id', 'event_key', 'name_ar', 'recipient_type', 'channels', 'active']);
+            ->get(['id', 'event_key', 'name_ar', 'recipient_type', 'channels', 'title_template', 'body_template', 'active']);
 
         $integrationSettings = IntegrationSetting::query()
             ->get(['id', 'key', 'label', 'config', 'enabled']);
@@ -250,6 +250,43 @@ class AdminController extends Controller
         $this->audit($request, 'priority_multiplier.update', 'priority_multipliers', $data['priority'], $data);
 
         return back()->with('success', 'تم تحديث معامل الأولوية.');
+    }
+
+    /** Update a notification template's editable fields. */
+    public function updateTemplate(Request $request, NotificationTemplate $template): RedirectResponse
+    {
+        $data = $request->validate([
+            'name_ar' => ['nullable', 'string', 'max:191'],
+            'recipient_type' => ['nullable', 'string', 'max:64'],
+            'title_template' => ['nullable', 'string', 'max:1000'],
+            'body_template' => ['nullable', 'string', 'max:5000'],
+            'channels' => ['array'],
+            'channels.*' => ['string', 'max:32'],
+            'active' => ['required', 'boolean'],
+        ]);
+
+        $before = $template->only([
+            'name_ar', 'recipient_type', 'title_template', 'body_template', 'channels', 'active',
+        ]);
+
+        $template->fill([
+            'name_ar' => $data['name_ar'] ?? $template->name_ar,
+            'recipient_type' => $data['recipient_type'] ?? $template->recipient_type,
+            'title_template' => $data['title_template'] ?? null,
+            'body_template' => $data['body_template'] ?? null,
+            'channels' => array_values($data['channels'] ?? []),
+            'active' => $data['active'],
+        ])->save();
+
+        $this->audit($request, 'template.update', 'notification_templates', $template->id, [
+            'event_key' => $template->event_key,
+            'before' => $before,
+            'after' => $template->only([
+                'name_ar', 'recipient_type', 'title_template', 'body_template', 'channels', 'active',
+            ]),
+        ]);
+
+        return back()->with('success', 'تم تحديث القالب');
     }
 
     /** Assign a role to a profile (idempotent). */

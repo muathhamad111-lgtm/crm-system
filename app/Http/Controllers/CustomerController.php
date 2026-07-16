@@ -14,6 +14,7 @@ use App\Models\RequestRating;
 use App\Models\SuggestionVote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -243,7 +244,7 @@ class CustomerController extends Controller
             ->where('customer_id', $profile->id)
             ->orderBy('sort_order')
             ->orderBy('created_at')
-            ->get(['id', 'title', 'description', 'status', 'due_date', 'completed_at', 'created_at']);
+            ->get(['id', 'title', 'description', 'status', 'due_date', 'sort_order', 'assigned_to', 'completed_at', 'created_at']);
 
         // Meetings / calendar events (staff + self both may view).
         $meetings = CalendarEvent::query()
@@ -331,6 +332,310 @@ class CustomerController extends Controller
                 'contacts' => $contacts->count(),
                 'active_subscriptions' => $subscriptions->where('status', 'active')->count(),
             ],
+        ]);
+    }
+
+    // ======================================================================
+    // Write / CRUD operations (all gated to staff via route middleware).
+    // ======================================================================
+
+    /** Update the core account (profiles) fields + internal notes. */
+    public function updateAccount(Request $request, Profile $profile)
+    {
+        $data = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'business_field' => ['nullable', 'string', 'max:255'],
+            'region' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'website' => ['nullable', 'string', 'max:255'],
+            'tier' => ['nullable', 'string', 'max:50'],
+            'journey_stage' => ['nullable', 'string', 'max:50'],
+            'account_status' => ['nullable', 'string', 'max:50'],
+            'internal_notes' => ['nullable', 'string'],
+        ]);
+
+        $profile->update($data);
+        $this->logActivity($profile, 'account_updated', 'تحديث بيانات الحساب', null, $request->user()->id);
+
+        return back()->with('success', 'تم تحديث بيانات الحساب');
+    }
+
+    /** Dedicated staff-only internal notes save. */
+    public function updateNotes(Request $request, Profile $profile)
+    {
+        $data = $request->validate([
+            'internal_notes' => ['nullable', 'string'],
+        ]);
+
+        $profile->update(['internal_notes' => $data['internal_notes']]);
+        $this->logActivity($profile, 'note_updated', 'تحديث الملاحظات الداخلية', null, $request->user()->id);
+
+        return back()->with('success', 'تم حفظ الملاحظات الداخلية');
+    }
+
+    /** Create a contact. */
+    public function storeContact(Request $request, Profile $profile)
+    {
+        $data = $this->contactData($request);
+        $data['customer_id'] = $profile->id;
+        $data['created_by'] = $request->user()->id;
+
+        $contact = CustomerContact::create($data);
+        if ($contact->is_primary) {
+            CustomerContact::query()
+                ->where('customer_id', $profile->id)
+                ->where('id', '!=', $contact->id)
+                ->update(['is_primary' => false]);
+        }
+
+        $this->logActivity($profile, 'contact_added', 'إضافة جهة تواصل: '.$contact->full_name, null, $request->user()->id);
+
+        return back()->with('success', 'تمت إضافة جهة التواصل');
+    }
+
+    /** Update a contact. */
+    public function updateContact(Request $request, Profile $profile, CustomerContact $contact)
+    {
+        $this->ensureBelongs($contact->customer_id, $profile);
+
+        $contact->update($this->contactData($request));
+        if ($contact->is_primary) {
+            CustomerContact::query()
+                ->where('customer_id', $profile->id)
+                ->where('id', '!=', $contact->id)
+                ->update(['is_primary' => false]);
+        }
+
+        $this->logActivity($profile, 'contact_updated', 'تحديث جهة تواصل: '.$contact->full_name, null, $request->user()->id);
+
+        return back()->with('success', 'تم تحديث جهة التواصل');
+    }
+
+    /** Delete a contact. */
+    public function destroyContact(Request $request, Profile $profile, CustomerContact $contact)
+    {
+        $this->ensureBelongs($contact->customer_id, $profile);
+        $name = $contact->full_name;
+        $contact->delete();
+
+        $this->logActivity($profile, 'contact_removed', 'حذف جهة تواصل: '.$name, null, $request->user()->id);
+
+        return back()->with('success', 'تم حذف جهة التواصل');
+    }
+
+    /** Create a subscription. */
+    public function storeSubscription(Request $request, Profile $profile)
+    {
+        $data = $this->subscriptionData($request);
+        $data['customer_id'] = $profile->id;
+        $data['source'] = 'manual';
+        $data['last_synced_at'] = now();
+
+        $sub = CustomerSubscription::create($data);
+        $this->logActivity($profile, 'subscription_added', 'إضافة اشتراك: '.$sub->product_name, null, $request->user()->id);
+
+        return back()->with('success', 'تمت إضافة الاشتراك');
+    }
+
+    /** Update a subscription. */
+    public function updateSubscription(Request $request, Profile $profile, CustomerSubscription $subscription)
+    {
+        $this->ensureBelongs($subscription->customer_id, $profile);
+
+        $subscription->update($this->subscriptionData($request));
+        $this->logActivity($profile, 'subscription_updated', 'تحديث اشتراك: '.$subscription->product_name, null, $request->user()->id);
+
+        return back()->with('success', 'تم تحديث الاشتراك');
+    }
+
+    /** Delete a subscription. */
+    public function destroySubscription(Request $request, Profile $profile, CustomerSubscription $subscription)
+    {
+        $this->ensureBelongs($subscription->customer_id, $profile);
+        $name = $subscription->product_name;
+        $subscription->delete();
+
+        $this->logActivity($profile, 'subscription_removed', 'حذف اشتراك: '.$name, null, $request->user()->id);
+
+        return back()->with('success', 'تم حذف الاشتراك');
+    }
+
+    /** Create an activation task. */
+    public function storeActivationTask(Request $request, Profile $profile)
+    {
+        $data = $this->activationTaskData($request);
+        $data['customer_id'] = $profile->id;
+        $data['created_by'] = $request->user()->id;
+        $data['completed_at'] = ($data['status'] ?? null) === 'done' ? now() : null;
+
+        $task = CustomerActivationTask::create($data);
+        $this->logActivity($profile, 'activation_task_added', 'مهمة تفعيل جديدة: '.$task->title, null, $request->user()->id);
+
+        return back()->with('success', 'تمت إضافة مهمة التفعيل');
+    }
+
+    /** Update / toggle an activation task. */
+    public function updateActivationTask(Request $request, Profile $profile, CustomerActivationTask $task)
+    {
+        $this->ensureBelongs($task->customer_id, $profile);
+
+        $data = $this->activationTaskData($request);
+        $data['completed_at'] = ($data['status'] ?? null) === 'done' ? ($task->completed_at ?? now()) : null;
+        $task->update($data);
+
+        $this->logActivity($profile, 'activation_task_updated', 'تحديث مهمة تفعيل: '.$task->title, null, $request->user()->id);
+
+        return back()->with('success', 'تم تحديث مهمة التفعيل');
+    }
+
+    /** Delete an activation task. */
+    public function destroyActivationTask(Request $request, Profile $profile, CustomerActivationTask $task)
+    {
+        $this->ensureBelongs($task->customer_id, $profile);
+        $title = $task->title;
+        $task->delete();
+
+        $this->logActivity($profile, 'activation_task_removed', 'حذف مهمة تفعيل: '.$title, null, $request->user()->id);
+
+        return back()->with('success', 'تم حذف مهمة التفعيل');
+    }
+
+    /** Log a manual activity entry. */
+    public function storeActivity(Request $request, Profile $profile)
+    {
+        $data = $request->validate([
+            'activity_type' => ['required', 'string', 'max:50'],
+            'subject' => ['required', 'string', 'max:255'],
+            'summary' => ['nullable', 'string'],
+        ]);
+
+        CustomerActivity::create([
+            'customer_id' => $profile->id,
+            'activity_type' => $data['activity_type'],
+            'subject' => $data['subject'],
+            'summary' => $data['summary'] ?? null,
+            'occurred_at' => now(),
+            'performed_by' => $request->user()->id,
+            'created_at' => now(),
+        ]);
+
+        return back()->with('success', 'تم تسجيل النشاط');
+    }
+
+    /** Upload an attachment. */
+    public function storeAttachment(Request $request, Profile $profile)
+    {
+        $data = $request->validate([
+            'file' => ['required', 'file', 'max:20480'], // 20 MB
+            'category' => ['nullable', 'string', 'max:100'],
+            'description' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->store("customers/{$profile->id}", 'public');
+
+        $attachment = CustomerAttachment::create([
+            'customer_id' => $profile->id,
+            'category' => $data['category'] ?? 'general',
+            'file_name' => $file->getClientOriginalName(),
+            'storage_path' => '/storage/'.$path,
+            'mime_type' => $file->getMimeType(),
+            'size_bytes' => $file->getSize(),
+            'description' => $data['description'] ?? null,
+            'uploaded_by' => $request->user()->id,
+            'created_at' => now(),
+        ]);
+
+        $this->logActivity($profile, 'attachment_added', 'رفع مرفق: '.$attachment->file_name, null, $request->user()->id);
+
+        return back()->with('success', 'تم رفع المرفق');
+    }
+
+    /** Delete an attachment (file + row). */
+    public function destroyAttachment(Request $request, Profile $profile, CustomerAttachment $attachment)
+    {
+        $this->ensureBelongs($attachment->customer_id, $profile);
+
+        if ($attachment->storage_path && str_starts_with($attachment->storage_path, '/storage/')) {
+            Storage::disk('public')->delete(substr($attachment->storage_path, strlen('/storage/')));
+        }
+        $name = $attachment->file_name;
+        $attachment->delete();
+
+        $this->logActivity($profile, 'attachment_removed', 'حذف مرفق: '.$name, null, $request->user()->id);
+
+        return back()->with('success', 'تم حذف المرفق');
+    }
+
+    // ----------------------------------------------------------------------
+    // Write helpers
+    // ----------------------------------------------------------------------
+
+    /** Validate + normalize contact payload. */
+    private function contactData(Request $request): array
+    {
+        $data = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'job_title' => ['nullable', 'string', 'max:255'],
+            'department' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'mobile' => ['nullable', 'string', 'max:50'],
+            'role_type' => ['nullable', 'string', 'max:50'],
+            'status' => ['nullable', 'string', 'max:50'],
+        ]);
+        $data['is_primary'] = $request->boolean('is_primary');
+        $data['has_portal_access'] = $request->boolean('has_portal_access');
+
+        return $data;
+    }
+
+    /** Validate subscription payload. */
+    private function subscriptionData(Request $request): array
+    {
+        return $request->validate([
+            'product_name' => ['required', 'string', 'max:255'],
+            'plan_name' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'string', 'in:active,expired,cancelled,trial,suspended'],
+            'external_id' => ['nullable', 'string', 'max:255'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date'],
+        ]);
+    }
+
+    /** Validate activation-task payload. */
+    private function activationTaskData(Request $request): array
+    {
+        return $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'status' => ['nullable', 'string', 'in:todo,in_progress,blocked,done,cancelled'],
+            'due_date' => ['nullable', 'date'],
+            'sort_order' => ['nullable', 'integer'],
+            'assigned_to' => ['nullable', 'string', 'exists:profiles,id'],
+        ]);
+    }
+
+    /** Guard that a child row belongs to the given customer profile. */
+    private function ensureBelongs(?string $ownerId, Profile $profile): void
+    {
+        if ($ownerId !== $profile->id) {
+            abort(404);
+        }
+    }
+
+    /** Insert a customer_activities audit row. */
+    private function logActivity(Profile $profile, string $type, string $subject, ?string $summary, string $performedBy): void
+    {
+        CustomerActivity::create([
+            'customer_id' => $profile->id,
+            'activity_type' => $type,
+            'subject' => $subject,
+            'summary' => $summary,
+            'occurred_at' => now(),
+            'performed_by' => $performedBy,
+            'created_at' => now(),
         ]);
     }
 }

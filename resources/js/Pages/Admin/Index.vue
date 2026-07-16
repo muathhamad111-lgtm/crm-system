@@ -8,6 +8,7 @@ import Badge from '@/Components/ui/Badge.vue';
 import Input from '@/Components/ui/Input.vue';
 import Label from '@/Components/ui/Label.vue';
 import Select from '@/Components/ui/Select.vue';
+import Textarea from '@/Components/ui/Textarea.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import Avatar from '@/Components/ui/Avatar.vue';
 import SettingRow from '@/Components/admin/SettingRow.vue';
@@ -181,6 +182,51 @@ const groupedTemplates = computed(() => {
     return grouped.filter((g) => g.items.length);
 });
 const CHANNEL_LABELS = { sms: 'رسائل نصية', email: 'بريد', in_app: 'داخل المنصة', whatsapp: 'واتساب' };
+const CHANNEL_OPTIONS = ['in_app', 'email', 'sms'];
+const RECIPIENT_OPTIONS = ['customer', 'assigned_staff', 'team', 'supervisor', 'manager', 'admin'];
+const TEMPLATE_VARS = ['{customer_name}', '{request_number}', '{staff_name}', '{status}', '{category}', '{team_name}'];
+
+const tplOpen = ref(false);
+const tplForm = useForm({
+    id: null,
+    name_ar: '',
+    recipient_type: '',
+    channels: [],
+    title_template: '',
+    body_template: '',
+    active: true,
+});
+function openTpl(t) {
+    tplForm.clearErrors();
+    tplForm.id = t.id;
+    tplForm.name_ar = t.name_ar ?? '';
+    tplForm.recipient_type = t.recipient_type ?? '';
+    tplForm.channels = Array.isArray(t.channels) ? [...t.channels] : [];
+    tplForm.title_template = t.title_template ?? '';
+    tplForm.body_template = t.body_template ?? '';
+    tplForm.active = !!t.active;
+    tplOpen.value = true;
+}
+function toggleChannel(ch) {
+    const i = tplForm.channels.indexOf(ch);
+    if (i === -1) tplForm.channels.push(ch);
+    else tplForm.channels.splice(i, 1);
+}
+function saveTpl() {
+    tplForm
+        .transform((d) => ({
+            name_ar: d.name_ar,
+            recipient_type: d.recipient_type || null,
+            channels: d.channels,
+            title_template: d.title_template === '' ? null : d.title_template,
+            body_template: d.body_template === '' ? null : d.body_template,
+            active: !!d.active,
+        }))
+        .post(`/admin/templates/${tplForm.id}`, {
+            preserveScroll: true,
+            onSuccess: () => { tplOpen.value = false; },
+        });
+}
 
 /* --------------------------- Integrations ----------------------------- */
 const INTEG_ICONS = {
@@ -207,10 +253,11 @@ const ACTION_LABELS = {
     'staff.create': 'إنشاء موظف',
     'role.assign': 'إسناد دور',
     'role.remove': 'إزالة دور',
+    'template.update': 'تعديل قالب',
 };
 const ENTITY_LABELS = {
     system_settings: 'إعدادات', categories: 'تصنيف', priority_multipliers: 'معامل أولوية',
-    users: 'مستخدم', user_roles: 'دور مستخدم',
+    users: 'مستخدم', user_roles: 'دور مستخدم', notification_templates: 'قالب إشعار',
 };
 function actionLabel(a) { return ACTION_LABELS[a] ?? a; }
 function entityLabel(e) { return ENTITY_LABELS[e] ?? e; }
@@ -543,6 +590,7 @@ const settingKeys = computed(() => Object.keys(props.settings));
                                         <div class="flex items-center gap-1.5">
                                             <Badge v-for="ch in (Array.isArray(t.channels) ? t.channels : [])" :key="ch" variant="secondary" class="text-[10px]">{{ CHANNEL_LABELS[ch] ?? ch }}</Badge>
                                             <Badge :variant="t.active ? 'success' : 'muted'">{{ t.active ? 'مفعّل' : 'معطّل' }}</Badge>
+                                            <Button size="sm" variant="outline" @click="openTpl(t)"><Pencil class="size-3.5" /> تعديل</Button>
                                         </div>
                                     </div>
                                 </div>
@@ -690,6 +738,63 @@ const settingKeys = computed(() => Object.keys(props.settings));
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="catOpen = false">إلغاء</Button>
                         <Button variant="accent" :disabled="catForm.processing" @click="saveCat"><Save class="size-4" /> حفظ التغييرات</Button>
+                    </div>
+                </div>
+            </Dialog>
+
+            <!-- Template edit dialog -->
+            <Dialog v-model:open="tplOpen" title="تعديل القالب" description="عدّل نص العنوان والمحتوى، القنوات، ونوع المستلم.">
+                <div class="space-y-3">
+                    <div>
+                        <Label>اسم القالب</Label>
+                        <Input v-model="tplForm.name_ar" class="mt-1.5" />
+                        <p v-if="tplForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ tplForm.errors.name_ar }}</p>
+                    </div>
+                    <div>
+                        <Label>نوع المستلم</Label>
+                        <Select v-model="tplForm.recipient_type" class="mt-1.5">
+                            <option value="">— بدون تحديد —</option>
+                            <option v-for="r in RECIPIENT_OPTIONS" :key="r" :value="r">{{ r }}</option>
+                            <option v-if="tplForm.recipient_type && !RECIPIENT_OPTIONS.includes(tplForm.recipient_type)" :value="tplForm.recipient_type">{{ tplForm.recipient_type }}</option>
+                        </Select>
+                        <p v-if="tplForm.errors.recipient_type" class="mt-1 text-xs text-destructive">{{ tplForm.errors.recipient_type }}</p>
+                    </div>
+                    <div>
+                        <Label>قنوات الإرسال</Label>
+                        <div class="mt-1.5 flex flex-wrap gap-2">
+                            <button v-for="ch in CHANNEL_OPTIONS" :key="ch" type="button" @click="toggleChannel(ch)"
+                                :class="['rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                                    tplForm.channels.includes(ch) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-muted-foreground hover:bg-muted']">
+                                {{ CHANNEL_LABELS[ch] ?? ch }}
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <Label>نص العنوان</Label>
+                        <Input v-model="tplForm.title_template" class="mt-1.5" />
+                        <p v-if="tplForm.errors.title_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.title_template }}</p>
+                    </div>
+                    <div>
+                        <Label>نص المحتوى</Label>
+                        <Textarea v-model="tplForm.body_template" rows="4" class="mt-1.5" />
+                        <p v-if="tplForm.errors.body_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.body_template }}</p>
+                    </div>
+                    <div class="rounded-lg border border-border bg-muted/30 px-3 py-2">
+                        <p class="text-xs text-muted-foreground">المتغيرات المتاحة:</p>
+                        <div class="mt-1.5 flex flex-wrap gap-1.5">
+                            <code v-for="v in TEMPLATE_VARS" :key="v" class="rounded bg-card px-1.5 py-0.5 font-mono text-[11px] text-primary" dir="ltr">{{ v }}</code>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+                        <span class="text-sm">الحالة</span>
+                        <button type="button" @click="tplForm.active = !tplForm.active"
+                            :class="['relative inline-flex h-6 w-11 items-center rounded-full transition-colors', tplForm.active ? 'bg-success' : 'bg-muted']">
+                            <span :class="['inline-block size-4 transform rounded-full bg-white transition-transform', tplForm.active ? '-translate-x-1' : '-translate-x-6']"></span>
+                        </button>
+                    </div>
+                    <div class="flex justify-end gap-2 pt-1">
+                        <Button variant="outline" @click="tplOpen = false">إلغاء</Button>
+                        <Button variant="accent" :disabled="tplForm.processing" @click="saveTpl"><Save class="size-4" /> حفظ التغييرات</Button>
                     </div>
                 </div>
             </Dialog>

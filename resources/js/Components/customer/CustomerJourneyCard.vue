@@ -30,7 +30,7 @@ const RISK = {
 const stage = computed(() => STAGE[props.profile.journey_stage] ?? STAGE.new);
 const risk = computed(() => RISK[props.profile.risk_level] ?? RISK.low);
 const pct = computed(() => props.profile.activation_percent ?? 0);
-const doneCount = computed(() => props.tasks.filter((t) => t.status === 'completed').length);
+const doneCount = computed(() => props.tasks.filter((t) => ['completed','done'].includes(t.status)).length);
 const activeTasks = computed(() => props.tasks.filter((t) => t.status !== 'skipped'));
 </script>
 
@@ -69,9 +69,9 @@ const activeTasks = computed(() => props.tasks.filter((t) => t.status !== 'skipp
                 <div v-else class="space-y-1.5">
                     <div v-for="t in tasks" :key="t.id"
                         class="flex items-center gap-2 rounded-lg border border-border/60 bg-card/40 p-2">
-                        <CheckCircle2 v-if="t.status === 'completed'" class="size-4 shrink-0 text-success" />
+                        <CheckCircle2 v-if="['completed','done'].includes(t.status)" class="size-4 shrink-0 text-success" />
                         <Circle v-else class="size-4 shrink-0 text-muted-foreground/50" />
-                        <span class="flex-1 text-sm" :class="t.status === 'completed' ? 'text-muted-foreground line-through' : ''">
+                        <span class="flex-1 text-sm" :class="['completed','done'].includes(t.status) ? 'text-muted-foreground line-through' : ''">
                             {{ t.title }}
                         </span>
                     </div>
