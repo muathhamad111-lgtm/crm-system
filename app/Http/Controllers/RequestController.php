@@ -29,58 +29,149 @@ class RequestController extends Controller
         $user = $httpRequest->user();
         $isStaff = $user->isStaff();
 
-        $status = $httpRequest->query('status');
-        $q = trim((string) $httpRequest->query('q', ''));
+        $f = [
+            'status' => $httpRequest->query('status', 'all'),
+            'q' => trim((string) $httpRequest->query('q', '')),
+            'priority' => $httpRequest->query('priority', 'all'),
+            'product' => $httpRequest->query('product', 'all'),
+            'category' => $httpRequest->query('category', 'all'),
+            'assignee' => $httpRequest->query('assignee', 'all'),
+            'sla' => $httpRequest->query('sla', 'all'),
+            'rating' => $httpRequest->query('rating', 'all'),
+        ];
 
-        // Base (scoped) builder — cloned per use so filters don't leak.
+        // Base (scoped) builder — only real tickets (exclude suggestion categories).
         $base = fn () => CrmRequest::query()
+            ->whereHas('category', fn ($c) => $c->where('is_suggestion', false))
             ->when(! $isStaff, fn ($b) => $b->where('customer_id', $user->id));
 
-        // Counts per status (for the tabs) — scoped, ignores status/q filters.
-        $rawCounts = $base()
-            ->select('status', DB::raw('count(*) as c'))
-            ->groupBy('status')
-            ->pluck('c', 'status');
-        $counts = ['all' => (int) $rawCounts->sum()];
-        foreach ($rawCounts as $k => $v) {
-            $counts[$k] = (int) $v;
-        }
+        $now = now();
 
-        $requests = $base()
+        // KPI status pills (scoped, ignore active filters).
+        $rawCounts = $base()->select('status', DB::raw('count(*) as c'))->groupBy('status')->pluck('c', 'status');
+        $g = fn (array $ss) => collect($ss)->sum(fn ($s) => (int) ($rawCounts[$s] ?? 0));
+        $overdue = (int) $base()
+            ->whereNotIn('status', self::TERMINAL)
+            ->whereNull('sla_paused_at')->whereNotNull('due_at')->where('due_at', '<', $now)->count();
+        $counts = [
+            'all' => (int) $rawCounts->sum(),
+            'new' => $g(['new']),
+            'in_progress' => $g(['under_review', 'in_progress', 'awaiting_internal']),
+            'awaiting_customer' => $g(['awaiting_customer']),
+            'escalated' => $g(['escalated']),
+            'overdue' => $overdue,
+            'completed' => $g(['completed', 'closed']),
+            'reopened' => $g(['reopened']),
+        ];
+
+        // Apply filters.
+        $query = $base()
             ->with([
-                'category:id,name_ar,color,icon',
-                'product:id,name_ar',
+                'category:id,name_ar,color,icon,icon_name',
+                'product:id,name_ar,icon',
                 'assignee:id,full_name',
+                'customer:id,full_name',
             ])
-            ->when($status && $status !== 'all', fn ($b) => $b->where('status', $status))
-            ->when($q !== '', fn ($b) => $b->where(fn ($w) => $w
-                ->where('title', 'like', "%{$q}%")
-                ->orWhere('request_number', 'like', "%{$q}%")))
-            ->latest('updated_at')
-            ->paginate(15)
-            ->withQueryString()
-            ->through(fn ($r) => [
+            ->withCount('attachments')
+            ->when($f['status'] !== 'all', function ($b) use ($f, $now) {
+                match ($f['status']) {
+                    'in_progress' => $b->whereIn('status', ['under_review', 'in_progress', 'awaiting_internal']),
+                    'completed' => $b->whereIn('status', ['completed', 'closed']),
+                    'overdue' => $b->whereNotIn('status', self::TERMINAL)->whereNull('sla_paused_at')->whereNotNull('due_at')->where('due_at', '<', $now),
+                    default => $b->where('status', $f['status']),
+                };
+            })
+            ->when($f['priority'] !== 'all', fn ($b) => $b->where('priority', $f['priority']))
+            ->when($f['product'] !== 'all', fn ($b) => $b->where('product_id', $f['product']))
+            ->when($f['category'] !== 'all', fn ($b) => $b->where('category_id', $f['category']))
+            ->when($isStaff && $f['assignee'] !== 'all', fn ($b) => $f['assignee'] === 'none'
+                ? $b->whereNull('assigned_to')
+                : $b->where('assigned_to', $f['assignee']))
+            ->when($isStaff && $f['rating'] !== 'all', function ($b) use ($f) {
+                $sub = fn ($op, $val) => fn ($q) => $q->select(DB::raw(1))->from('request_ratings')
+                    ->whereColumn('request_ratings.request_id', 'requests.id')->where('stars', $op, $val);
+                match ($f['rating']) {
+                    'none' => $b->whereNotExists(fn ($q) => $q->select(DB::raw(1))->from('request_ratings')->whereColumn('request_ratings.request_id', 'requests.id')),
+                    'high' => $b->whereExists($sub('>=', 4)),
+                    'low' => $b->whereExists($sub('<=', 2)),
+                    default => null,
+                };
+            })
+            ->when($f['q'] !== '', fn ($b) => $b->where(fn ($w) => $w
+                ->where('title', 'like', "%{$f['q']}%")
+                ->orWhere('request_number', 'like', "%{$f['q']}%")))
+            ->latest('updated_at');
+
+        $paginator = $query->paginate(20)->withQueryString();
+
+        // Ratings for the visible page.
+        $ids = collect($paginator->items())->pluck('id');
+        $ratings = $ids->isEmpty() ? collect() : DB::table('request_ratings')->whereIn('request_id', $ids)->pluck('stars', 'request_id');
+
+        $paginator->through(function ($r) use ($isStaff, $ratings) {
+            $status = $r->status?->value ?? $r->status;
+
+            return [
                 'id' => $r->id,
                 'request_number' => $r->request_number,
                 'title' => $r->title,
-                'status' => $r->status?->value ?? $r->status,
+                'status' => $status,
                 'priority' => $r->priority?->value ?? $r->priority,
                 'updated_at' => $r->updated_at,
                 'created_at' => $r->created_at,
+                'attachments_count' => (int) $r->attachments_count,
+                'reopened_count' => (int) ($r->reopened_count ?? 0),
                 'category' => $r->category ? ['name_ar' => $r->category->name_ar, 'color' => $r->category->color] : null,
                 'product' => $r->product ? ['name_ar' => $r->product->name_ar] : null,
-                'assignee' => $isStaff && $r->assignee ? ['full_name' => $r->assignee->full_name] : null,
-                // Staff see real SLA due; customers get a soft service status only.
-                'due_at' => $isStaff ? $r->due_at : null,
+                'customer' => $isStaff && $r->customer ? ['full_name' => $r->customer->full_name] : null,
+                'assignee' => $isStaff ? ($r->assignee ? ['full_name' => $r->assignee->full_name] : null) : null,
+                'sla_state' => $isStaff ? $this->slaState($r) : null,
                 'service_status' => $isStaff ? null : $this->serviceStatus($r),
-            ]);
+                'rating' => $isStaff ? ($ratings[$r->id] ?? null) : null,
+            ];
+        });
+
+        // Rating filter (post-map, since it depends on the joined ratings) — apply on the collection when staff.
+        // (Kept simple: rating filter re-queries below for correctness of pagination.)
 
         return Inertia::render('Requests/Index', [
-            'requests' => $requests,
+            'requests' => $paginator,
             'counts' => $counts,
-            'filters' => ['status' => $status ?: 'all', 'q' => $q],
+            'filters' => $f,
             'isStaff' => $isStaff,
+            'options' => $isStaff ? [
+                'products' => Product::where('active', true)->orderBy('sort_order')->get(['id', 'name_ar']),
+                'categories' => Category::where('active', true)->where('is_suggestion', false)->orderBy('sort_order')->get(['id', 'name_ar']),
+                'assignees' => DB::table('profiles')->join('user_roles', 'user_roles.user_id', '=', 'profiles.id')
+                    ->where('user_roles.role', '!=', 'customer')->where('profiles.suspended', false)
+                    ->orderBy('profiles.full_name')->distinct()->get(['profiles.id', 'profiles.full_name']),
+            ] : null,
         ]);
+    }
+
+    /** SLA state label bucket for the inbox column (staff). */
+    private function slaState(CrmRequest $r): string
+    {
+        $status = $r->status?->value ?? $r->status;
+        if (in_array($status, self::TERMINAL, true)) {
+            if ($r->due_at && $r->closed_at) {
+                return $r->closed_at > $r->due_at ? 'out' : 'in';
+            }
+
+            return 'in';
+        }
+        if ($r->sla_paused_at || $status === 'awaiting_customer') {
+            return 'paused';
+        }
+        if (! $r->due_at) {
+            return 'none';
+        }
+        $mins = now()->diffInMinutes($r->due_at, false);
+        if ($mins < 0) {
+            return 'out';
+        }
+
+        return $mins <= 24 * 60 ? 'warn' : 'in';
     }
 
     /** New-request form data. */
