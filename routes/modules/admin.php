@@ -27,6 +27,15 @@ Route::post('/admin/roles/assign', [AdminController::class, 'assignRole'])
 Route::post('/admin/roles/remove', [AdminController::class, 'removeRole'])
     ->middleware('admin')->name('admin.role.remove');
 
+Route::post('/admin/permissions', [AdminController::class, 'setPermission'])
+    ->middleware('admin')->name('admin.permission.set');
+
+Route::post('/admin/products', [AdminController::class, 'storeProduct'])
+    ->middleware('admin')->name('admin.product.store');
+
+Route::post('/admin/products/{product}', [AdminController::class, 'updateProduct'])
+    ->middleware('admin')->name('admin.product.update');
+
 // ---- SLA compliance dashboard (staff) ----
 Route::get('/sla-compliance', [SlaComplianceController::class, 'index'])
     ->middleware('staff')->name('sla.compliance');

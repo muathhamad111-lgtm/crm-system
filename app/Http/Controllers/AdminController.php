@@ -10,6 +10,7 @@ use App\Models\NotificationTemplate;
 use App\Models\PriorityMultiplier;
 use App\Models\Product;
 use App\Models\Profile;
+use App\Models\RolePermission;
 use App\Models\SystemIntegration;
 use App\Models\SystemSetting;
 use App\Models\Team;
@@ -394,6 +395,115 @@ class AdminController extends Controller
         $this->audit($request, 'role.remove', 'user_roles', $data['user_id'], $data);
 
         return back()->with('success', 'تمت إزالة الدور.');
+    }
+
+    /** Toggle a single capability for a role (upsert role_permissions). */
+    public function setPermission(Request $request): RedirectResponse
+    {
+        $appRoles = [
+            'customer', 'support_staff', 'support_supervisor', 'product_team',
+            'product_manager', 'tech_team', 'tech_manager', 'management team', 'system_admin',
+        ];
+
+        $data = $request->validate([
+            'role' => ['required', 'string', Rule::in($appRoles)],
+            'capability' => ['required', 'string', Rule::exists('capability_meta', 'capability')],
+            'allowed' => ['required', 'boolean'],
+        ]);
+
+        // Guard: never strip capabilities from system_admin (it bypasses via Gate anyway).
+        if ($data['role'] === 'system_admin' && $data['allowed'] === false) {
+            return back()->with('info', 'لا يمكن تقييد صلاحيات مدير النظام.');
+        }
+
+        // Action type comes from the capability catalogue (needed when creating a new row).
+        $actionType = CapabilityMeta::query()
+            ->where('capability', $data['capability'])
+            ->value('action_type');
+
+        $row = RolePermission::query()
+            ->where('role', $data['role'])
+            ->where('capability', $data['capability'])
+            ->first();
+
+        if ($row) {
+            $row->allowed = $data['allowed'];
+            $row->updated_at = now();
+            $row->save();
+        } else {
+            RolePermission::query()->create([
+                'role' => $data['role'],
+                'capability' => $data['capability'],
+                'action_type' => $actionType,
+                'allowed' => $data['allowed'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        $this->audit($request, 'permission.set', 'role_permissions', $data['role'], [
+            'role' => $data['role'],
+            'capability' => $data['capability'],
+            'allowed' => $data['allowed'],
+        ]);
+
+        return back()->with('success', 'تم تحديث الصلاحية.');
+    }
+
+    /** Create a product/service. */
+    public function storeProduct(Request $request): RedirectResponse
+    {
+        $data = $this->validateProduct($request);
+
+        $product = Product::query()->create($data);
+
+        $this->audit($request, 'product.create', 'products', $product->id, $data);
+
+        return back()->with('success', 'تمت إضافة المنتج.');
+    }
+
+    /** Update a product/service. */
+    public function updateProduct(Request $request, Product $product): RedirectResponse
+    {
+        $data = $this->validateProduct($request);
+
+        $before = $product->only(array_keys($data));
+
+        $product->fill($data)->save();
+
+        $this->audit($request, 'product.update', 'products', $product->id, [
+            'before' => $before,
+            'after' => $data,
+        ]);
+
+        return back()->with('success', 'تم تحديث المنتج.');
+    }
+
+    /** Shared validation + normalization for product create/update. */
+    private function validateProduct(Request $request): array
+    {
+        $data = $request->validate([
+            'name_ar' => ['required', 'string', 'max:191'],
+            'type' => ['required', 'in:product,service'],
+            'description_ar' => ['nullable', 'string', 'max:5000'],
+            'color' => ['nullable', 'string', 'max:32'],
+            'icon' => ['nullable', 'string', 'max:64'],
+            'sla_hours' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'escalation_hours' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'sort_order' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'restricted' => ['required', 'boolean'],
+            'active' => ['required', 'boolean'],
+        ]);
+
+        // Nulls out empty optional numeric/text fields for clean storage.
+        foreach (['description_ar', 'color', 'icon', 'sla_hours', 'escalation_hours'] as $k) {
+            if (($data[$k] ?? null) === '' || ($data[$k] ?? null) === null) {
+                $data[$k] = null;
+            }
+        }
+        $data['sort_order'] = $data['sort_order'] ?? 0;
+
+        return $data;
     }
 
     /** Write an admin audit-log entry. */

@@ -121,6 +121,70 @@ function saveCat() {
         });
 }
 
+/* -------------------------- Product edit dialog ----------------------- */
+const prodOpen = ref(false);
+const prodForm = useForm({
+    id: null,
+    name_ar: '',
+    type: 'product',
+    description_ar: '',
+    sla_hours: '',
+    escalation_hours: '',
+    color: '',
+    sort_order: '',
+    restricted: false,
+    active: true,
+});
+function resetProdForm() {
+    prodForm.id = null;
+    prodForm.name_ar = '';
+    prodForm.type = 'product';
+    prodForm.description_ar = '';
+    prodForm.sla_hours = '';
+    prodForm.escalation_hours = '';
+    prodForm.color = '';
+    prodForm.sort_order = '';
+    prodForm.restricted = false;
+    prodForm.active = true;
+}
+function openProduct(p) {
+    prodForm.clearErrors();
+    if (p) {
+        prodForm.id = p.id;
+        prodForm.name_ar = p.name_ar ?? '';
+        prodForm.type = p.type ?? 'product';
+        prodForm.description_ar = p.description_ar ?? '';
+        prodForm.sla_hours = p.sla_hours ?? '';
+        prodForm.escalation_hours = p.escalation_hours ?? '';
+        prodForm.color = p.color ?? '';
+        prodForm.sort_order = p.sort_order ?? '';
+        prodForm.restricted = !!p.restricted;
+        prodForm.active = !!p.active;
+    } else {
+        resetProdForm();
+    }
+    prodOpen.value = true;
+}
+function saveProduct() {
+    const url = prodForm.id ? `/admin/products/${prodForm.id}` : '/admin/products';
+    prodForm
+        .transform((d) => ({
+            name_ar: d.name_ar,
+            type: d.type,
+            description_ar: d.description_ar === '' ? null : d.description_ar,
+            sla_hours: d.sla_hours === '' || d.sla_hours === null ? null : Number(d.sla_hours),
+            escalation_hours: d.escalation_hours === '' || d.escalation_hours === null ? null : Number(d.escalation_hours),
+            color: d.color === '' ? null : d.color,
+            sort_order: d.sort_order === '' || d.sort_order === null ? null : Number(d.sort_order),
+            restricted: !!d.restricted,
+            active: !!d.active,
+        }))
+        .post(url, {
+            preserveScroll: true,
+            onSuccess: () => { prodOpen.value = false; },
+        });
+}
+
 /* ---------------------------- Staff roles ----------------------------- */
 function addRole(userId, role) {
     if (!role) return;
@@ -166,6 +230,24 @@ const filteredCaps = computed(() => {
         (c.capability ?? '').toLowerCase().includes(q) || (c.description ?? '').toLowerCase().includes(q));
 });
 const totalCaps = computed(() => props.capabilityMeta.length);
+
+const savingPerm = ref(null);
+function permKey(role, cap) { return `${role}::${cap}`; }
+function togglePerm(role, cap) {
+    // system_admin is guarded server-side and always effectively allowed.
+    if (role === 'system_admin') return;
+    const key = permKey(role, cap);
+    savingPerm.value = key;
+    router.post('/admin/permissions', {
+        role,
+        capability: cap,
+        allowed: !roleHas(role, cap),
+    }, {
+        preserveScroll: true,
+        preserveState: true,
+        onFinish: () => { if (savingPerm.value === key) savingPerm.value = null; },
+    });
+}
 
 /* --------------------------- Notifications ---------------------------- */
 const TEMPLATE_GROUPS = [
@@ -254,10 +336,14 @@ const ACTION_LABELS = {
     'role.assign': 'إسناد دور',
     'role.remove': 'إزالة دور',
     'template.update': 'تعديل قالب',
+    'permission.set': 'تعديل صلاحية',
+    'product.create': 'إضافة منتج',
+    'product.update': 'تعديل منتج',
 };
 const ENTITY_LABELS = {
     system_settings: 'إعدادات', categories: 'تصنيف', priority_multipliers: 'معامل أولوية',
     users: 'مستخدم', user_roles: 'دور مستخدم', notification_templates: 'قالب إشعار',
+    role_permissions: 'صلاحية', products: 'منتج',
 };
 function actionLabel(a) { return ACTION_LABELS[a] ?? a; }
 function entityLabel(e) { return ENTITY_LABELS[e] ?? e; }
@@ -383,37 +469,47 @@ const settingKeys = computed(() => Object.keys(props.settings));
                         </div>
 
                         <!-- ============ PRODUCTS ============ -->
-                        <div v-show="active === 'products'" class="overflow-x-auto">
-                            <table class="w-full border-collapse text-sm">
-                                <thead class="bg-muted/50 text-xs text-muted-foreground">
-                                    <tr class="border-b border-border">
-                                        <th class="px-3 py-3 text-start">المنتج / الخدمة</th>
-                                        <th class="px-3 py-3 text-start">النوع</th>
-                                        <th class="px-3 py-3 text-start">الوصف</th>
-                                        <th class="px-3 py-3 text-start">SLA</th>
-                                        <th class="px-3 py-3 text-start">التصعيد</th>
-                                        <th class="px-3 py-3 text-start">مقيّد</th>
-                                        <th class="px-3 py-3 text-start">الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="p in products" :key="p.id" class="border-b border-border hover:bg-muted/40">
-                                        <td class="px-3 py-3">
-                                            <div class="flex items-center gap-2">
-                                                <span class="size-2.5 rounded-full" :style="{ background: p.color || 'var(--muted-foreground)' }"></span>
-                                                <span class="font-medium">{{ p.name_ar }}</span>
-                                            </div>
-                                        </td>
-                                        <td class="px-3 py-3"><Badge variant="secondary">{{ p.type }}</Badge></td>
-                                        <td class="px-3 py-3 max-w-[18rem] truncate text-sm text-muted-foreground">{{ p.description_ar ?? '—' }}</td>
-                                        <td class="px-3 py-3 tabular-nums">{{ p.sla_hours ?? '—' }}</td>
-                                        <td class="px-3 py-3 tabular-nums">{{ p.escalation_hours ?? '—' }}</td>
-                                        <td class="px-3 py-3"><Badge :variant="p.restricted ? 'warning' : 'muted'">{{ p.restricted ? 'نعم' : 'لا' }}</Badge></td>
-                                        <td class="px-3 py-3"><Badge :variant="p.active ? 'success' : 'muted'">{{ p.active ? 'مفعّل' : 'معطّل' }}</Badge></td>
-                                    </tr>
-                                    <tr v-if="!products.length"><td colspan="7" class="py-10 text-center text-muted-foreground">لا توجد منتجات.</td></tr>
-                                </tbody>
-                            </table>
+                        <div v-show="active === 'products'">
+                            <div class="mb-3 flex items-center justify-between">
+                                <p class="text-sm text-muted-foreground">إجمالي المنتجات والخدمات: <span class="font-bold tabular-nums text-foreground">{{ products.length }}</span></p>
+                                <Button variant="accent" @click="openProduct(null)"><Package class="size-4" /> إضافة منتج</Button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-collapse text-sm">
+                                    <thead class="bg-muted/50 text-xs text-muted-foreground">
+                                        <tr class="border-b border-border">
+                                            <th class="px-3 py-3 text-start">المنتج / الخدمة</th>
+                                            <th class="px-3 py-3 text-start">النوع</th>
+                                            <th class="px-3 py-3 text-start">الوصف</th>
+                                            <th class="px-3 py-3 text-start">SLA</th>
+                                            <th class="px-3 py-3 text-start">التصعيد</th>
+                                            <th class="px-3 py-3 text-start">مقيّد</th>
+                                            <th class="px-3 py-3 text-start">الحالة</th>
+                                            <th class="px-3 py-3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="p in products" :key="p.id" class="border-b border-border hover:bg-muted/40">
+                                            <td class="px-3 py-3">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="size-2.5 rounded-full" :style="{ background: p.color || 'var(--muted-foreground)' }"></span>
+                                                    <span class="font-medium">{{ p.name_ar }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-3 py-3"><Badge variant="secondary">{{ p.type }}</Badge></td>
+                                            <td class="px-3 py-3 max-w-[18rem] truncate text-sm text-muted-foreground">{{ p.description_ar ?? '—' }}</td>
+                                            <td class="px-3 py-3 tabular-nums">{{ p.sla_hours ?? '—' }}</td>
+                                            <td class="px-3 py-3 tabular-nums">{{ p.escalation_hours ?? '—' }}</td>
+                                            <td class="px-3 py-3"><Badge :variant="p.restricted ? 'warning' : 'muted'">{{ p.restricted ? 'نعم' : 'لا' }}</Badge></td>
+                                            <td class="px-3 py-3"><Badge :variant="p.active ? 'success' : 'muted'">{{ p.active ? 'مفعّل' : 'معطّل' }}</Badge></td>
+                                            <td class="px-3 py-3 text-left">
+                                                <Button size="sm" variant="outline" @click="openProduct(p)"><Pencil class="size-3.5" /> تعديل</Button>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="!products.length"><td colspan="8" class="py-10 text-center text-muted-foreground">لا توجد منتجات.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <!-- ============ TEAMS ============ -->
@@ -535,8 +631,13 @@ const settingKeys = computed(() => Object.keys(props.settings));
                                                     <div v-if="cap.description" class="mt-0.5 max-w-[220px] truncate text-[10px] text-muted-foreground">{{ cap.description }}</div>
                                                 </td>
                                                 <td v-for="role in permRoles" :key="role" class="px-2 py-2 text-center">
-                                                    <CheckCircle2 v-if="roleHas(role, cap.capability)" class="mx-auto size-4 text-success" />
-                                                    <span v-else class="text-muted-foreground/40">—</span>
+                                                    <input type="checkbox"
+                                                        class="size-4 cursor-pointer align-middle accent-primary disabled:cursor-not-allowed"
+                                                        :class="savingPerm === permKey(role, cap.capability) ? 'opacity-40' : ''"
+                                                        :checked="role === 'system_admin' ? true : roleHas(role, cap.capability)"
+                                                        :disabled="role === 'system_admin' || savingPerm === permKey(role, cap.capability)"
+                                                        :title="role === 'system_admin' ? 'مدير النظام يملك جميع الصلاحيات' : ''"
+                                                        @change="togglePerm(role, cap.capability)" />
                                                 </td>
                                             </tr>
                                             <tr v-if="!filteredCaps.length"><td :colspan="permRoles.length + 1" class="py-8 text-center text-muted-foreground">لا توجد صلاحيات مطابقة.</td></tr>
@@ -738,6 +839,72 @@ const settingKeys = computed(() => Object.keys(props.settings));
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="catOpen = false">إلغاء</Button>
                         <Button variant="accent" :disabled="catForm.processing" @click="saveCat"><Save class="size-4" /> حفظ التغييرات</Button>
+                    </div>
+                </div>
+            </Dialog>
+
+            <!-- Product add/edit dialog -->
+            <Dialog v-model:open="prodOpen" :title="prodForm.id ? 'تعديل المنتج' : 'إضافة منتج'" description="عرّف المنتج أو الخدمة ومستهدفات الخدمة والتصعيد.">
+                <div class="space-y-3">
+                    <div>
+                        <Label>الاسم</Label>
+                        <Input v-model="prodForm.name_ar" class="mt-1.5" />
+                        <p v-if="prodForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.name_ar }}</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <Label>النوع</Label>
+                            <Select v-model="prodForm.type" class="mt-1.5">
+                                <option value="product">منتج</option>
+                                <option value="service">خدمة</option>
+                            </Select>
+                            <p v-if="prodForm.errors.type" class="mt-1 text-xs text-destructive">{{ prodForm.errors.type }}</p>
+                        </div>
+                        <div>
+                            <Label>اللون</Label>
+                            <Input v-model="prodForm.color" class="mt-1.5" dir="ltr" placeholder="#2563eb" />
+                            <p v-if="prodForm.errors.color" class="mt-1 text-xs text-destructive">{{ prodForm.errors.color }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <Label>الوصف</Label>
+                        <Textarea v-model="prodForm.description_ar" rows="3" class="mt-1.5" />
+                        <p v-if="prodForm.errors.description_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.description_ar }}</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <Label>SLA (ساعة)</Label>
+                            <Input v-model="prodForm.sla_hours" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <p v-if="prodForm.errors.sla_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sla_hours }}</p>
+                        </div>
+                        <div>
+                            <Label>التصعيد (ساعة)</Label>
+                            <Input v-model="prodForm.escalation_hours" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <p v-if="prodForm.errors.escalation_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.escalation_hours }}</p>
+                        </div>
+                        <div>
+                            <Label>الترتيب</Label>
+                            <Input v-model="prodForm.sort_order" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <p v-if="prodForm.errors.sort_order" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sort_order }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+                        <span class="text-sm">مقيّد (صلاحية خاصة)</span>
+                        <button type="button" @click="prodForm.restricted = !prodForm.restricted"
+                            :class="['relative inline-flex h-6 w-11 items-center rounded-full transition-colors', prodForm.restricted ? 'bg-warning' : 'bg-muted']">
+                            <span :class="['inline-block size-4 transform rounded-full bg-white transition-transform', prodForm.restricted ? '-translate-x-1' : '-translate-x-6']"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+                        <span class="text-sm">الحالة</span>
+                        <button type="button" @click="prodForm.active = !prodForm.active"
+                            :class="['relative inline-flex h-6 w-11 items-center rounded-full transition-colors', prodForm.active ? 'bg-success' : 'bg-muted']">
+                            <span :class="['inline-block size-4 transform rounded-full bg-white transition-transform', prodForm.active ? '-translate-x-1' : '-translate-x-6']"></span>
+                        </button>
+                    </div>
+                    <div class="flex justify-end gap-2 pt-1">
+                        <Button variant="outline" @click="prodOpen = false">إلغاء</Button>
+                        <Button variant="accent" :disabled="prodForm.processing" @click="saveProduct"><Save class="size-4" /> {{ prodForm.id ? 'حفظ التغييرات' : 'إضافة' }}</Button>
                     </div>
                 </div>
             </Dialog>

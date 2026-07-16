@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('staff')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])
         ->middleware('cap:report.ops')->name('reports.index');
+    Route::get('/reports/export', [ReportController::class, 'export'])
+        ->middleware('cap:report.ops')->name('reports.export');
     Route::get('/reports/employee/{profile}', [ReportController::class, 'employee'])
         ->middleware('cap:report.employee')->name('reports.employee');
 });

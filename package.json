@@ -18,10 +18,12 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "apexcharts": "^5.16.0",
         "axios": "^1.18.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-vue-next": "^1.0.0",
-        "tailwind-merge": "^3.6.0"
+        "tailwind-merge": "^3.6.0",
+        "vue3-apexcharts": "^1.11.1"
     }
 }
