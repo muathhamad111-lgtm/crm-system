@@ -9,6 +9,10 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
 cd "$APP_DIR"
 
+# Allow running composer as root inside CI without the interactive warning.
+export COMPOSER_ALLOW_SUPERUSER=1
+WEB_USER="${WEB_USER:-www-data}"
+
 echo "▶ Deploying in: $APP_DIR"
 
 # Put the app in maintenance mode (ignore if not yet bootable).
@@ -37,8 +41,13 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+echo "▶ Fixing ownership & permissions…"
+chown -R "$WEB_USER:$WEB_USER" "$APP_DIR" || true
+chmod -R 775 storage bootstrap/cache || true
+
 echo "▶ Restarting queue workers…"
 php artisan queue:restart || true
+systemctl restart crm-worker 2>/dev/null || true
 
 php artisan up
 echo "✅ Deploy complete."
