@@ -12,3 +12,14 @@ Route::post('/requests/{request}/comments', [RequestController::class, 'comment'
 Route::post('/requests/{request}/close', [RequestController::class, 'close'])->middleware('cap:request.close')->name('requests.close');
 Route::post('/requests/{request}/reopen', [RequestController::class, 'reopen'])->name('requests.reopen');
 Route::post('/requests/{request}/rate', [RequestController::class, 'rate'])->name('requests.rate');
+
+// Workspace actions
+Route::post('/requests/{request}/assign-self', [RequestController::class, 'assignSelf'])->name('requests.assignSelf');
+Route::post('/requests/{request}/escalate', [RequestController::class, 'escalate'])->name('requests.escalate');
+Route::post('/requests/{request}/return-to-customer', [RequestController::class, 'returnToCustomer'])->name('requests.returnToCustomer');
+Route::post('/requests/{request}/resume', [RequestController::class, 'resume'])->name('requests.resume');
+Route::post('/requests/{request}/transition-stage', [RequestController::class, 'transitionStage'])->name('requests.transitionStage');
+Route::post('/requests/{request}/tasks', [RequestController::class, 'addTask'])->name('requests.addTask');
+Route::patch('/requests/{request}/tasks/{task}', [RequestController::class, 'updateTask'])->name('requests.updateTask');
+Route::post('/requests/{request}/checklist/{item}', [RequestController::class, 'toggleChecklist'])->name('requests.toggleChecklist');
+Route::post('/requests/{request}/verify', [RequestController::class, 'verifySolution'])->name('requests.verify');

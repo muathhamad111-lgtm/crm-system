@@ -292,6 +292,82 @@ class RequestController extends Controller
         $status = $request->status?->value ?? $request->status;
         $isOwner = $request->customer_id === $user->id;
 
+        // Dynamic field values with their definition labels.
+        $fieldValues = DB::table('request_field_values as v')
+            ->join('field_definitions as d', 'd.id', '=', 'v.field_id')
+            ->where('v.request_id', $request->id)
+            ->when(! $isStaff, fn ($b) => $b->where('d.visible_to_customer', true))
+            ->orderBy('d.display_order')
+            ->get(['d.label', 'd.field_type', 'v.value']);
+
+        // Stage workflow ledger (staff only).
+        $stages = $isStaff ? DB::table('request_stage_sla_log')
+            ->where('request_id', $request->id)
+            ->orderBy('stage_index')
+            ->get(['stage_index', 'stage_name', 'started_at', 'due_at', 'ended_at', 'breached', 'final_minutes'])
+            : collect();
+
+        // Tasks + checklist (staff only).
+        $tasks = collect();
+        if ($isStaff) {
+            $taskRows = DB::table('request_tasks')->where('request_id', $request->id)
+                ->orderBy('position')->orderBy('created_at')
+                ->get(['id', 'title', 'description', 'status', 'priority', 'progress_pct', 'due_at', 'assigned_to']);
+            $checklist = DB::table('request_task_checklist')
+                ->whereIn('task_id', $taskRows->pluck('id'))
+                ->orderBy('position')
+                ->get(['id', 'task_id', 'label', 'is_done'])
+                ->groupBy('task_id');
+            $tasks = $taskRows->map(fn ($t) => [
+                'id' => $t->id, 'title' => $t->title, 'description' => $t->description,
+                'status' => $t->status, 'priority' => $t->priority, 'progress_pct' => (int) $t->progress_pct,
+                'due_at' => $t->due_at,
+                'checklist' => ($checklist[$t->id] ?? collect())->map(fn ($c) => [
+                    'id' => $c->id, 'label' => $c->label, 'is_done' => (bool) $c->is_done,
+                ])->values(),
+            ]);
+        }
+
+        // Reassignment candidates (staff for this category's team).
+        $staffCandidates = [];
+        if ($isStaff && ($user->hasCapability('request.assign') || $user->hasCapability('request.reassign'))) {
+            $staffCandidates = DB::table('profiles')
+                ->join('user_roles', 'user_roles.user_id', '=', 'profiles.id')
+                ->where('user_roles.role', '!=', 'customer')
+                ->where('profiles.suspended', false)
+                ->orderBy('profiles.full_name')
+                ->distinct()
+                ->limit(200)
+                ->get(['profiles.id', 'profiles.full_name']);
+        }
+
+        // SLA summary (staff): remaining minutes, breach/at-risk tier.
+        $sla = null;
+        if ($isStaff && $request->due_at && ! in_array($status, self::TERMINAL, true)) {
+            $due = \Illuminate\Support\Carbon::parse($request->due_at);
+            $created = \Illuminate\Support\Carbon::parse($request->created_at);
+            $remaining = now()->diffInMinutes($due, false);
+            $paused = (bool) $request->sla_paused_at;
+            $tier = 'ok';
+            if (! $paused) {
+                if ($remaining < 0) {
+                    $tier = 'breach';
+                } else {
+                    $window = max(1, $created->diffInMinutes($due));
+                    $pct = 1 - ($remaining / $window);
+                    $tier = $pct >= 0.9 ? 'critical' : ($pct >= 0.75 ? 'warn' : 'ok');
+                }
+            }
+            $sla = [
+                'due_at' => $request->due_at,
+                'response_due_at' => $request->response_due_at,
+                'first_response_at' => $request->first_response_at,
+                'remaining_minutes' => $remaining,
+                'paused' => $paused,
+                'tier' => $tier,
+            ];
+        }
+
         return Inertia::render('Requests/Show', [
             'request' => [
                 'id' => $request->id,
@@ -314,9 +390,25 @@ class RequestController extends Controller
                     'email' => $request->customer->email,
                     'phone' => $request->customer->phone,
                 ] : null,
-                'assignee' => $request->assignee ? ['full_name' => $request->assignee->full_name] : null,
+                'assignee' => $request->assignee ? ['id' => $request->assignee->id, 'full_name' => $request->assignee->full_name] : null,
+                'assigned_team' => $request->assigned_team?->value ?? $request->assigned_team,
                 'attachments_count' => $attachments->count(),
+                'reopened_count' => (int) ($request->reopened_count ?? 0),
+                'escalation_level' => (int) ($request->escalation_level ?? 0),
+                'escalated_at' => $request->escalated_at,
+                'current_stage_index' => $request->current_stage_index,
+                'current_stage_name' => $request->current_stage_name,
+                'returned_to_customer_at' => $request->returned_to_customer_at,
+                'return_reason' => $request->return_reason,
+                'external_wait_party' => $request->external_wait_party,
+                'closure_reason_public' => $request->closure_reason_public,
+                'closure_reason_code' => $request->closure_reason_code,
             ],
+            'fieldValues' => $fieldValues,
+            'stages' => $stages,
+            'tasks' => $tasks,
+            'staffCandidates' => $staffCandidates,
+            'sla' => $sla,
             'comments' => $commentsOut,
             'activity' => $activity,
             'attachments' => $attachments,
@@ -325,12 +417,17 @@ class RequestController extends Controller
             'isOwner' => $isOwner,
             'can' => [
                 'close' => $isStaff && $user->hasCapability('request.close'),
-                'reopen' => $isStaff && $user->hasCapability('request.reopen'),
+                'reopen' => ($isStaff && $user->hasCapability('request.reopen')) || ($isOwner && in_array($status, ['closed', 'completed'], true)),
                 'assign' => $isStaff && ($user->hasCapability('request.assign') || $user->hasCapability('request.reassign')),
                 'update_status' => $isStaff && $user->hasCapability('request.update_status'),
                 'change_priority' => $isStaff && $user->hasCapability('request.change_priority'),
                 'comment_internal' => $isStaff && $user->hasCapability('request.internal_comment'),
+                'escalate' => $isStaff && $user->hasCapability('request.escalate'),
+                'return_to_customer' => $isStaff && $user->hasCapability('request.return_to_customer'),
+                'manage_tasks' => $isStaff,
+                'transition_stage' => $isStaff && $user->hasCapability('request.update_status'),
                 'rate' => $isOwner && ! $isStaff && in_array($status, ['completed', 'closed'], true),
+                'verify' => $isOwner && ! $isStaff && in_array($status, ['awaiting_customer', 'in_progress', 'completed'], true),
             ],
         ]);
     }
@@ -510,6 +607,247 @@ class RequestController extends Controller
         $this->log($request->id, $user->id, 'rated', null, (string) $data['stars']);
 
         return back()->with('success', 'شكراً لتقييمك');
+    }
+
+    /** Assign the request to the current staff member. */
+    public function assignSelf(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! ($user->hasCapability('request.assign') || $user->hasCapability('request.reassign'))) {
+            abort(403);
+        }
+        $from = $request->assigned_to;
+        $request->assigned_to = $user->id;
+        $request->save();
+        $this->log($request->id, $user->id, 'assigned_self', $from, $user->id);
+
+        return back()->with('success', 'تم إسناد الطلب إليك');
+    }
+
+    /** Escalate the request one level. */
+    public function escalate(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! $user->hasCapability('request.escalate')) {
+            abort(403, 'لا تملك صلاحية التصعيد.');
+        }
+        $data = $httpRequest->validate(['reason' => ['nullable', 'string', 'max:2000']]);
+        $bump = ['low' => 'medium', 'medium' => 'high', 'high' => 'urgent', 'urgent' => 'urgent'];
+        $prio = $request->priority?->value ?? $request->priority;
+
+        $request->fill([
+            'status' => 'escalated',
+            'escalation_level' => (int) ($request->escalation_level ?? 0) + 1,
+            'escalated_at' => now(),
+            'priority' => $bump[$prio] ?? $prio,
+        ])->save();
+
+        $this->log($request->id, $user->id, 'escalated', $prio, $request->priority?->value ?? $request->priority, $data['reason'] ?? null);
+        app(\App\Services\NotificationService::class)->notifyRoles(
+            ['system_admin', 'support_supervisor'], 'تم تصعيد طلب',
+            "تم تصعيد الطلب {$request->request_number}.", $request->id, "/requests/{$request->id}"
+        );
+
+        return back()->with('success', 'تم تصعيد الطلب');
+    }
+
+    /** Return the request to the customer for more information. */
+    public function returnToCustomer(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! $user->hasCapability('request.return_to_customer')) {
+            abort(403);
+        }
+        $data = $httpRequest->validate(['reason' => ['required', 'string', 'max:2000']]);
+
+        $category = $request->category_id ? DB::table('categories')->where('id', $request->category_id)->first() : null;
+        $days = $category->auto_close_days ?? 5;
+
+        $request->fill([
+            'status' => 'awaiting_customer',
+            'returned_to_customer_at' => now(),
+            'return_reason' => $data['reason'],
+            'auto_close_due_at' => now()->addDays($days),
+        ])->save();
+
+        $this->log($request->id, $user->id, 'returned_to_customer', null, null, $data['reason']);
+        app(\App\Services\NotificationService::class)->notify(
+            $request->customer_id, 'طلبك بحاجة إلى ردّك',
+            "الطلب {$request->request_number} بانتظار ردّك.", $request->id, "/requests/{$request->id}", 'request'
+        );
+
+        return back()->with('success', 'تمت إعادة الطلب للعميل');
+    }
+
+    /** Resume processing (from an awaiting state back to in_progress). */
+    public function resume(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff()) {
+            abort(403);
+        }
+        $from = $request->status?->value ?? $request->status;
+        $request->fill([
+            'status' => 'in_progress',
+            'auto_close_due_at' => null,
+            'returned_to_customer_at' => null,
+        ])->save();
+        $this->log($request->id, $user->id, 'resumed', $from, 'in_progress');
+
+        return back()->with('success', 'تم استئناف المعالجة');
+    }
+
+    /** Advance or roll back the current workflow stage. */
+    public function transitionStage(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! $user->hasCapability('request.update_status')) {
+            abort(403);
+        }
+        $data = $httpRequest->validate([
+            'stage_index' => ['required', 'integer', 'min:0', 'max:20'],
+            'stage_name' => ['required', 'string', 'max:100'],
+        ]);
+
+        // Close the currently open stage log row.
+        DB::table('request_stage_sla_log')
+            ->where('request_id', $request->id)->whereNull('ended_at')
+            ->update(['ended_at' => now(), 'updated_at' => now()]);
+
+        // Resolve stage SLA and compute the due date via business hours.
+        $cfg = DB::table('stage_sla_config')
+            ->where('category_id', $request->category_id)
+            ->where('stage_index', $data['stage_index'])
+            ->first();
+        $baseMinutes = (int) ($cfg->base_minutes ?? 480);
+        $respectBh = (bool) ($cfg->respect_business_hours ?? true);
+        $due = (new \App\Services\Sla\SlaService)->computeDeadline(now(), $baseMinutes, $respectBh);
+
+        DB::table('request_stage_sla_log')->insert([
+            'id' => (string) Str::uuid(),
+            'request_id' => $request->id,
+            'stage_index' => $data['stage_index'],
+            'stage_name' => $data['stage_name'],
+            'priority' => $request->priority?->value ?? $request->priority,
+            'multiplier' => 1,
+            'base_minutes' => $baseMinutes,
+            'final_minutes' => $baseMinutes,
+            'started_at' => now(),
+            'due_at' => $due,
+            'paused_total_seconds' => 0,
+            'escalation_level' => 0,
+            'created_at' => now(),
+        ]);
+
+        $request->fill([
+            'current_stage_index' => $data['stage_index'],
+            'current_stage_name' => $data['stage_name'],
+            'current_stage_started_at' => now(),
+            'current_stage_due_at' => $due,
+            'stage_alert_75_sent_at' => null,
+            'stage_alert_90_sent_at' => null,
+        ])->save();
+
+        $this->log($request->id, $user->id, 'stage_transition', null, $data['stage_name']);
+
+        return back()->with('success', "تم الانتقال إلى مرحلة: {$data['stage_name']}");
+    }
+
+    /** Create a task on the request. */
+    public function addTask(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff()) {
+            abort(403);
+        }
+        $data = $httpRequest->validate([
+            'title' => ['required', 'string', 'max:200'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'priority' => ['nullable', 'string', 'in:low,medium,high,urgent'],
+        ]);
+        DB::table('request_tasks')->insert([
+            'id' => (string) Str::uuid(),
+            'request_id' => $request->id,
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'task_type' => 'main',
+            'status' => 'todo',
+            'priority' => $data['priority'] ?? 'medium',
+            'sla_impact' => 'none',
+            'sla_extension_applied' => false,
+            'sla_extension_minutes' => 0,
+            'created_by' => $user->id,
+            'position' => (int) DB::table('request_tasks')->where('request_id', $request->id)->count(),
+            'progress_pct' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $this->log($request->id, $user->id, 'task_created', null, $data['title']);
+
+        return back()->with('success', 'تمت إضافة المهمة');
+    }
+
+    /** Change a task's status. */
+    public function updateTask(Request $httpRequest, CrmRequest $request, string $task)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff()) {
+            abort(403);
+        }
+        $data = $httpRequest->validate(['status' => ['required', 'string', 'in:todo,in_progress,blocked,done,cancelled']]);
+        DB::table('request_tasks')->where('id', $task)->where('request_id', $request->id)->update([
+            'status' => $data['status'],
+            'progress_pct' => $data['status'] === 'done' ? 100 : DB::raw('progress_pct'),
+            'completed_at' => $data['status'] === 'done' ? now() : null,
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'تم تحديث المهمة');
+    }
+
+    /** Toggle a task checklist item. */
+    public function toggleChecklist(Request $httpRequest, CrmRequest $request, string $item)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff()) {
+            abort(403);
+        }
+        $row = DB::table('request_task_checklist')->where('id', $item)->first();
+        if ($row) {
+            DB::table('request_task_checklist')->where('id', $item)->update([
+                'is_done' => ! $row->is_done,
+                'done_at' => ! $row->is_done ? now() : null,
+                'done_by' => ! $row->is_done ? $user->id : null,
+                'updated_at' => now(),
+            ]);
+        }
+
+        return back();
+    }
+
+    /** Customer confirms whether their issue was resolved (verification card). */
+    public function verifySolution(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if ($request->customer_id !== $user->id) {
+            abort(403);
+        }
+        $data = $httpRequest->validate([
+            'resolved' => ['required', 'boolean'],
+            'note' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        if ($data['resolved']) {
+            $request->fill(['status' => 'completed', 'progress' => 100])->save();
+            $this->log($request->id, $user->id, 'customer_confirmed_resolved', null, null, $data['note'] ?? null);
+            $msg = 'شكراً لتأكيدك، تم إغلاق المعالجة';
+        } else {
+            $request->fill(['status' => 'in_progress'])->save();
+            $this->log($request->id, $user->id, 'customer_reported_unresolved', null, null, $data['note'] ?? null);
+            $msg = 'تم إبلاغ الفريق بأن المشكلة لم تُحل بعد';
+        }
+
+        return back()->with('success', $msg);
     }
 
     // ----------------------------------------------------------------------
