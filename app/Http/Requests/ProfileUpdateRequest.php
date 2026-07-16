@@ -26,6 +26,12 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            // Extended profiles fields (all optional).
+            'full_name' => ['nullable', 'string', 'max:191'],
+            'phone' => ['nullable', 'string', 'max:32'],
+            'city' => ['nullable', 'string', 'max:191'],
+            'region' => ['nullable', 'string', 'max:191'],
+            'business_field' => ['nullable', 'string', 'max:191'],
         ];
     }
 }

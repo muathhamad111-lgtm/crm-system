@@ -42,10 +42,12 @@ class User extends Authenticatable
         return $this->hasMany(UserRole::class, 'user_id');
     }
 
-    /** Array of role keys assigned to this user. */
+    /** Array of role keys (strings) assigned to this user. */
     public function roleKeys(): array
     {
-        return $this->roles()->pluck('role')->all();
+        return $this->roles()->pluck('role')
+            ->map(fn ($r) => $r instanceof \BackedEnum ? $r->value : $r)
+            ->all();
     }
 
     public function hasRole(string $role): bool
