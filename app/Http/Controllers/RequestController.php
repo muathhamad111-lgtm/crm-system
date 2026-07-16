@@ -403,6 +403,10 @@ class RequestController extends Controller
                 'external_wait_party' => $request->external_wait_party,
                 'closure_reason_public' => $request->closure_reason_public,
                 'closure_reason_code' => $request->closure_reason_code,
+                'approval_status' => $request->approval_status,
+                'approval_requested_at' => $request->approval_requested_at,
+                'approval_decided_at' => $request->approval_decided_at,
+                'approval_notes' => $request->approval_notes,
             ],
             'fieldValues' => $fieldValues,
             'stages' => $stages,
@@ -428,6 +432,9 @@ class RequestController extends Controller
                 'transition_stage' => $isStaff && $user->hasCapability('request.update_status'),
                 'rate' => $isOwner && ! $isStaff && in_array($status, ['completed', 'closed'], true),
                 'verify' => $isOwner && ! $isStaff && in_array($status, ['awaiting_customer', 'in_progress', 'completed'], true),
+                'request_approval' => $isStaff && ! $user->isSupervisor() && $request->approval_status !== 'pending' && ! in_array($status, self::TERMINAL, true),
+                'approve' => $user->isSupervisor() && $request->approval_status === 'pending',
+                'upload' => $isStaff || $isOwner,
             ],
         ]);
     }
@@ -848,6 +855,116 @@ class RequestController extends Controller
         }
 
         return back()->with('success', $msg);
+    }
+
+    /** Assignee/staff submits the request for supervisor approval. */
+    public function requestApproval(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff()) {
+            abort(403);
+        }
+        $data = $httpRequest->validate(['note' => ['nullable', 'string', 'max:2000']]);
+
+        $request->fill([
+            'approval_status' => 'pending',
+            'approval_requested_at' => now(),
+            'approval_requested_by' => $user->id,
+            'approval_decided_at' => null,
+            'approval_decided_by' => null,
+            'approval_notes' => $data['note'] ?? null,
+        ])->save();
+
+        $this->log($request->id, $user->id, 'approval_requested', null, null, $data['note'] ?? null);
+        app(\App\Services\NotificationService::class)->notifyRoles(
+            ['support_supervisor', 'system_admin'], 'طلب موافقة إشرافية',
+            "الطلب {$request->request_number} بانتظار موافقتك.", $request->id, "/requests/{$request->id}"
+        );
+
+        return back()->with('success', 'تم رفع الطلب للموافقة الإشرافية');
+    }
+
+    /** Supervisor approves or rejects a pending approval. */
+    public function decideApproval(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isSupervisor()) {
+            abort(403, 'الموافقة الإشرافية تتطلّب دورًا إشرافيًا.');
+        }
+        $data = $httpRequest->validate([
+            'decision' => ['required', 'string', 'in:approved,rejected'],
+            'note' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $request->fill([
+            'approval_status' => $data['decision'],
+            'approval_decided_at' => now(),
+            'approval_decided_by' => $user->id,
+            'approval_notes' => $data['note'] ?? $request->approval_notes,
+        ])->save();
+
+        $this->log($request->id, $user->id, 'approval_'.$data['decision'], null, null, $data['note'] ?? null);
+
+        if ($request->approval_requested_by) {
+            $label = $data['decision'] === 'approved' ? 'اعتماد' : 'رفض';
+            app(\App\Services\NotificationService::class)->notify(
+                $request->approval_requested_by, "تم {$label} طلب الموافقة",
+                "الطلب {$request->request_number}: {$label} من المشرف.", $request->id, "/requests/{$request->id}", 'request'
+            );
+        }
+
+        return back()->with('success', $data['decision'] === 'approved' ? 'تمت الموافقة' : 'تم الرفض');
+    }
+
+    /** Upload one or more attachments to the request. */
+    public function uploadAttachment(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        $isStaff = $user->isStaff();
+        $this->authorizeView($user, $request, $isStaff);
+
+        $httpRequest->validate([
+            'file' => ['required', 'file', 'max:20480'], // 20 MB
+        ]);
+
+        $file = $httpRequest->file('file');
+        $path = $file->store("requests/{$request->id}", 'public');
+
+        DB::table('request_attachments')->insert([
+            'id' => (string) Str::uuid(),
+            'request_id' => $request->id,
+            'file_name' => $file->getClientOriginalName(),
+            'file_url' => '/storage/'.$path,
+            'file_size' => $file->getSize(),
+            'mime_type' => $file->getMimeType(),
+            'uploaded_by' => $user->id,
+            'created_at' => now(),
+        ]);
+
+        $this->log($request->id, $user->id, 'attachment_added', null, $file->getClientOriginalName());
+
+        return back()->with('success', 'تم رفع المرفق');
+    }
+
+    /** Delete an attachment (uploader or staff). */
+    public function deleteAttachment(Request $httpRequest, CrmRequest $request, string $attachment)
+    {
+        $user = $httpRequest->user();
+        $row = DB::table('request_attachments')->where('id', $attachment)->where('request_id', $request->id)->first();
+        if (! $row) {
+            abort(404);
+        }
+        if (! $user->isStaff() && $row->uploaded_by !== $user->id) {
+            abort(403);
+        }
+
+        if ($row->file_url && str_starts_with($row->file_url, '/storage/')) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete(substr($row->file_url, strlen('/storage/')));
+        }
+        DB::table('request_attachments')->where('id', $attachment)->delete();
+        $this->log($request->id, $user->id, 'attachment_removed', $row->file_name, null);
+
+        return back()->with('success', 'تم حذف المرفق');
     }
 
     // ----------------------------------------------------------------------

@@ -23,3 +23,11 @@ Route::post('/requests/{request}/tasks', [RequestController::class, 'addTask'])-
 Route::patch('/requests/{request}/tasks/{task}', [RequestController::class, 'updateTask'])->name('requests.updateTask');
 Route::post('/requests/{request}/checklist/{item}', [RequestController::class, 'toggleChecklist'])->name('requests.toggleChecklist');
 Route::post('/requests/{request}/verify', [RequestController::class, 'verifySolution'])->name('requests.verify');
+
+// Supervisor approval
+Route::post('/requests/{request}/request-approval', [RequestController::class, 'requestApproval'])->name('requests.requestApproval');
+Route::post('/requests/{request}/decide-approval', [RequestController::class, 'decideApproval'])->name('requests.decideApproval');
+
+// Attachments
+Route::post('/requests/{request}/attachments', [RequestController::class, 'uploadAttachment'])->name('requests.uploadAttachment');
+Route::delete('/requests/{request}/attachments/{attachment}', [RequestController::class, 'deleteAttachment'])->name('requests.deleteAttachment');

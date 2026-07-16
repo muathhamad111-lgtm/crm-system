@@ -84,6 +84,17 @@ class User extends Authenticatable
         return $this->hasRole('system_admin') && $this->isInternalEmail() && ! $this->isSuspended();
     }
 
+    /** Supervisory roles that may approve escalations/closures. */
+    public function isSupervisor(): bool
+    {
+        if (! $this->isStaff()) {
+            return false;
+        }
+        $sup = ['support_supervisor', 'product_manager', 'tech_manager', 'management team', 'system_admin'];
+
+        return count(array_intersect($this->roleKeys(), $sup)) > 0;
+    }
+
     /** Capability check via the role_permissions matrix (cached 5 min). */
     public function hasCapability(string $capability): bool
     {

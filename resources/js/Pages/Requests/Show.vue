@@ -22,6 +22,7 @@ import {
     ArrowRight, Tag, Package, Clock, Paperclip, Star, MessageSquare, Lock,
     GaugeCircle, UserCog, ArrowUpCircle, ListTodo, CheckCircle2, CircleDot,
     Undo2, Play, RotateCcw, ShieldCheck, Activity, Plus,
+    ClipboardCheck, Upload, FileText, Trash2, Download,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -108,6 +109,36 @@ function submitRating() { rateForm.post(`/requests/${r.value.id}/rate`, { preser
 const verifyForm = useForm({ resolved: true, note: '' });
 function verify(resolved) { verifyForm.resolved = resolved; verifyForm.post(`/requests/${r.value.id}/verify`, { preserveScroll: true }); }
 
+// --- Attachments ---
+const uploadForm = useForm({ file: null });
+const fileInput = ref(null);
+function onFile(e) { uploadForm.file = e.target.files[0]; if (uploadForm.file) upload(); }
+function upload() {
+    uploadForm.post(`/requests/${r.value.id}/attachments`, {
+        forceFormData: true, preserveScroll: true,
+        onSuccess: () => { uploadForm.reset(); if (fileInput.value) fileInput.value.value = ''; },
+    });
+}
+function removeAttachment(a) {
+    if (confirm('حذف المرفق؟')) router.delete(`/requests/${r.value.id}/attachments/${a.id}`, { preserveScroll: true });
+}
+function fileSize(bytes) {
+    if (!bytes) return '';
+    const kb = bytes / 1024;
+    return kb > 1024 ? (kb / 1024).toFixed(1) + ' م.ب' : Math.round(kb) + ' ك.ب';
+}
+
+// --- Supervisor approval ---
+const approvalForm = useForm({ note: '' });
+function requestApproval() { approvalForm.post(`/requests/${r.value.id}/request-approval`, { preserveScroll: true, onSuccess: () => approvalForm.reset() }); }
+const decideForm = useForm({ decision: 'approved', note: '' });
+function decide(decision) { decideForm.decision = decision; decideForm.post(`/requests/${r.value.id}/decide-approval`, { preserveScroll: true, onSuccess: () => decideForm.reset() }); }
+const approvalMeta = {
+    pending: { label: 'بانتظار الموافقة', tone: 'warning' },
+    approved: { label: 'معتمد', tone: 'success' },
+    rejected: { label: 'مرفوض', tone: 'destructive' },
+};
+
 // --- Unified timeline (comments + activity merged) ---
 const timeline = computed(() => {
     const c = props.comments.map((x) => ({ kind: 'comment', at: x.created_at, ...x }));
@@ -177,6 +208,30 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                                     <p class="text-xs text-muted-foreground">{{ f.label }}</p>
                                     <p class="text-sm font-medium">{{ typeof f.value === 'object' ? JSON.stringify(f.value) : (f.value ?? '—') }}</p>
                                 </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <!-- Attachments -->
+                    <Card>
+                        <CardHeader><CardTitle class="flex items-center gap-2"><Paperclip class="size-5" /> المرفقات <Badge variant="muted">{{ attachments.length }}</Badge></CardTitle></CardHeader>
+                        <CardContent class="space-y-3">
+                            <div v-for="a in attachments" :key="a.id" class="flex items-center gap-3 rounded-lg border border-border p-2.5">
+                                <FileText class="size-5 shrink-0 text-muted-foreground" />
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-sm font-medium">{{ a.file_name }}</p>
+                                    <p class="text-xs text-muted-foreground">{{ fileSize(a.file_size) }}</p>
+                                </div>
+                                <a :href="a.file_url" target="_blank" class="rounded-md p-1.5 text-muted-foreground hover:bg-muted" title="تنزيل"><Download class="size-4" /></a>
+                                <button v-if="isStaff" @click="removeAttachment(a)" class="rounded-md p-1.5 text-destructive hover:bg-muted" title="حذف"><Trash2 class="size-4" /></button>
+                            </div>
+                            <p v-if="!attachments.length" class="text-sm text-muted-foreground">لا توجد مرفقات.</p>
+                            <div v-if="can.upload">
+                                <input ref="fileInput" type="file" class="hidden" @change="onFile" />
+                                <Button size="sm" variant="outline" class="w-full gap-1" :disabled="uploadForm.processing" @click="fileInput?.click()">
+                                    <Upload class="size-4" /> {{ uploadForm.processing ? 'جارٍ الرفع…' : 'رفع مرفق' }}
+                                </Button>
+                                <p v-if="uploadForm.errors.file" class="mt-1 text-xs text-destructive">{{ uploadForm.errors.file }}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -321,6 +376,36 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                             <Button v-if="request.status === 'awaiting_customer' || request.status === 'awaiting_internal'" variant="outline" size="sm" class="w-full gap-1" @click="resume"><Play class="size-4" /> استئناف</Button>
                             <Button v-if="can.close && !isTerminal" variant="success" size="sm" class="w-full" @click="closeOpen = true">إغلاق الطلب</Button>
                             <Button v-if="can.reopen && isTerminal" variant="warning" size="sm" class="w-full gap-1" @click="reopen"><RotateCcw class="size-4" /> إعادة فتح</Button>
+                        </CardContent>
+                    </Card>
+
+                    <!-- Supervisor approval -->
+                    <Card v-if="isStaff && (request.approval_status || can.request_approval || can.approve)"
+                        :class="request.approval_status === 'pending' && 'sla-card-warn'">
+                        <CardHeader><CardTitle class="flex items-center gap-2"><ClipboardCheck class="size-5" /> الموافقة الإشرافية</CardTitle></CardHeader>
+                        <CardContent class="space-y-3">
+                            <div v-if="request.approval_status" class="flex items-center justify-between text-sm">
+                                <span class="text-muted-foreground">الحالة</span>
+                                <Badge :variant="approvalMeta[request.approval_status]?.tone ?? 'muted'">{{ approvalMeta[request.approval_status]?.label ?? request.approval_status }}</Badge>
+                            </div>
+                            <p v-if="request.approval_notes" class="rounded-lg bg-muted/40 p-2 text-sm">{{ request.approval_notes }}</p>
+
+                            <!-- Supervisor decides a pending approval -->
+                            <template v-if="can.approve">
+                                <Textarea v-model="decideForm.note" placeholder="ملاحظة القرار (اختياري)" class="min-h-16" />
+                                <div class="flex gap-2">
+                                    <Button size="sm" variant="success" class="flex-1" :disabled="decideForm.processing" @click="decide('approved')">اعتماد</Button>
+                                    <Button size="sm" variant="destructive" class="flex-1" :disabled="decideForm.processing" @click="decide('rejected')">رفض</Button>
+                                </div>
+                            </template>
+
+                            <!-- Assignee requests approval -->
+                            <template v-else-if="can.request_approval">
+                                <Textarea v-model="approvalForm.note" placeholder="سبب طلب الموافقة (اختياري)" class="min-h-16" />
+                                <Button size="sm" variant="accent" class="w-full gap-1" :disabled="approvalForm.processing" @click="requestApproval">
+                                    <ClipboardCheck class="size-4" /> رفع للموافقة الإشرافية
+                                </Button>
+                            </template>
                         </CardContent>
                     </Card>
 
