@@ -1,0 +1,16 @@
+# /etc/systemd/system/crm-worker.service
+# sudo systemctl enable --now crm-worker
+[Unit]
+Description=CRM queue worker
+After=network.target mysql.service
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+WorkingDirectory=/var/www/crm-system
+ExecStart=/usr/bin/php /var/www/crm-system/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target
