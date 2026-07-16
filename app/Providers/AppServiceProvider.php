@@ -30,5 +30,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Generic capability gate: Gate::allows('cap:<capability>') or @can('cap:x').
         Gate::define('cap', fn ($user, string $capability) => $user->hasCapability($capability));
+
+        \App\Models\Request::observe(\App\Observers\RequestObserver::class);
     }
 }
