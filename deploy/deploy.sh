@@ -15,6 +15,12 @@ WEB_USER="${WEB_USER:-www-data}"
 
 echo "▶ Deploying in: $APP_DIR"
 
+# Ensure the site is brought back up even if a step below fails.
+trap 'php artisan up >/dev/null 2>&1 || true' EXIT
+
+# The repo dir may be owned by the web user while CI runs as root.
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+
 # Put the app in maintenance mode (ignore if not yet bootable).
 php artisan down --render="errors::503" --retry=15 || true
 
