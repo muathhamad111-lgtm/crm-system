@@ -1,0 +1,101 @@
+[
+ {
+  "id": "033c9173-1a25-4ddf-8001-6cc866a6c299",
+  "code": "emergency",
+  "label_ar": "إجازة اضطرارية",
+  "description": "",
+  "color": "#f59e0b",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": true,
+  "sort_order": 3
+ },
+ {
+  "id": "1c0e16f2-30e0-42b5-9397-f9337c7863d0",
+  "code": "part_time",
+  "label_ar": "عمل جزئي",
+  "description": "",
+  "color": "#a3a3a3",
+  "requires_approval": true,
+  "affects_assignment": false,
+  "is_active": false,
+  "sort_order": 7
+ },
+ {
+  "id": "74aef107-d836-4d6a-a3b6-b1251eb835d9",
+  "code": "test",
+  "label_ar": "اختبار",
+  "description": "",
+  "color": "#6366f1",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": true,
+  "sort_order": 0
+ },
+ {
+  "id": "8a9719a2-cff1-4f25-a18a-a368d37ea6b0",
+  "code": "unavailable",
+  "label_ar": "عدم توفر مؤقت",
+  "description": "",
+  "color": "#64748b",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": true,
+  "sort_order": 8
+ },
+ {
+  "id": "8f947124-0f1d-489c-9903-af9c404fae98",
+  "code": "training",
+  "label_ar": "تدريب",
+  "description": "",
+  "color": "#06b6d4",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": false,
+  "sort_order": 6
+ },
+ {
+  "id": "a464746c-0d22-4120-9338-561cd64cfe4f",
+  "code": "annual",
+  "label_ar": "إجازة سنوية",
+  "description": "",
+  "color": "#10b981",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": true,
+  "sort_order": 1
+ },
+ {
+  "id": "a5dbab64-d720-4919-80a2-247646ea01f6",
+  "code": "secondment",
+  "label_ar": "انتداب",
+  "description": "",
+  "color": "#8b5cf6",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": false,
+  "sort_order": 5
+ },
+ {
+  "id": "ad460bbb-4c63-4e7f-b78b-6c412cc8ff55",
+  "code": "sick",
+  "label_ar": "إجازة مرضية",
+  "description": "",
+  "color": "#ef4444",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": false,
+  "sort_order": 2
+ },
+ {
+  "id": "fc478ac5-3a9f-4739-95ad-ab5888ca8b2b",
+  "code": "official",
+  "label_ar": "إجازة رسمية",
+  "description": "",
+  "color": "#3b82f6",
+  "requires_approval": true,
+  "affects_assignment": true,
+  "is_active": true,
+  "sort_order": 4
+ }
+]

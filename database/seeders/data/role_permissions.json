@@ -1,0 +1,4146 @@
+[
+ {
+  "id": "0014f37c-2a01-4937-bba9-b5b1e1af7b11",
+  "role": "tech_manager",
+  "capability": "report.employee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0017b3f8-ad21-4c22-b90d-e91c74dac71c",
+  "role": "tech_team",
+  "capability": "internal_comments",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0054d3e1-b8c5-4fef-93ff-f663ac90edba",
+  "role": "support_staff",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "007ceefa-5dd2-4e5c-ae08-8cf89ee54662",
+  "role": "product_manager",
+  "capability": "report.admin_dashboard",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "03633abd-20d0-4fb0-ab16-ce6b056917a7",
+  "role": "management team",
+  "capability": "staff.view_directory",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "037ff8d8-675a-425d-8159-1462d66826a0",
+  "role": "management team",
+  "capability": "appointments.view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "040596d2-7eea-4ad5-a9de-c092b4879510",
+  "role": "product_team",
+  "capability": "internal_comments",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "045cbfe7-5848-4a16-a914-ebc9c4981ba7",
+  "role": "product_manager",
+  "capability": "rating.extended_feedback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "055401b6-65b1-43e1-aabe-20fb6320a9e1",
+  "role": "product_manager",
+  "capability": "suggestions.stage.rollback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "055521e3-2ce1-496d-8049-892ce8087c9a",
+  "role": "tech_manager",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "05e81baf-2be3-4c18-83b0-c4b8fb6d2ee5",
+  "role": "management team",
+  "capability": "appointments.add_to_calendar",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "077b10f0-c05f-467e-8be2-e4d55189ea0f",
+  "role": "tech_manager",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "07ee42af-0cae-4825-a83d-570ba690067a",
+  "role": "customer",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "08350074-bf9b-461c-b15b-24338e659c80",
+  "role": "tech_manager",
+  "capability": "report.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "08767077-7228-4b84-a3f0-fce947c10663",
+  "role": "system_admin",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0a1bf1aa-478b-42d2-af54-7a1afe1ab1ef",
+  "role": "tech_manager",
+  "capability": "sla.pause",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0af3c35b-804d-4c07-928d-92b50b965ba6",
+  "role": "tech_manager",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0b1f2cbf-ec03-4d9a-96d4-08bf342b8661",
+  "role": "management team",
+  "capability": "suggestions.inbox",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0bdc7379-e91e-420e-a1ea-d4705d0430d9",
+  "role": "support_staff",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0ce12b9b-25fb-4324-871b-da7a7c09cb10",
+  "role": "tech_manager",
+  "capability": "admin.system_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0d352239-934b-4028-985b-2855be65f047",
+  "role": "management team",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0d69f19e-8e28-4cd1-856c-d28d2a9fb640",
+  "role": "product_manager",
+  "capability": "report.employee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0d749c6d-55fc-46b5-900d-999db6312df9",
+  "role": "product_team",
+  "capability": "suggestions.stage.advance",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0d8441e6-e25a-4093-b41c-6af7f639dc5d",
+  "role": "product_manager",
+  "capability": "report.regions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0dc179ab-c9dd-4b47-809a-60f57ee47e7a",
+  "role": "system_admin",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0e3b58d1-251c-4cc8-a284-6a5ee2bfb126",
+  "role": "tech_manager",
+  "capability": "sla.compliance_page",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0f2fd462-0890-4dc6-a260-7cc87be3a21f",
+  "role": "management team",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0f4b184a-b452-4103-970d-03e378691cee",
+  "role": "system_admin",
+  "capability": "request.bulk_action",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0f4cbc29-8b23-40fc-b367-e8b4508f4491",
+  "role": "management team",
+  "capability": "staff.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0f805f39-f022-49f4-a489-7371fddc5683",
+  "role": "support_supervisor",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "0f9d1d4e-a34e-4292-9ab0-2b959a8ac527",
+  "role": "support_staff",
+  "capability": "appointments.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1095bcbf-ad53-4dcb-93f4-eb54a9c705db",
+  "role": "management team",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "11132111-c024-403d-be4e-ff6822875338",
+  "role": "tech_manager",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "113a648c-4e37-46dd-83d1-bb2a0cc98f52",
+  "role": "system_admin",
+  "capability": "chat.respond",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "11b9ac2b-c6bd-482a-9fb5-b488f7af530b",
+  "role": "system_admin",
+  "capability": "data.export.staff",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1252dcfe-5a06-4c7c-bef6-c0f5e8107a86",
+  "role": "system_admin",
+  "capability": "internal_comments",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "12b8b616-b31c-4aac-a423-bfaab791a29e",
+  "role": "system_admin",
+  "capability": "manage_products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "134855b0-5530-4394-a42b-005af8f9a01a",
+  "role": "support_staff",
+  "capability": "request.customer_wait.return",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "136f288e-9772-42b5-a1d5-3c11b3287a57",
+  "role": "management team",
+  "capability": "contacts.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "138f6901-ae44-42f7-889a-3da16b5a2d7d",
+  "role": "customer",
+  "capability": "appointments.share",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1444f423-7e22-4c56-b295-694bbdc10326",
+  "role": "management team",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "14dae101-a960-4287-8e91-d6ed1f2ab716",
+  "role": "management team",
+  "capability": "report.heatmap",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "14f44828-c420-40e5-b48a-d867563fad39",
+  "role": "system_admin",
+  "capability": "admin.settings",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "155ed616-4aa6-44c2-93cc-040f007a4290",
+  "role": "support_staff",
+  "capability": "appointments.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1567709f-0a7b-44eb-b3fb-cd4f76a2f9c2",
+  "role": "tech_team",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "157a5ed8-3994-4fee-8d4b-bc8f191f599f",
+  "role": "product_manager",
+  "capability": "suggestions.inbox",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "160c1a78-2974-4026-a31c-c9a57de82d88",
+  "role": "product_manager",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1612119a-10be-4680-b7e4-b6de1ad868b1",
+  "role": "system_admin",
+  "capability": "assign_team_members",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1633cf08-46e5-47d6-8245-3ac39f84672f",
+  "role": "tech_manager",
+  "capability": "admin.audit_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1685de1e-fef7-4434-9163-2ad74cccd10e",
+  "role": "management team",
+  "capability": "suggestions.referral.audit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "168da8fc-6459-42d5-9cd7-48012fb6aa38",
+  "role": "customer",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1699e727-2854-4f2b-a5a4-c8dab3bad836",
+  "role": "management team",
+  "capability": "appointments.view_activity_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1741990c-f297-40a3-82ed-15b952cff06d",
+  "role": "support_supervisor",
+  "capability": "admin.quick_replies",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "17c0327b-fb87-45ae-bd72-b5870d5ef13e",
+  "role": "management team",
+  "capability": "leaves.view_team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "18422cba-f058-4540-8139-700648588523",
+  "role": "tech_manager",
+  "capability": "report.heatmap",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "188ea19c-e193-4566-8eb2-d4bbedf31438",
+  "role": "system_admin",
+  "capability": "staff.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "18c72365-3684-4b5c-8ab1-c84f4b5421fb",
+  "role": "system_admin",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "190e6fc0-909b-4403-85d2-5d75050049a8",
+  "role": "tech_team",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "191b6a6b-bff7-4eb8-b7f7-a8b7d11c6a9a",
+  "role": "tech_manager",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "19daa6fb-cee9-4ab8-b044-a7dbade9de97",
+  "role": "system_admin",
+  "capability": "appointments.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1ac871c8-6ffb-47c9-a426-b7febee4ddd5",
+  "role": "system_admin",
+  "capability": "suggestions.inbox",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1b2a6148-e474-4002-8a04-d8623db58b23",
+  "role": "product_manager",
+  "capability": "request.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1ba100d6-0ad7-4d5c-9496-38f4aad2a645",
+  "role": "product_team",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1c73bd9d-ce2b-40d0-829b-90b43d1b0021",
+  "role": "product_manager",
+  "capability": "suggestions.moderate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1cd83ffd-9819-486e-82e8-177396212694",
+  "role": "support_staff",
+  "capability": "appointments.view_activity_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1d1a1fce-57e9-4819-8b58-56b634e05554",
+  "role": "product_manager",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1d536215-5d49-4784-9de1-12fbdd4ed4fa",
+  "role": "support_staff",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1d64714c-9d1e-4828-84ab-39455bece856",
+  "role": "tech_team",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1d772300-a22f-4e2a-8adb-20fa9d666f77",
+  "role": "system_admin",
+  "capability": "appointments.reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1d7fdc1d-aaec-485c-8a7e-2a9e6dbf73f2",
+  "role": "support_supervisor",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1daffd21-d788-44ae-a2df-7646bfd08ff8",
+  "role": "management team",
+  "capability": "notifications.send_manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1e979207-961c-47c9-86f1-f7887a6b82ce",
+  "role": "support_staff",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1ee1bf36-96b8-4ec4-aded-bcca97383cf1",
+  "role": "product_manager",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1f343733-1cbc-43e6-92a8-530199e03405",
+  "role": "tech_manager",
+  "capability": "request.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1f436385-84f4-4d69-a7f8-cfb05fba9d24",
+  "role": "management team",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "1f6db37a-f21f-4557-9f31-c9d610a4134c",
+  "role": "support_supervisor",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "204b7e19-a73a-409d-a066-917383980945",
+  "role": "support_supervisor",
+  "capability": "request.change_category",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "21661748-f387-4891-a930-da4bb034ecc1",
+  "role": "support_supervisor",
+  "capability": "internal_comments",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "227449e1-ecbe-46a2-b062-82a13919aaa6",
+  "role": "support_supervisor",
+  "capability": "appointments.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "22d53e56-9f4d-497f-aea1-662142dc309a",
+  "role": "management team",
+  "capability": "suggestions.referral.notify",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "22dac119-d9e8-4bf9-8224-a46222051452",
+  "role": "management team",
+  "capability": "report.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "240cf304-81b6-4ab5-89e6-746981a2386c",
+  "role": "product_manager",
+  "capability": "request.change_category",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "24357b4b-0694-4b1b-8587-9f7eb7d1c886",
+  "role": "support_supervisor",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "25c9e2de-478d-4c80-9548-3e8383e75f7b",
+  "role": "support_supervisor",
+  "capability": "request.close.view_internal_note",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "261324c9-e990-4261-b468-96606e42d5c8",
+  "role": "product_team",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2644af19-348c-4db7-aae9-dabde6935263",
+  "role": "customer",
+  "capability": "appointments.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2651165d-d21d-4979-afbf-c1eb85b76f9a",
+  "role": "management team",
+  "capability": "data.export.customers",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "26cfaa20-de7a-439d-8250-ad380707a5ec",
+  "role": "support_supervisor",
+  "capability": "appointments.approve_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "274824ca-cf42-4da9-8501-74ce71cb33be",
+  "role": "management team",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "27836c26-d6d7-42c3-bad7-9e24f76aab94",
+  "role": "product_team",
+  "capability": "suggestions.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "27daddf2-3610-43cf-ac63-08a5538001dd",
+  "role": "management team",
+  "capability": "sla.pause",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "281c46b9-d766-4dfd-9ce0-e3182b9e8477",
+  "role": "support_staff",
+  "capability": "appointments.share",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2826666c-e786-4e3b-82f9-8af6df29d800",
+  "role": "support_staff",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "28a97395-b4f0-4eb8-8346-8c95a5b025c0",
+  "role": "system_admin",
+  "capability": "admin.numbering",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "28d58fa1-7174-47a8-a42b-49de3fe5eeea",
+  "role": "management team",
+  "capability": "contacts.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "28f33192-9275-4171-acad-59ce7bb939d3",
+  "role": "system_admin",
+  "capability": "admin.audit_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2924fefc-fd59-4db6-8172-2ca4d1c52c57",
+  "role": "support_supervisor",
+  "capability": "request.delete_attachment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "29409ea9-ce5c-43dc-94c8-458fe6841fe8",
+  "role": "system_admin",
+  "capability": "appointments.send_invite",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "294b6e46-54b7-4c8d-80b0-febad1cb353d",
+  "role": "system_admin",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "29a20cea-3cef-4f5b-9270-3823145e5662",
+  "role": "management team",
+  "capability": "request.close.view_internal_note",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "29b215a6-f698-4b38-8112-93b4a9b04dd1",
+  "role": "support_supervisor",
+  "capability": "appointments.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2a78ddd6-df3f-4520-9581-1745c00b174a",
+  "role": "support_staff",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2c496f82-c6a0-4215-9a32-83387296c954",
+  "role": "management team",
+  "capability": "request.reopen",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2c9af9a7-2c31-4be0-9e9f-410644a99c68",
+  "role": "management team",
+  "capability": "suggestions.stage.advance",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2cd37297-36b5-4160-941d-0a79b930187f",
+  "role": "system_admin",
+  "capability": "appointments.reject_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2d1e57d7-19ea-4b82-bd3c-2221d3aba0e1",
+  "role": "system_admin",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2dd1b9ec-442b-49f9-9488-eda881623da8",
+  "role": "support_supervisor",
+  "capability": "availability.manage_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2e211cb3-1802-40e6-9fd3-c99318d86185",
+  "role": "support_staff",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2e7f370c-3fa8-4b37-8885-7411ba0b8b26",
+  "role": "management team",
+  "capability": "report.team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2f6142bf-14fa-45c3-8d35-12612e932121",
+  "role": "management team",
+  "capability": "suggestions.moderate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "2fe84fb1-f03b-48c7-830c-91fbaf332b45",
+  "role": "system_admin",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3026fe59-5547-4641-bbd9-a93e70658167",
+  "role": "management team",
+  "capability": "leaves.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "30576287-086c-4341-be7f-48d8d57df5dd",
+  "role": "product_manager",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "30672968-6925-4fe2-8a27-f3dfb9698a7e",
+  "role": "management team",
+  "capability": "suggestions.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3074c0b6-9475-4195-bb93-75f2dfb7b836",
+  "role": "product_team",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "30ef9b25-637c-441a-93ed-8d82754cb076",
+  "role": "support_supervisor",
+  "capability": "appointments.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "31849efd-4d50-4a93-a5e9-b245fdb63c1d",
+  "role": "support_supervisor",
+  "capability": "request.reopen.manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "329bb2ae-ee58-4b74-83de-b2b0ba190bae",
+  "role": "system_admin",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "32c865e3-0ba0-4a08-a025-4513b5872a17",
+  "role": "tech_manager",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "32dc2fd2-5d68-42a5-9dcc-f195d97b662e",
+  "role": "management team",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "33888a37-88a2-4e7b-bd23-e55f271990e4",
+  "role": "support_staff",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "340d7f36-adc6-42e1-a468-3c986676db41",
+  "role": "product_manager",
+  "capability": "suggestions.referral.view_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "34e7a1a9-b125-469d-b819-dc3cb0be73a5",
+  "role": "tech_manager",
+  "capability": "admin.reply_templates",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "35608eac-8edc-476b-bbcd-7c7665692831",
+  "role": "tech_manager",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "359550b0-56fd-4343-b344-bb6550a6d003",
+  "role": "support_staff",
+  "capability": "appointments.propose_alternative",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "35dd132e-5581-4417-9005-f654e79b165e",
+  "role": "tech_team",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "36ce2650-62f8-44f2-9385-e5aee93193e6",
+  "role": "system_admin",
+  "capability": "contacts.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3762d017-901a-45c4-86f8-3d8798e8f290",
+  "role": "tech_manager",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3765a598-0bc9-4bd0-8570-679243869cee",
+  "role": "support_supervisor",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "376a23f3-6c9b-4efc-8d4b-c217713c9f89",
+  "role": "management team",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "379409db-cce2-407b-b10d-3436ee04101e",
+  "role": "product_team",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "37972666-8b4c-4e61-a369-c9ecf915703c",
+  "role": "tech_team",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "39050368-8eca-4ab6-bc2e-acba890a85ed",
+  "role": "system_admin",
+  "capability": "admin.asana",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "390e5e80-ce8d-40a1-8ac2-039cf37e6d6b",
+  "role": "tech_team",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "399bd058-fd45-4593-ae10-11d9216a0a44",
+  "role": "product_manager",
+  "capability": "suggestions.stage.advance",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3a12b4f4-dfb4-4bce-9926-0f1fbcd36298",
+  "role": "support_supervisor",
+  "capability": "sla.pause",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3a5ae7b3-17ba-40f2-8993-dd74a73cea6f",
+  "role": "customer",
+  "capability": "create_request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3ab2e246-e63c-4c64-b280-ce7996ea09c3",
+  "role": "product_manager",
+  "capability": "report.team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3ccd975e-b4c5-4e7f-83d7-c371854f2df6",
+  "role": "tech_manager",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3d83d183-93ab-4fec-b154-74e82706e4a8",
+  "role": "customer",
+  "capability": "suggestions.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3e265aa0-b787-4064-8824-f8a43586fc35",
+  "role": "system_admin",
+  "capability": "admin.suspend_staff",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3e3401a4-6be6-4f27-83d9-d8076e8e3572",
+  "role": "tech_manager",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3e3ab29e-f9e5-4f24-b10b-5d3faf918b3a",
+  "role": "support_supervisor",
+  "capability": "report.employee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3f35b4ad-3b1e-4446-a5e2-fd65d516be05",
+  "role": "management team",
+  "capability": "governance.review_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3f799c3d-d311-4438-95bb-94e1affe7f9f",
+  "role": "management team",
+  "capability": "request.close",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3f85a0cb-ba2c-45bb-979a-a9d1750c461d",
+  "role": "product_manager",
+  "capability": "sla.pause",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3faed0e7-b70b-4d5b-aa6b-995051acaa76",
+  "role": "system_admin",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "3fd53136-2ad6-47d2-a978-751e7fbcb172",
+  "role": "management team",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4012f4d0-1f12-4ccc-9b56-8d75202ade34",
+  "role": "product_manager",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "407ebdfc-596d-46ec-829d-943c7fd90b3f",
+  "role": "system_admin",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4096884e-600c-401f-b81b-7676a13942e6",
+  "role": "system_admin",
+  "capability": "appointments.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "41326abb-4e9e-4cf8-8a60-96d4ecb53c49",
+  "role": "tech_team",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "41a15aa4-f6f6-44e2-9e90-49c59b74529e",
+  "role": "system_admin",
+  "capability": "admin.system_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "41e11626-45d8-42df-8d5d-4a1b0807728b",
+  "role": "customer",
+  "capability": "request.reopen",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "41f1dad1-01dc-4407-b2d0-743e19c1e9de",
+  "role": "product_manager",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4291a617-3091-406a-8022-b35f1d0ed90b",
+  "role": "system_admin",
+  "capability": "request.closure_reasons.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "42a1b919-94fc-4304-b155-ac81dfb3ef64",
+  "role": "management team",
+  "capability": "appointments.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "42e2b46e-aa6a-4ecd-9f40-55bd4fe5afb6",
+  "role": "management team",
+  "capability": "rating.extended_feedback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "43350fb2-85c8-4972-b639-882c6f835090",
+  "role": "tech_manager",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4362dd53-f81f-4d27-ace2-d5e018ed0f69",
+  "role": "support_staff",
+  "capability": "appointments.confirm",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4389f81e-c6ea-4d13-8008-82d691a533dd",
+  "role": "product_manager",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "439eb092-709a-461f-b047-abb7e50141b1",
+  "role": "management team",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "43d2b045-8789-4297-b550-d0a08a223925",
+  "role": "tech_team",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "443bdb81-d107-46cb-899c-5c20ef31f201",
+  "role": "system_admin",
+  "capability": "suggestions.referral.notify",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "45755ad3-95b7-47c9-a713-116d0910e42e",
+  "role": "support_supervisor",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "46892400-0058-4264-a8b2-953e80eb6515",
+  "role": "management team",
+  "capability": "leaves.approve",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "468c9359-1173-4538-808f-d74aa2521388",
+  "role": "system_admin",
+  "capability": "leaves.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "469b5d72-949e-4856-b259-ea35e14f827e",
+  "role": "customer",
+  "capability": "appointments.reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "47389ff6-3517-4046-b062-5e54aa4fc225",
+  "role": "management team",
+  "capability": "suggestions.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "48590d6a-5f8c-4984-8132-38fff63a2811",
+  "role": "system_admin",
+  "capability": "request.reopen.manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "48928bf4-32a5-4b03-a8b4-e6c3b1c7e3ea",
+  "role": "tech_manager",
+  "capability": "request.bulk_action",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "48df3fca-91b9-4869-b27f-1c48da11e3bc",
+  "role": "product_manager",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4964b25f-fd6d-4101-8464-3061ab08593d",
+  "role": "product_manager",
+  "capability": "report.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "49dec30a-0a57-45b9-a599-9e2256e4892c",
+  "role": "system_admin",
+  "capability": "pii.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4b046457-cb9b-496d-afb7-34c8b5d0d808",
+  "role": "support_supervisor",
+  "capability": "rating.send_reminder",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4d0b414d-740b-4d65-822c-7f56ab087c8d",
+  "role": "tech_team",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4d45c268-3b4e-4d61-a53b-dc4a6e4bbc93",
+  "role": "system_admin",
+  "capability": "report.regions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4d57bce6-8de3-456e-ab7b-13ec720f20e6",
+  "role": "tech_team",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4d748b7b-ef6e-4e3c-bf03-8782c3381365",
+  "role": "system_admin",
+  "capability": "report.satisfaction",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4e914e85-c54b-4aca-8f90-760180159c25",
+  "role": "management team",
+  "capability": "appointments.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4ecc41ba-75ed-4822-b59f-b16a2b324835",
+  "role": "support_staff",
+  "capability": "contacts.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4f0e93c0-634e-41a6-9127-d38b8d326e44",
+  "role": "management team",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "4fceef1e-4c77-4767-9433-b9c984777cdc",
+  "role": "system_admin",
+  "capability": "admin.categories",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "506cd9ef-60bc-4cd2-9ea6-f4070b7ca71f",
+  "role": "tech_manager",
+  "capability": "request.change_category",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "50b8ed04-df5f-4f89-88bf-b0fb22fd7f5e",
+  "role": "management team",
+  "capability": "request.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "50be3360-0be8-40c2-a042-77ef5fe03b05",
+  "role": "system_admin",
+  "capability": "suggestions.publish",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5108c9bf-467c-4f57-be7f-11dda91a486c",
+  "role": "system_admin",
+  "capability": "request.close.view_internal_note",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "53761c72-1754-4a73-b086-a7f5ec00bb37",
+  "role": "product_manager",
+  "capability": "admin.audit_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "53ea07a1-a322-4aef-952e-1ae14c9efa26",
+  "role": "product_team",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "544a110e-35a7-4e3c-b315-7c2c3819886c",
+  "role": "product_manager",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "552c35e0-62d0-4088-a70f-105e038485bb",
+  "role": "management team",
+  "capability": "appointments.reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "55a14401-3e98-4cf7-a324-ea5d53fa8174",
+  "role": "support_staff",
+  "capability": "appointments.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "55a5f772-3e41-48e9-9c56-caae3201130d",
+  "role": "system_admin",
+  "capability": "appointments.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "55ddaa5c-be29-425c-8ad3-d1e6a1503cde",
+  "role": "management team",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "561fbf4d-9490-479f-a6a1-13dc89212dec",
+  "role": "system_admin",
+  "capability": "sla.pause",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "562ed8dd-6749-4820-b6d5-8c28c62ef2cc",
+  "role": "product_manager",
+  "capability": "suggestions.referral.notify",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "56451707-95ce-4b2d-895f-3a21fcdd6bfa",
+  "role": "tech_team",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "56fb8bb1-539b-4827-99d6-27f6a2debbf8",
+  "role": "support_staff",
+  "capability": "appointments.add_to_calendar",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "572393cf-7fc1-4865-bcb5-73635bf19302",
+  "role": "tech_manager",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "575f05bf-943a-41ba-8bfb-8f5041eb7d36",
+  "role": "system_admin",
+  "capability": "request.close",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5772a2f7-6251-4096-b68f-aada9a9724a2",
+  "role": "system_admin",
+  "capability": "leaves.view_team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "57d294ac-5397-425d-9201-ce0f253f307d",
+  "role": "support_staff",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "57ea624b-d624-407e-8e0a-47f71606db9c",
+  "role": "support_staff",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5856837a-9956-4821-8d62-f2c43e0f7faf",
+  "role": "product_manager",
+  "capability": "report.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "596ede6e-ce15-4eaf-9e29-fefc9374058e",
+  "role": "tech_manager",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5a067045-9d02-42b7-9428-e4e5d6f7174a",
+  "role": "product_manager",
+  "capability": "rating.send_reminder",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5bb30472-d28e-4342-b75f-ee5d779af223",
+  "role": "management team",
+  "capability": "report.satisfaction",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5be33150-0219-4fe2-80f7-3c03cc209a4a",
+  "role": "support_supervisor",
+  "capability": "request.customer_wait.remind",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5c118fb5-4c4d-4ebb-af86-c5a9ba7a2730",
+  "role": "system_admin",
+  "capability": "manage_permissions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5c6ad1a8-3c34-4e15-91be-634b5a7c632e",
+  "role": "management team",
+  "capability": "assign_team_members",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5cc7c423-4bea-4394-883b-b6d1c783e7bd",
+  "role": "tech_manager",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5ce5c73a-ea47-49c3-a89c-33e4f1051f58",
+  "role": "system_admin",
+  "capability": "rating.extended_feedback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5d021718-0235-4e19-9eef-2b90827b5f65",
+  "role": "system_admin",
+  "capability": "appointments.view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5d5cd9ea-bf15-4c80-b5c1-ba19d08a8842",
+  "role": "product_manager",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5d7ca499-154e-42ae-b595-1d13d6a4547b",
+  "role": "system_admin",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5d9a4aa9-6031-47df-a70b-2d65f70424af",
+  "role": "system_admin",
+  "capability": "request.customer_wait.override",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5e576154-0df9-4495-a1f1-c02983304bfa",
+  "role": "support_supervisor",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5e619c7c-fb63-4455-8a54-1201ba6c9423",
+  "role": "product_team",
+  "capability": "update_request_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5ea38fd3-f370-4c32-8191-75d286f20a0c",
+  "role": "support_supervisor",
+  "capability": "staff.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "5f6abab1-f351-4059-b4b8-b61b788e2b70",
+  "role": "product_manager",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "604a2fe6-1a62-4082-af0b-4e5b79652b5d",
+  "role": "system_admin",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "60885294-81e7-4bb0-b25e-274a4bdbbbab",
+  "role": "system_admin",
+  "capability": "appointments.share",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "60d37517-6037-435a-9559-699ff12c8030",
+  "role": "management team",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6135ff31-9e39-494b-9029-bd4fdd83192d",
+  "role": "product_team",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6209609e-6656-4476-9de9-2cf6b6e6ceff",
+  "role": "management team",
+  "capability": "request.change_category",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6220053a-49ea-4c45-84dc-cd6c8a04df6a",
+  "role": "tech_team",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "63187b12-81ae-49e9-a348-862dab8169fe",
+  "role": "system_admin",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "635a384b-32d2-497f-8582-b8271da18393",
+  "role": "system_admin",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "636d2029-b2b7-4592-8f2a-77013484a0de",
+  "role": "product_team",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "637c00d4-4f56-4dcd-ac7e-2f859d7c2fd9",
+  "role": "support_supervisor",
+  "capability": "activity.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "639e6c90-2031-4406-9d2a-5e91df5437c4",
+  "role": "management team",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "647bf032-d9f3-481a-9714-734717cfb76d",
+  "role": "system_admin",
+  "capability": "staff.deactivate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "651a7d28-c261-4a5a-bc41-e80addd84b5f",
+  "role": "support_staff",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "657d4041-0d47-4b3f-9236-969fa7ff8885",
+  "role": "product_team",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "65ca0a94-e923-45d2-b387-623cddf8525f",
+  "role": "customer",
+  "capability": "rating.submit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "65e0773a-375f-4a30-b9d1-5d65a03f76aa",
+  "role": "product_team",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "65ffb175-000a-4cfe-8532-ef723e5c7786",
+  "role": "system_admin",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "661d923c-3e0f-489e-a2a4-a6ab475b5ef5",
+  "role": "management team",
+  "capability": "request.customer_wait.remind",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "66ff29d9-2f32-4f27-af94-9de1ab8faa68",
+  "role": "customer",
+  "capability": "appointments.reject_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "677d229f-df98-4bfd-a533-c443cc8e6340",
+  "role": "system_admin",
+  "capability": "suggestions.referral.view_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "67b7432c-40c3-4be1-bc23-1a973574ad65",
+  "role": "system_admin",
+  "capability": "admin.reply_templates",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "67d975dd-be30-4503-ae3c-b2be7fb766c1",
+  "role": "system_admin",
+  "capability": "leaves.approve",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "689d2537-7933-48fa-b4d2-d0464f76ccc8",
+  "role": "tech_manager",
+  "capability": "admin.integrations",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "68c5b508-c196-4859-9a71-4780411946bb",
+  "role": "product_manager",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6936e1a9-4df9-4d22-8253-8049aeda2b66",
+  "role": "system_admin",
+  "capability": "admin.fields.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "69fd5958-4e9c-4159-beb8-faefcc795bae",
+  "role": "product_manager",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6a087104-0009-490e-9783-c8be8a2b3ffd",
+  "role": "support_supervisor",
+  "capability": "report.satisfaction",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6ac515c7-6894-41ac-8c7e-eaffb31548b4",
+  "role": "product_team",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6aca838c-0612-46aa-afaa-dd9ceaf95faa",
+  "role": "system_admin",
+  "capability": "leaves.manage_policy",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6b16f4b5-638d-4839-8253-f8cb1c00c1df",
+  "role": "system_admin",
+  "capability": "suggestions.referral.audit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6bae87e9-ce5d-4918-9c12-dcf19ef38f3a",
+  "role": "support_supervisor",
+  "capability": "request.closure_reasons.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6c2a1670-1564-43eb-84a4-cc88a4f68229",
+  "role": "tech_team",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6c336ce0-dde8-4650-83e3-acddc51e593d",
+  "role": "support_staff",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6cc1a30b-210d-4554-a5a3-0565f5d9820b",
+  "role": "system_admin",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6cd6974f-9a26-4c29-bb73-4844ef766683",
+  "role": "product_manager",
+  "capability": "sla.compliance_page",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6d070765-76cd-4dc0-89cf-97f4f89a8c26",
+  "role": "support_supervisor",
+  "capability": "contacts.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6d1d13c4-6781-4dcb-b325-a20162437e31",
+  "role": "support_staff",
+  "capability": "appointments.send_invite",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6da12987-2b85-41b7-b98c-00958dcf381a",
+  "role": "support_supervisor",
+  "capability": "leaves.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6e72c49d-5b4b-41c5-a5f3-b918fe703d00",
+  "role": "management team",
+  "capability": "appointments.share",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "6fd44520-39d5-4a0d-9410-04ac54285858",
+  "role": "management team",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "702363bf-e53e-495a-bfe4-d9055f0d36c2",
+  "role": "support_staff",
+  "capability": "update_request_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7025bc99-77d5-424f-9d97-efe802c640ba",
+  "role": "tech_manager",
+  "capability": "admin.asana",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "70ba1f56-8d68-462c-8a90-663a0a07b08c",
+  "role": "support_staff",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "70bd9cc7-c5a7-4924-ba9d-f59932a1ca35",
+  "role": "management team",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "713b0cc8-d047-4cf1-8c84-40f95e7d2ced",
+  "role": "support_staff",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "71fbb516-cb72-45b4-87ae-001bba47b43b",
+  "role": "system_admin",
+  "capability": "admin.quick_replies",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7287aabe-32ae-4498-8085-abca62c21372",
+  "role": "system_admin",
+  "capability": "manage_integrations",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "73ecb87d-8057-4556-84b2-bd19f12c2ad1",
+  "role": "support_supervisor",
+  "capability": "rating.extended_feedback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "74218f32-f926-459a-a55e-bcff0f7fa891",
+  "role": "support_staff",
+  "capability": "appointments.approve_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "74e7357c-bf8b-4dc9-8727-9f16fd184d5c",
+  "role": "system_admin",
+  "capability": "request.delete_attachment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "753c7cb9-5652-4ed4-905e-7aa4546f2f3c",
+  "role": "system_admin",
+  "capability": "admin.completion_settings",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "756e39bb-0cd1-4cbd-a484-c60fc7854a01",
+  "role": "support_staff",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "75b2f213-d632-47f1-b857-e2f59a23000f",
+  "role": "tech_team",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "75ce1a64-9286-4ece-877c-fcd240c5cb63",
+  "role": "product_manager",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "75fb9d07-5d0e-40e8-88e8-1ad73af82266",
+  "role": "management team",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "76d18acd-3665-4ad8-9db0-812f99556a02",
+  "role": "support_supervisor",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "771b71fc-a4cd-4f36-b967-ef2432442b05",
+  "role": "system_admin",
+  "capability": "appointments.view_activity_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "772ce79b-9e00-4d7b-a04e-eea47505255d",
+  "role": "system_admin",
+  "capability": "data.export.customers",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "77a08a00-3be5-4c0b-8aae-5bd2305ad9ab",
+  "role": "tech_manager",
+  "capability": "request.change_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "780553f1-09b0-44fd-85fb-918e672ba598",
+  "role": "management team",
+  "capability": "customers.manage_subscriptions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "78244bc6-3b3d-4b0e-bb68-ec306fed4e73",
+  "role": "support_supervisor",
+  "capability": "update_request_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7892b16b-996d-42eb-9bfc-7f1306bc0a93",
+  "role": "customer",
+  "capability": "appointments.approve_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "78fa954a-5ced-4d7c-a5df-0bd5def90b3a",
+  "role": "product_manager",
+  "capability": "admin.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "79b15e77-1e7c-4a6e-ac21-b545f94dee1e",
+  "role": "product_team",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7a5e93b5-a8ff-4063-8944-8ba6127246c0",
+  "role": "system_admin",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7a653233-1aff-40df-aa54-2582a2f508ce",
+  "role": "management team",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7a6e74c6-6bab-4ba9-9ea1-fe3faa3a2d81",
+  "role": "customer",
+  "capability": "request.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7a7cac6a-6c83-4605-baf3-8e4f455f7c7a",
+  "role": "support_supervisor",
+  "capability": "staff.view_directory",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7ae42d6c-a6f1-4c0a-8ad3-fa81ebeaad4b",
+  "role": "tech_manager",
+  "capability": "request.delete_attachment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7b875aca-d78a-4bda-af6e-a902e63c81aa",
+  "role": "management team",
+  "capability": "data.export.requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7b98ee51-6610-4854-88dc-49917066b74c",
+  "role": "product_manager",
+  "capability": "report.satisfaction",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7c19bcf2-1a20-4c8d-b134-ca6a33f4fb07",
+  "role": "management team",
+  "capability": "appointments.manage_availability",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7c9e1124-5009-4a77-9397-64d7da0c16eb",
+  "role": "customer",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7cd608e1-54a0-46a8-9f5a-7ff772b40db2",
+  "role": "system_admin",
+  "capability": "suggestions.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7ced27e9-7c60-44a5-8881-7e7fee0d464b",
+  "role": "product_manager",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7e4803eb-7efd-4935-8c00-056478ea013d",
+  "role": "management team",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7f1a68e1-f7b0-4386-b2c3-29bfcca8f655",
+  "role": "product_manager",
+  "capability": "governance.review_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7f37b6cd-8c7d-43dd-a7d4-8aeb77299e7f",
+  "role": "tech_team",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7f4f42fe-6451-4731-bdb9-4bc2eb9f5b56",
+  "role": "tech_team",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7fb508f9-a3f5-48b0-aab7-564c9b43aa60",
+  "role": "support_staff",
+  "capability": "chat.respond",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7ff28b4a-d861-476d-8441-b52259f3a62c",
+  "role": "system_admin",
+  "capability": "report.team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "7ff3c5af-688c-4b52-aaf4-4af2d5c41bb6",
+  "role": "product_team",
+  "capability": "suggestions.referral.notify",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "80205461-3951-42da-b789-d9c37d56ea51",
+  "role": "system_admin",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "80828fa6-e2e7-41db-b610-b9d7ea209e17",
+  "role": "support_supervisor",
+  "capability": "leaves.approve",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "827c693d-1cd5-498c-963b-f29e6399c345",
+  "role": "product_team",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "830dea96-3442-4bd1-ae4d-57e0499d6b51",
+  "role": "management team",
+  "capability": "request.reopen.manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8396b2cf-26fc-46c6-b709-2a24d8918d93",
+  "role": "system_admin",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "83a71eda-1980-4a5a-9a86-2b8922cb39c9",
+  "role": "management team",
+  "capability": "appointments.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "844c1491-a29e-4006-ab62-2f98bef6d2d9",
+  "role": "system_admin",
+  "capability": "request.change_category",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "84b18723-b20b-4650-a35a-3a95bee320a1",
+  "role": "management team",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "84ea545a-fa19-4ec3-8b24-c6df67bb9ac2",
+  "role": "support_supervisor",
+  "capability": "request.bulk_action",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "84ec378e-77ca-447e-89be-0b85965b6541",
+  "role": "system_admin",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "858ac6d8-ca10-443c-b10b-bd5b73f951bc",
+  "role": "system_admin",
+  "capability": "manage_team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "85fb828d-7ee5-4d45-834a-9e34f898c144",
+  "role": "system_admin",
+  "capability": "appointments.manage_availability",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "86487a9e-eee7-45f2-b52c-3c31f56db3fc",
+  "role": "management team",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "865fde95-6992-4848-8b0e-5fb64d22fc43",
+  "role": "management team",
+  "capability": "data.export.suggestions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "880003d1-2989-4337-95e1-1ab498a947e8",
+  "role": "system_admin",
+  "capability": "suggestions.referral.bulk",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "884867cb-4ba6-4864-9c72-e92818d3a98c",
+  "role": "product_team",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "89009bc4-eb15-4f8f-a3a3-244c0068b75f",
+  "role": "customer",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8907ec5a-864b-41fb-b87f-715ca0b12a96",
+  "role": "tech_manager",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "895b02f6-6c41-4f33-969f-7248a43bfeb8",
+  "role": "management team",
+  "capability": "report.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "897f5334-a86c-4757-838a-4a60df756b10",
+  "role": "product_manager",
+  "capability": "suggestions.referral.manage_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8a381abe-4309-4c27-b8e1-fa791bab9af4",
+  "role": "product_manager",
+  "capability": "admin.reply_templates",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8a44da0d-ddcb-4fd3-99cf-b9fc43d78f01",
+  "role": "support_supervisor",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8a4b9a75-f173-4aac-906e-3b329a81a202",
+  "role": "system_admin",
+  "capability": "data.import",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8b37bf75-541c-40cb-afb6-e69afa7208a7",
+  "role": "management team",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8c71ae11-8124-4e67-b799-eaec323c64e7",
+  "role": "system_admin",
+  "capability": "report.heatmap",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8c94cfe7-c6da-41e9-8a2b-1ddc7aefa292",
+  "role": "support_supervisor",
+  "capability": "request.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8ca2fbb6-9c15-41d3-bfb1-fcbfe1110b75",
+  "role": "customer",
+  "capability": "rate_request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8cc70f91-712e-4038-9e7e-65412db30371",
+  "role": "management team",
+  "capability": "suggestions.score",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8d8e05ed-1152-4c97-95a8-a28638a7886c",
+  "role": "support_supervisor",
+  "capability": "report.team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8e909f11-e9b9-4f5b-a002-a2a0cf5f2f2b",
+  "role": "system_admin",
+  "capability": "admin.workflow",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8ebe444d-89b1-4f9c-99ff-1c0bd38631c6",
+  "role": "tech_manager",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8f6b2fe8-ae28-4052-ac85-529ddad86c39",
+  "role": "system_admin",
+  "capability": "report.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8f8139ea-36eb-479c-b55e-8ac0cadd8eae",
+  "role": "support_supervisor",
+  "capability": "appointments.reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8fafa464-44d1-447b-8516-f214543c97aa",
+  "role": "product_manager",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "8fda6ba8-c712-447f-a866-7d393043bcdd",
+  "role": "system_admin",
+  "capability": "appointments.confirm",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "91327f9d-6179-4d9a-a816-b2bdb3f72b6d",
+  "role": "management team",
+  "capability": "suggestions.referral.view_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9153aaaf-dc52-48dc-91bc-5aa98c7a9bc1",
+  "role": "system_admin",
+  "capability": "admin.sla_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "920807a2-957f-47e4-b477-2a13ec7c0526",
+  "role": "system_admin",
+  "capability": "contacts.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "920d8d94-cbd9-416c-b06d-9a9f1db56e54",
+  "role": "tech_manager",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "925e65e0-1364-4d29-bf8a-57bd63103271",
+  "role": "management team",
+  "capability": "appointments.confirm",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "926aa8f0-d5c1-4940-ae29-e2095f6da2c1",
+  "role": "support_staff",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "92b42b16-2ce8-4fb3-9a6c-1be2b49637bd",
+  "role": "product_manager",
+  "capability": "request.bulk_action",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "92fc43e7-0385-45a3-a65b-c954d5a61dae",
+  "role": "system_admin",
+  "capability": "request.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "93c2ed18-9112-4130-b3af-c11dfa30ac57",
+  "role": "system_admin",
+  "capability": "manage_categories",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "94482bce-b3c0-4dbb-8b47-bcc4c530edc9",
+  "role": "support_supervisor",
+  "capability": "appointments.confirm",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "94ae1780-4d96-49c6-bbc0-148e13579ecc",
+  "role": "system_admin",
+  "capability": "governance.run_healthcheck",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9534d943-7092-4ab4-9311-05962c8a01d4",
+  "role": "tech_manager",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "958f57c3-f3f2-4d83-8f38-9e718d6725ad",
+  "role": "system_admin",
+  "capability": "request.reopen",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "95c2b721-a968-4ff5-9442-45f3238a6767",
+  "role": "system_admin",
+  "capability": "customers.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "96404246-6851-4b8f-9e98-2c0743e1362f",
+  "role": "support_supervisor",
+  "capability": "leaves.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "98915ea2-7701-4708-96be-7bb6ac5586f2",
+  "role": "management team",
+  "capability": "customers.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "98c1d48b-6294-4afa-8c47-d5a56be186de",
+  "role": "support_supervisor",
+  "capability": "report.heatmap",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "98e2e13f-adf4-4398-b515-f046342024d3",
+  "role": "system_admin",
+  "capability": "view_audit_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "991ab2bd-aad5-4cba-88d3-f2276e4cf404",
+  "role": "support_supervisor",
+  "capability": "report.regions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9a28e202-9597-41ca-8ab4-4d807b15f73a",
+  "role": "support_supervisor",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9a339208-e1d6-412b-aa35-96c4b9afa0d9",
+  "role": "system_admin",
+  "capability": "request.change_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9a462bdb-00f0-42b1-b6ef-ee7042b5f95e",
+  "role": "management team",
+  "capability": "contacts.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9bb4f3a0-eb10-4426-85ac-a64e8b5b5974",
+  "role": "support_supervisor",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9bdbca91-c964-4119-a85a-7e25ecc4ff9b",
+  "role": "product_manager",
+  "capability": "suggestions.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9c4313af-b19b-40ea-b84e-320de74de272",
+  "role": "support_supervisor",
+  "capability": "assign_team_members",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9c48013b-7edc-48c5-8671-b024e1b3df61",
+  "role": "tech_manager",
+  "capability": "request.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9c717ae2-d91e-477f-89df-fbf109f9efea",
+  "role": "support_supervisor",
+  "capability": "notifications.send_manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9d218eff-8e15-434c-bed9-72134a96de6e",
+  "role": "system_admin",
+  "capability": "availability.manage_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9d8db454-3307-4b72-beb2-142d15bce463",
+  "role": "support_supervisor",
+  "capability": "appointments.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9dc17a1d-401e-4ecb-a8f3-97aae55a274a",
+  "role": "system_admin",
+  "capability": "suggestions.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9e0234f3-ab85-4803-b7ff-aada6394b6ea",
+  "role": "system_admin",
+  "capability": "activity.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9e4a85ea-5457-4e62-91f5-b47a2e167876",
+  "role": "product_manager",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9e88bc88-7d0f-4f36-8109-d82b0f331d3f",
+  "role": "support_staff",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9f533a45-91a6-4548-84a9-f7d16640642b",
+  "role": "system_admin",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9fa5c937-d602-43f7-b43f-ffc419c5c5a4",
+  "role": "system_admin",
+  "capability": "appointments.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "9fce0e62-eabe-478f-b7d7-01d94fc424bf",
+  "role": "system_admin",
+  "capability": "update_request_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a00cf491-a873-468f-a464-5edc2e72c306",
+  "role": "support_staff",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a1d1697e-2c1b-45eb-8d17-f13549789ed2",
+  "role": "management team",
+  "capability": "report.admin_dashboard",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a279c8a0-32a6-4bd6-a38c-8030f37a4310",
+  "role": "support_supervisor",
+  "capability": "leaves.view_team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a3bbeeb1-f18d-444f-9cde-169cccedd16a",
+  "role": "tech_manager",
+  "capability": "report.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a41bf90c-4abd-47f4-8c78-e637d69cf540",
+  "role": "system_admin",
+  "capability": "appointments.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a495a540-0ad1-48ae-90a2-037e8da3c6fa",
+  "role": "support_supervisor",
+  "capability": "request.close",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a4baa0d2-5a60-42bd-ab26-3a20686b0d96",
+  "role": "support_supervisor",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a4bf188f-312a-4201-8324-2fa9b8648c55",
+  "role": "system_admin",
+  "capability": "suggestions.decide",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a4d022de-f96b-4898-8c28-6a8dbbf21997",
+  "role": "product_team",
+  "capability": "suggestions.referral.view_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a4d9e0b7-860a-431e-bb62-6bf8dabdc294",
+  "role": "system_admin",
+  "capability": "admin.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a53aa341-3c80-444f-ab2b-6ab72b863b44",
+  "role": "system_admin",
+  "capability": "report.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a5b84d2f-a911-4bc1-b3ea-cfb21a1549e3",
+  "role": "product_manager",
+  "capability": "request.change_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a5c24189-3d22-4f88-8be9-742bf0290c09",
+  "role": "support_supervisor",
+  "capability": "request.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a65eba73-a87d-42e2-92ae-6694fe679986",
+  "role": "tech_team",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a6f6243a-8251-4477-9014-6cf1dc9df37d",
+  "role": "product_team",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a71952dd-c4d0-48f1-8b36-3ab165d9003a",
+  "role": "system_admin",
+  "capability": "request.customer_wait.return",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a71e2e39-ebd5-4710-84d2-8fad1e68ef43",
+  "role": "support_staff",
+  "capability": "internal_comments",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a7fa00b6-0041-4c34-85ed-4a1df6082ce8",
+  "role": "product_team",
+  "capability": "suggestions.score",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a82abc72-3c41-4f31-9263-2179e04917c0",
+  "role": "system_admin",
+  "capability": "request.close.edit_reason",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a84ce739-f154-41d4-9edb-132250766d60",
+  "role": "support_staff",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a8577798-5c91-466e-8a6a-a20396c47ee6",
+  "role": "management team",
+  "capability": "report.regions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a8de2da5-7eb1-4389-83ef-cc2edabe544d",
+  "role": "system_admin",
+  "capability": "admin.invite_staff",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a8eb9d2e-e899-4e30-b9ce-4450e07bc0a5",
+  "role": "product_team",
+  "capability": "suggestions.inbox",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a90e8167-a9e0-4be6-859a-effe279a389c",
+  "role": "management team",
+  "capability": "request.bulk_action",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "a9e80a53-d20e-4398-bb23-1c854bda1beb",
+  "role": "product_manager",
+  "capability": "suggestions.publish",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ab0bc848-b928-4382-ae21-34b3783fe98f",
+  "role": "management team",
+  "capability": "rating.send_reminder",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ab27549d-f5ff-49a6-9294-031bf89f90d4",
+  "role": "system_admin",
+  "capability": "system_log.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ab7a235d-8c77-48cd-b187-e1e1c7062fd7",
+  "role": "tech_manager",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ac14e989-1dc7-4126-90ad-6a08b37da607",
+  "role": "product_manager",
+  "capability": "suggestions.referral.bulk",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ac58a500-4c7d-43b2-90ab-1ac205968360",
+  "role": "tech_manager",
+  "capability": "report.regions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ad7e2c6d-ecc8-4b43-be32-caaab7bb251a",
+  "role": "support_supervisor",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ad8dbe76-f4ac-40bd-9356-d95084fb30ef",
+  "role": "system_admin",
+  "capability": "notifications.send_manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "adb4e074-f68c-4d01-9418-9f4fd1239404",
+  "role": "product_manager",
+  "capability": "report.heatmap",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "adf64daf-5c8f-45dd-8bdf-b5fb5923de65",
+  "role": "product_manager",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "aecdce4b-5217-4f78-a57e-d3e67fb3a40b",
+  "role": "product_manager",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "af100536-fb34-4bd2-bfd8-eecde0947809",
+  "role": "management team",
+  "capability": "leaves.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "af75cf24-b568-4b43-973c-f8357060b3ee",
+  "role": "support_supervisor",
+  "capability": "data.export.requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "afd45c59-0099-4c0c-8558-16968e496103",
+  "role": "management team",
+  "capability": "availability.manage_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b0643b07-f93d-4b17-8376-98e62eb210a0",
+  "role": "product_team",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b097744e-7d71-4d5c-9f47-27130d4cac81",
+  "role": "system_admin",
+  "capability": "sla.compliance_page",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b1995d53-f151-48e9-8dfa-d41da9debcf2",
+  "role": "support_supervisor",
+  "capability": "customers.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b1ed4e92-d14e-4b67-905a-04ee80293302",
+  "role": "management team",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b30e1f69-b228-4177-939d-8da21eec567e",
+  "role": "tech_manager",
+  "capability": "report.admin_dashboard",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b3303d47-0fcc-4b44-b0ae-d37836d3fa3d",
+  "role": "support_supervisor",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b3cb01bb-a3fa-4a97-bf50-db50e312cf00",
+  "role": "support_supervisor",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b63e1e39-2c17-45d9-b9d9-8ba252eaf334",
+  "role": "tech_manager",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b6898fd4-8754-4261-9190-77b27a1162f0",
+  "role": "system_admin",
+  "capability": "security.impersonate_user",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b6ac0fa9-66f7-493e-aa14-dcc1f1c8af66",
+  "role": "tech_team",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b7209461-8869-4d5f-9096-dbdc6b749eff",
+  "role": "system_admin",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b776dcd2-1577-45ad-898b-8252d6a38fc3",
+  "role": "support_staff",
+  "capability": "appointments.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b7848c68-a656-485a-8951-049956bb5827",
+  "role": "system_admin",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b7e204d0-c4ed-42ff-a7c5-5f6103e65a7d",
+  "role": "customer",
+  "capability": "appointments.add_to_calendar",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "b7fbc899-b08c-4fd3-867d-416002e5112c",
+  "role": "management team",
+  "capability": "request.escalate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ba1d4723-9a2d-48a3-ac35-43ea690f501b",
+  "role": "product_manager",
+  "capability": "suggestions.decide",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ba4dad9a-a721-43c0-b09f-697074bf2293",
+  "role": "system_admin",
+  "capability": "contacts.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ba6fcee8-4e2c-4da7-9084-e2bbe24f2a63",
+  "role": "support_staff",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bab66a1f-51ad-4c13-983a-7e070d3b7b5e",
+  "role": "product_team",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bab96d60-5a04-410f-a7b9-d3ad9361ad4f",
+  "role": "tech_manager",
+  "capability": "rating.extended_feedback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bae1aa97-9b6f-406e-a9eb-22635dc2de59",
+  "role": "support_supervisor",
+  "capability": "appointments.share",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bb24579e-ef99-470a-9c46-c2ecd2e1e20e",
+  "role": "support_supervisor",
+  "capability": "report.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bb370708-3969-4f19-920c-96f315f512ce",
+  "role": "product_team",
+  "capability": "comments.view_internal",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bb376fb9-7416-4713-b875-00c7e7d028a5",
+  "role": "management team",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bb567a26-42c8-489c-87df-831a0df1a633",
+  "role": "management team",
+  "capability": "request.change_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bbcdb1e2-b1ce-48a7-9bfe-ccaf6e0a5a09",
+  "role": "system_admin",
+  "capability": "leaves.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bc6e7c8e-0c02-4912-b98f-507ee2d7c69a",
+  "role": "product_manager",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bce3cc7b-53d6-42e9-8ec2-11d87fef4e3e",
+  "role": "system_admin",
+  "capability": "leaves.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bd0b23e8-eb32-4c78-a7a8-16c71e93951d",
+  "role": "system_admin",
+  "capability": "admin.delete_staff",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bd478d98-5fd4-4a42-a1ac-288f1eb7341d",
+  "role": "product_team",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bd9db38e-dd9e-4dc7-ba9e-4d9f81c91eb4",
+  "role": "support_supervisor",
+  "capability": "report.ops",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "be208b98-1ed6-49b8-bf71-c10e8b30393e",
+  "role": "system_admin",
+  "capability": "api.tokens.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "be4fada9-c040-4dab-9a48-30379d627097",
+  "role": "support_staff",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "be551619-5bb7-4768-b567-5c7c66bbf0c3",
+  "role": "product_manager",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bf0c674d-096f-488d-ac30-8a807c409b8a",
+  "role": "tech_team",
+  "capability": "update_request_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "bfa0fb6f-c417-4181-a0fe-2240cc423e74",
+  "role": "tech_manager",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c04f132a-287f-4537-84c9-247b7b42283f",
+  "role": "product_team",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c0fefa59-ac45-4c2c-944d-9820416c7a47",
+  "role": "support_supervisor",
+  "capability": "appointments.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c14291d7-9228-4151-8cce-a1f505561282",
+  "role": "product_manager",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c15630a8-c003-4634-8584-61687639953b",
+  "role": "system_admin",
+  "capability": "rating.send_reminder",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c39e59a3-2d32-4664-9772-659960dbedc6",
+  "role": "product_manager",
+  "capability": "suggestions.referral.override_assignee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c44f2097-62fd-44a5-b153-6ac4b14943a8",
+  "role": "support_supervisor",
+  "capability": "appointments.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c4695ac6-04c4-46d1-8693-8f7a1cdb14fa",
+  "role": "management team",
+  "capability": "request.reassign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c48b3f70-e545-4a9f-94be-ddc763a7df30",
+  "role": "system_admin",
+  "capability": "suggestions.delete",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c5f272c5-a07e-4e8f-9e52-020a7583914f",
+  "role": "customer",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c6964952-02ff-4944-8456-15737b76d618",
+  "role": "tech_team",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c6d14ead-3da5-49b5-a0a4-5044832133e1",
+  "role": "customer",
+  "capability": "appointments.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c7365b9e-afff-4e85-8203-7692e5e2359c",
+  "role": "customer",
+  "capability": "appointments.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c7829b61-01f9-459a-834a-65e3d7bfc8df",
+  "role": "system_admin",
+  "capability": "request.delete",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c7b78f95-54c6-4a0d-9aa8-398c76b734d1",
+  "role": "support_supervisor",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c841e55e-b205-4060-8045-7a161f67d75b",
+  "role": "support_staff",
+  "capability": "appointments.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c8dd6622-ad78-4756-826c-8a152bb16e17",
+  "role": "tech_manager",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "c977002c-4481-4cba-b573-599a3097bc77",
+  "role": "product_team",
+  "capability": "suggestions.moderate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cb0b5d78-df98-4a0e-868b-b708d544543a",
+  "role": "support_staff",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cb7d2166-65d5-4bb4-be45-13aaa33b7dd0",
+  "role": "product_team",
+  "capability": "suggestions.vote",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ccccc685-aea5-40ba-8794-ae5954d86a0d",
+  "role": "customer",
+  "capability": "chat.use",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ccfb7263-32ca-4131-98f6-1f8b7f1a5570",
+  "role": "support_staff",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cd3246db-0dfc-4e6d-a3e6-429e9425c0b8",
+  "role": "support_supervisor",
+  "capability": "request.reopen",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cd64743b-433d-41ff-80f2-d34818e4afff",
+  "role": "management team",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cd807c6b-c698-4118-b1a6-124a58f08f55",
+  "role": "product_manager",
+  "capability": "suggestions.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cde7479a-42e8-41be-9aed-748ebe2948fd",
+  "role": "system_admin",
+  "capability": "appointments.manage_settings",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ceb60d86-b1d1-4950-8312-4251eafb13e1",
+  "role": "system_admin",
+  "capability": "data.export.suggestions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cf6d69c0-16fe-456a-9404-6d400dd3971d",
+  "role": "support_supervisor",
+  "capability": "appointments.add_to_calendar",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "cfdc8d74-23aa-4a31-8dc7-5b6d67471a40",
+  "role": "management team",
+  "capability": "request.customer_wait.return",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d111a329-3cbd-46e9-af6d-714e3096760c",
+  "role": "management team",
+  "capability": "suggestions.decide",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d1366f19-ea78-4748-8373-e35a50f9596e",
+  "role": "management team",
+  "capability": "suggestions.referral.manage_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d1c554c3-199f-442e-bf37-613a57dbe06f",
+  "role": "system_admin",
+  "capability": "view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d24d1e49-2d0f-493d-a223-3988dbb260ae",
+  "role": "support_staff",
+  "capability": "request.close.view_internal_note",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d261e9eb-154e-4b3d-a1e1-f8a818e1f6bd",
+  "role": "product_team",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d2fd03fe-41ff-41a3-a39b-b08174266f95",
+  "role": "system_admin",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d302d946-f322-4d06-b878-be364471e001",
+  "role": "support_staff",
+  "capability": "appointments.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d36fce12-fc8e-4f61-987d-af805f481cdb",
+  "role": "system_admin",
+  "capability": "admin.team_roles",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d38b5770-54ec-4f05-9d7e-fef17e4d38ce",
+  "role": "management team",
+  "capability": "request.close.edit_reason",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d3a6e3fb-5810-4114-804b-8b75f2759b99",
+  "role": "product_manager",
+  "capability": "request.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d3d2ad30-bc7d-4b80-8c56-f77e8d72a275",
+  "role": "tech_team",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d3fa4fcb-dd87-4a04-ba19-888b5f9a38b8",
+  "role": "tech_manager",
+  "capability": "rating.send_reminder",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d419da4f-3c17-433a-8274-f0dbf842bc4b",
+  "role": "customer",
+  "capability": "appointments.view_activity_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d4312f6d-6285-4c01-a757-4d0fbf1746b2",
+  "role": "system_admin",
+  "capability": "suggestions.stage.advance",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d470a2d9-5dc8-40c9-a2b4-ee0f3c45e395",
+  "role": "system_admin",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d53b9eee-5ab7-461d-b689-576247b115bc",
+  "role": "management team",
+  "capability": "report.employee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d5b130e1-9cce-4ef3-943e-fb4f185aec28",
+  "role": "support_supervisor",
+  "capability": "appointments.send_invite",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d5dfa3ec-4024-4fbe-807e-2a61daae835f",
+  "role": "management team",
+  "capability": "appointments.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d731db27-b2bf-40c3-bd6e-123f04cb6341",
+  "role": "system_admin",
+  "capability": "suggestions.referral.override_assignee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d780aef6-7809-4e42-961a-d2a1927b8afe",
+  "role": "product_manager",
+  "capability": "suggestions.referral.audit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d7ad81dc-59ac-4859-be2d-8338cfc9cf3a",
+  "role": "system_admin",
+  "capability": "appointments.edit",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d82cd169-0909-4249-aa9a-843c7348eda1",
+  "role": "management team",
+  "capability": "admin.audit_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d8c00287-8ec6-474b-9cc7-7ee94f6d3b9d",
+  "role": "customer",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d8d00853-2a03-425c-84e5-5bb8de8e0ef9",
+  "role": "system_admin",
+  "capability": "report.admin_dashboard",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d976d2eb-e8f6-45ec-b00b-9a223c4aa52b",
+  "role": "management team",
+  "capability": "chat.respond",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d9b49742-6811-4245-a4c0-e16cd1c51d29",
+  "role": "product_team",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d9c98d81-5794-499c-91ca-97b5f0ce81c7",
+  "role": "system_admin",
+  "capability": "suggestions.score",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "d9dc29f0-4943-4a6a-b91e-b8916c238205",
+  "role": "system_admin",
+  "capability": "customers.manage_subscriptions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "da56cc5d-cf9a-416a-8789-be13c70e955e",
+  "role": "system_admin",
+  "capability": "data.export.requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "da7afff2-a1ae-4da0-864f-1cdba61a8917",
+  "role": "system_admin",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "da97ee04-0e76-42b1-afee-1b7875a59881",
+  "role": "system_admin",
+  "capability": "customers.view_list",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "daa3f4c6-3fad-4c1f-92d0-f4970a5ecb59",
+  "role": "support_supervisor",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "db1a4be8-bb34-43ff-8041-38cbf0f91298",
+  "role": "tech_team",
+  "capability": "leaves.view_own",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "db4c0304-c789-4f16-a048-fb017c7fa3d7",
+  "role": "system_admin",
+  "capability": "admin.teams",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "dbe92f47-6352-4f19-b489-28adc8f440ee",
+  "role": "tech_team",
+  "capability": "request.view_all",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "dbea37ea-6edd-4658-9b42-34f100b1365f",
+  "role": "support_staff",
+  "capability": "request.customer_wait.remind",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "dd7c1a3c-3fe2-4d3c-9148-afc2e2059f8b",
+  "role": "customer",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "dd8c13f6-0057-41b8-8699-10b202e5d500",
+  "role": "support_supervisor",
+  "capability": "request.customer_wait.return",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ddfb9370-bed5-4a4b-8ba4-61d1c6cd06da",
+  "role": "tech_manager",
+  "capability": "governance.review_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "df0a16f4-c25c-4692-8022-2c4d9ec2e8d9",
+  "role": "management team",
+  "capability": "pii.export",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "df2238d8-ec92-4db0-b3ba-bebb70dec2f1",
+  "role": "tech_manager",
+  "capability": "request.use_ai",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "df3c12fb-ad24-4d3d-bdbc-47760f5bdb6e",
+  "role": "tech_manager",
+  "capability": "report.team",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "df801075-a00b-4591-9c0b-1e4525676a12",
+  "role": "tech_manager",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e10ba822-7054-4435-ae06-5f4e42a4b74d",
+  "role": "management team",
+  "capability": "request.delete_attachment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e15c7792-8c5b-4d39-ac52-f583393a6667",
+  "role": "system_admin",
+  "capability": "report.employee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e18c2f88-3237-45e8-9d84-2054eac93048",
+  "role": "product_team",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e20d1727-8f35-416c-b093-1465ff9f47a2",
+  "role": "support_supervisor",
+  "capability": "view_all_requests",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e250d783-45e4-427a-a2ac-2dfd04fa0bce",
+  "role": "support_supervisor",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e393f4ee-53d8-400a-8297-6c22a1567834",
+  "role": "support_supervisor",
+  "capability": "appointments.manage_availability",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e3ac501f-4085-4ade-94ee-c9d305025f64",
+  "role": "system_admin",
+  "capability": "request.customer_wait.remind",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e46fd16b-acd1-4671-9471-4deb18bbee9a",
+  "role": "support_supervisor",
+  "capability": "appointments.view_reports",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e54a1c03-4fa7-4445-8f0e-b105b5e9bfb8",
+  "role": "support_supervisor",
+  "capability": "customers.manage_subscriptions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e675227c-10c1-4735-9877-937d2dc6db3c",
+  "role": "support_supervisor",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e73bf74c-cae3-4ab3-85a1-f63f4aed26ef",
+  "role": "support_supervisor",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e803e45a-09d3-4166-bbdd-96bbd46c36a6",
+  "role": "system_admin",
+  "capability": "appointments.add_to_calendar",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e8238e64-35f1-4f43-9c17-15d3e9aca181",
+  "role": "support_supervisor",
+  "capability": "appointments.reject_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e92908ce-4d4c-406c-8be2-4dfbef245704",
+  "role": "customer",
+  "capability": "appointments.send_invite",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e975b5d0-8a1e-4236-896d-9909506fb1fc",
+  "role": "system_admin",
+  "capability": "suggestions.stage.rollback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e97e7c81-db5a-4ed3-a7a7-0eeabb593dd4",
+  "role": "system_admin",
+  "capability": "staff.view_directory",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e99b22d7-d4ff-4ac9-a1e7-d06c58c0e670",
+  "role": "tech_manager",
+  "capability": "request.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e9ca00a8-0154-4d00-9a5f-899994e9830e",
+  "role": "system_admin",
+  "capability": "request.close_admin_override",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e9f207ec-f830-432b-bca5-d6d7823f951d",
+  "role": "management team",
+  "capability": "suggestions.stage.rollback",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "e9f638c2-2cd7-44cd-90b9-6ae9c931db9e",
+  "role": "support_supervisor",
+  "capability": "request.customer_wait.override",
+  "allowed": false,
+  "action_type": ""
+ },
+ {
+  "id": "ea213551-5221-479f-9239-cee25f63e5ca",
+  "role": "management team",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ea99901e-9fa1-4b7d-9494-9d6771895fee",
+  "role": "support_supervisor",
+  "capability": "customers.view_history",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "eb147bc3-85f1-475f-83d9-129d18d4e962",
+  "role": "management team",
+  "capability": "suggestions.referral.override_assignee",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ecbd7fee-a5b0-494f-804e-4ec9cb6472d5",
+  "role": "system_admin",
+  "capability": "request.assign",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ecde71da-bb40-43e6-8100-6168e2d3a4ac",
+  "role": "management team",
+  "capability": "request.customer_wait.override",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "edd28406-9883-4dce-9b92-2042a6f397fc",
+  "role": "management team",
+  "capability": "activity.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ee3365f7-47df-4e20-9fa3-6b4b11fb9565",
+  "role": "tech_team",
+  "capability": "request.return_to_customer",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ee48ce95-f129-4b08-b6b8-413e3a8c94cc",
+  "role": "system_admin",
+  "capability": "teams.members.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "eeb029c4-57f5-4522-ba33-30f29c84cf8b",
+  "role": "support_supervisor",
+  "capability": "admin.reply_templates",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ef42129e-29c7-4d0a-8385-061f4eda3542",
+  "role": "support_staff",
+  "capability": "appointments.reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ef5826d7-b664-4537-ba03-e6555f6725ac",
+  "role": "management team",
+  "capability": "suggestions.publish",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ef6b689f-73d5-4561-ac8f-9e4054513604",
+  "role": "system_admin",
+  "capability": "governance.review_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f04d20e9-b318-419e-947b-2a938cfa7a44",
+  "role": "tech_manager",
+  "capability": "notifications.send_manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f051fe88-a3e8-4d0e-b176-5c259b64773f",
+  "role": "system_admin",
+  "capability": "contacts.delete",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f06e083a-e29f-4279-82cc-cd1d11d6f8f5",
+  "role": "product_manager",
+  "capability": "notifications.send_manual",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f0962291-fa42-4c93-8c56-0cbd8b3f5797",
+  "role": "product_team",
+  "capability": "request.internal_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f0974380-ca05-4045-a47d-a286f99cdf22",
+  "role": "system_admin",
+  "capability": "admin.permissions",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f10b588a-b470-498d-b247-6ef6dc4690cb",
+  "role": "support_supervisor",
+  "capability": "chat.respond",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f1bd9ee5-d146-479b-94f9-fe7714a6ded4",
+  "role": "system_admin",
+  "capability": "appointments.approve_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f1cce894-2091-4860-8558-6227797d0050",
+  "role": "support_staff",
+  "capability": "request.public_comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f1f490c7-6a5a-4668-be28-451002afc868",
+  "role": "management team",
+  "capability": "leaves.cancel",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f2bdfdf0-49bd-4a4c-80b3-bed61c6e1596",
+  "role": "management team",
+  "capability": "sla.compliance_page",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f36239ef-8a26-45a2-890c-eac95324f201",
+  "role": "management team",
+  "capability": "appointments.reject",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f3dfdfe3-4d43-46cd-a8fa-4d7d9a2f0ce8",
+  "role": "support_supervisor",
+  "capability": "contacts.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f41c9ba2-53f7-4390-ac99-00234123b81b",
+  "role": "system_admin",
+  "capability": "suggestions.referral.manage_matrix",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f4aa9ece-b82c-4a37-9514-525c9d51eb83",
+  "role": "support_supervisor",
+  "capability": "appointments.propose_alternative",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f4f9a1d7-8a56-4ec1-86da-7f99648e06bd",
+  "role": "product_manager",
+  "capability": "request.delete_attachment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f4fea34f-07f8-4927-8d52-6fc84aa357ef",
+  "role": "support_staff",
+  "capability": "leaves.request",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f51c8924-e2fa-4e77-990f-bcdaa0786bf2",
+  "role": "tech_team",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f55cdbea-80d8-4cc2-b2a0-0c21147fdd80",
+  "role": "product_manager",
+  "capability": "suggestions.score",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f5739cff-ebc4-4849-9b3c-40ea26152dff",
+  "role": "system_admin",
+  "capability": "admin.notif_templates",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f5aa07dd-078b-48f5-9ce3-ad1814dcbf39",
+  "role": "system_admin",
+  "capability": "admin.integrations",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f5c98016-5f99-4842-b8e3-31b618d4db6e",
+  "role": "support_supervisor",
+  "capability": "request.update_progress",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f630f942-758e-4e64-acd7-31f1c5ad13d2",
+  "role": "management team",
+  "capability": "suggestions.referral.bulk",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f728dfa7-f60e-4a2a-aeac-079ef4b57f84",
+  "role": "support_supervisor",
+  "capability": "contacts.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f755f5d4-ada4-4558-a4a8-098ec13f73f5",
+  "role": "management team",
+  "capability": "appointments.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f7b70139-146e-4703-aec1-9e4f6d179ea1",
+  "role": "support_supervisor",
+  "capability": "rating.view",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f8be50c0-cbd5-4799-b4f5-e25732b0d7cd",
+  "role": "support_supervisor",
+  "capability": "appointments.view_activity_log",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f8cde782-b282-4a98-9fe4-fe8458b51e61",
+  "role": "support_staff",
+  "capability": "request.update_status",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f95cf464-06fa-4885-8104-41ee83eb3e14",
+  "role": "support_supervisor",
+  "capability": "suggestions.create",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f9a9f647-6a45-4967-946e-30aea409ac8b",
+  "role": "system_admin",
+  "capability": "suggestions.moderate",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "f9c686a7-2cb4-42e9-b4b2-94ada8152467",
+  "role": "support_supervisor",
+  "capability": "suggestions.view_public",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fa63d07d-b956-448a-a5ac-67e340f885b4",
+  "role": "support_staff",
+  "capability": "appointments.reject_reschedule",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fa937786-075c-49d0-97ed-e903cb637bd4",
+  "role": "product_manager",
+  "capability": "customers.view_profile",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fb437bca-d048-4af6-9777-7cc1f59378a4",
+  "role": "support_supervisor",
+  "capability": "request.close.edit_reason",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fbaacc1b-1cec-450a-89af-009a907d37ec",
+  "role": "system_admin",
+  "capability": "admin.stages.manage",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fc8bec3f-f71d-49b1-a4fe-52f91d308ec0",
+  "role": "customer",
+  "capability": "suggestions.comment",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fc9d56f5-a1fe-4b52-ade5-5f2c89b8f688",
+  "role": "product_manager",
+  "capability": "sla.monitor",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fd1aef86-3734-48f0-8757-d5484343bfeb",
+  "role": "support_supervisor",
+  "capability": "report.products",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fdbaa58b-07cb-4337-8e9b-b1e1a45f8ec1",
+  "role": "support_supervisor",
+  "capability": "sla.compliance_page",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fdfcfeb3-9cae-41d8-b2d1-eb19600a718b",
+  "role": "support_staff",
+  "capability": "notifications.receive",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "fed90c37-d22f-41d7-a8f9-b22806f0f3f1",
+  "role": "product_manager",
+  "capability": "request.attach",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "feeb65f3-8e38-4c83-9932-1149e3dbd73a",
+  "role": "support_supervisor",
+  "capability": "request.change_priority",
+  "allowed": true,
+  "action_type": ""
+ },
+ {
+  "id": "ffe26198-fbc1-48a9-a9d1-1504b8f6bd52",
+  "role": "system_admin",
+  "capability": "appointments.propose_alternative",
+  "allowed": true,
+  "action_type": ""
+ }
+]

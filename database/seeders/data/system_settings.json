@@ -1,0 +1,62 @@
+[
+ {
+  "key": "appointments_settings",
+  "value": "{\"enabled\": true, \"intro_title\": \"حجز موعد مع الفريق\", \"max_reschedules\": 2, \"allow_reschedule\": true, \"intro_description\": \"يمكنك حجز موعد مع فريقنا لمناقشة طلب قائم، الحصول على تدريب، ترتيب مكالمة، أو جدولة زيارة حسب الأوقات المتاحة.\", \"min_advance_hours\": 24, \"slot_interval_minutes\": 30, \"max_daily_per_assignee\": 8}"
+ },
+ {
+  "key": "attachments",
+  "value": "{\"max_mb\": 15}"
+ },
+ {
+  "key": "auto_close",
+  "value": "{\"default_days\": 5, \"reminder_days\": [1, 3]}"
+ },
+ {
+  "key": "business_hours",
+  "value": "{\"end\": \"17:00\", \"start\": \"08:00\", \"holidays\": [], \"weekdays\": [0, 1, 2, 3, 4]}"
+ },
+ {
+  "key": "closure",
+  "value": "{\"reopen\": {\"enabled\": true, \"window_days\": 3, \"stage_on_reopen\": \"previous\", \"allow_attachment\": true, \"max_reopen_count\": 3, \"use_business_days\": true, \"blocked_reason_codes\": [\"out_of_scope\", \"duplicate\", \"cancelled_by_customer\", \"rerouted\"], \"requires_internal_approval\": false}, \"channels\": {\"sms\": false, \"email\": false, \"portal\": true, \"whatsapp\": false}, \"quick_reasons\": [{\"code\": \"resolved\", \"label_ar\": \"تم حل الطلب بنجاح\", \"blocks_reopen\": false}, {\"code\": \"done\", \"label_ar\": \"تم تنفيذ المطلوب\", \"blocks_reopen\": false}, {\"code\": \"confirmed_by_customer\", \"label_ar\": \"تم تأكيد الحل من العميل\", \"blocks_reopen\": false}, {\"code\": \"no_response\", \"label_ar\": \"لم يرد العميل خلال المهلة المحددة\", \"blocks_reopen\": false}, {\"code\": \"duplicate\", \"label_ar\": \"الطلب مكرر\", \"blocks_reopen\": true}, {\"code\": \"out_of_scope\", \"label_ar\": \"الطلب خارج نطاق الخدمة\", \"blocks_reopen\": true}, {\"code\": \"cancelled_by_customer\", \"label_ar\": \"تم إلغاء الطلب بناءً على طلب العميل\", \"blocks_reopen\": true}, {\"code\": \"admin_close\", \"label_ar\": \"تم إغلاق الطلب إداريًا\", \"blocks_reopen\": false}, {\"code\": \"insufficient_data\", \"label_ar\": \"تعذر المعالجة بسبب نقص البيانات\", \"blocks_reopen\": false}, {\"code\": \"rerouted\", \"label_ar\": \"تم تحويل الطلب لمسار آخر\", \"blocks_reopen\": true}, {\"code\": \"other\", \"label_ar\": \"أخرى\", \"blocks_reopen\": false}], \"reason_required\": true, \"default_note_visibility\": \"internal\", \"notify_customer_on_close\": true, \"rating_enabled_after_close\": true}"
+ },
+ {
+  "key": "completion_confirmation",
+  "value": "{\"auto_close_days\": 3, \"rating_reminder\": {\"body\": \"مرحباً {customer_name}، نأمل ألا تنسى تقييم الخدمة المقدمة في الطلب \\\"{request_title}\\\" قبل الإغلاق التلقائي. تقييمك يساعدنا على التحسين المستمر.\", \"title\": \"⭐ تذكير: قيّم تجربتك مع الطلب {request_number}\"}, \"auto_close_notification\": {\"body\": \"مرحباً {customer_name}، تم إغلاق طلبك تلقائياً بعد مرور {days} أيام من اكتمال العمل دون تأكيد منكم. نسعد بتقييمكم للخدمة، ويمكنكم إعادة الفتح خلال ٧ أيام إذا لزم الأمر.\", \"title\": \"🔒 إغلاق تلقائي للطلب {request_number}\"}, \"completion_notification\": {\"body\": \"يرجى التحقق من اكتمال العمل وتقييم الخدمة ثم إغلاق الطلب. سيُغلق الطلب تلقائياً بعد {days} أيام في حال عدم تأكيدك.\", \"title\": \"✅ تم إنجاز طلبك {request_number} — بانتظار تأكيدك\"}}"
+ },
+ {
+  "key": "customer_business_fields",
+  "value": "[\"تقنية المعلومات\", \"التجارة الإلكترونية\", \"الصحة\", \"التعليم\", \"العقارات\", \"المقاولات\", \"الخدمات اللوجستية\", \"التجزئة\", \"المطاعم والضيافة\", \"الصناعة\", \"الخدمات المالية\", \"الإعلام والتسويق\", \"الاستشارات\", \"أخرى\"]"
+ },
+ {
+  "key": "customer_cities",
+  "value": "{\"تبوك\": [\"تبوك\", \"ضباء\", \"الوجه\", \"أملج\", \"حقل\", \"تيماء\"], \"حائل\": [\"حائل\", \"بقعاء\", \"الغزالة\", \"الشنان\", \"الحائط\", \"السميراء\"], \"عسير\": [\"أبها\", \"خميس مشيط\", \"بيشة\", \"النماص\", \"محايل عسير\", \"أحد رفيدة\", \"ظهران الجنوب\", \"تثليث\"], \"الجوف\": [\"سكاكا\", \"دومة الجندل\", \"القريات\", \"طبرجل\"], \"جازان\": [\"جازان\", \"صبيا\", \"صامطة\", \"أبو عريش\", \"الدرب\", \"بيش\", \"فرسان\"], \"نجران\": [\"نجران\", \"شرورة\", \"حبونا\", \"يدمة\", \"بدر الجنوب\"], \"الباحة\": [\"الباحة\", \"بلجرشي\", \"المندق\", \"العقيق\", \"قلوة\", \"المخواة\"], \"الرياض\": [\"الرياض\", \"الخرج\", \"الدوادمي\", \"المجمعة\", \"القويعية\", \"وادي الدواسر\", \"الأفلاج\", \"الزلفي\", \"شقراء\", \"عفيف\", \"رماح\", \"ثادق\", \"حريملاء\", \"ضرما\"], \"القصيم\": [\"بريدة\", \"عنيزة\", \"الرس\", \"البكيرية\", \"البدائع\", \"رياض الخبراء\", \"المذنب\", \"الأسياح\"], \"الشرقية\": [\"الدمام\", \"الخبر\", \"الظهران\", \"الأحساء\", \"الجبيل\", \"القطيف\", \"رأس تنورة\", \"بقيق\", \"الخفجي\", \"حفر الباطن\", \"النعيرية\"], \"مكة المكرمة\": [\"مكة المكرمة\", \"جدة\", \"الطائف\", \"القنفذة\", \"الليث\", \"رابغ\", \"خليص\", \"الكامل\", \"الجموم\", \"بحرة\"], \"الحدود الشمالية\": [\"عرعر\", \"رفحاء\", \"طريف\", \"العويقيلة\"], \"المدينة المنورة\": [\"المدينة المنورة\", \"ينبع\", \"العلا\", \"بدر\", \"خيبر\", \"الحناكية\", \"المهد\"]}"
+ },
+ {
+  "key": "customer_regions",
+  "value": "[\"الرياض\", \"مكة المكرمة\", \"المدينة المنورة\", \"القصيم\", \"الشرقية\", \"عسير\", \"تبوك\", \"حائل\", \"الحدود الشمالية\", \"جازان\", \"نجران\", \"الباحة\", \"الجوف\"]"
+ },
+ {
+  "key": "request_numbering",
+  "value": "{\"prefix\": \"REQ-\", \"suggestion_prefix\": \"PRD\"}"
+ },
+ {
+  "key": "role_label_overrides",
+  "value": "{\"customer\": \"عميل\"}"
+ },
+ {
+  "key": "suggestion_sla",
+  "value": "{\"study_days\": 10, \"voting_days\": 14, \"publish_days\": 3, \"decision_days\": 5, \"initial_review_days\": 2}"
+ },
+ {
+  "key": "support_channels",
+  "value": "{\"note\": \"فريق الدعم متاح خلال ساعات العمل الرسمية\", \"email\": \"support@example.com\", \"phone\": \"+966 11 000 0000\", \"whatsapp\": \"+966 50 000 0000\"}"
+ },
+ {
+  "key": "tasks_enabled",
+  "value": "true"
+ },
+ {
+  "key": "working_hours",
+  "value": "{\"enabled\": true, \"end_hour\": 17, \"holidays\": [], \"timezone\": \"Asia/Riyadh\", \"start_hour\": 8, \"working_days\": [0, 1, 2, 3, 4]}"
+ }
+]

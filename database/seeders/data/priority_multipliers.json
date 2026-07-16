@@ -1,0 +1,26 @@
+[
+ {
+  "priority": "urgent",
+  "multiplier": 1.0,
+  "label_ar": "عاجل (P1)",
+  "updated_by": null
+ },
+ {
+  "priority": "high",
+  "multiplier": 2.0,
+  "label_ar": "عالية (P2)",
+  "updated_by": null
+ },
+ {
+  "priority": "medium",
+  "multiplier": 4.0,
+  "label_ar": "متوسطة (P3)",
+  "updated_by": null
+ },
+ {
+  "priority": "low",
+  "multiplier": 8.0,
+  "label_ar": "منخفضة (P4)",
+  "updated_by": null
+ }
+]

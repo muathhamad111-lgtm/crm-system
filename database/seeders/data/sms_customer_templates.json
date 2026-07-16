@@ -1,0 +1,22 @@
+[
+ {
+  "event_type": "resolved",
+  "body_ar": "عزيزنا {customer_name}، تم حل طلبكم رقم {request_number} من قِبل {staff_name}. نرجو تقييم الخدمة عبر التطبيق. — فريق الدعم",
+  "description": "يُرسَل عند اكتمال حل التذكرة"
+ },
+ {
+  "event_type": "closed",
+  "body_ar": "عزيزنا {customer_name}، تم إغلاق طلبكم رقم {request_number}. شكراً لتواصلكم معنا. — فريق الدعم",
+  "description": "يُرسَل عند إغلاق التذكرة بأي طريقة"
+ },
+ {
+  "event_type": "awaiting_customer",
+  "body_ar": "عزيزنا {customer_name}، طلبكم رقم {request_number} يحتاج ردّاً منكم لمتابعة المعالجة. الرجاء الدخول للتطبيق. — فريق الدعم",
+  "description": "يُرسَل في كل مرة يُعاد الطلب فيها إلى العميل"
+ },
+ {
+  "event_type": "reopened",
+  "body_ar": "عزيزنا {customer_name}، تم إعادة فتح طلبكم رقم {request_number} وسنتابع معكم قريباً. — فريق الدعم",
+  "description": "يُرسَل عند إعادة فتح تذكرة مغلقة"
+ }
+]

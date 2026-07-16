@@ -1,0 +1,322 @@
+[
+ {
+  "capability": "activity.view",
+  "action_type": "view",
+  "description": "عرض سجل نشاط الموظفين"
+ },
+ {
+  "capability": "admin.fields.manage",
+  "action_type": "manage",
+  "description": "إدارة الحقول المخصصة للطلبات"
+ },
+ {
+  "capability": "admin.quick_replies",
+  "action_type": "manage",
+  "description": "إدارة الردود السريعة (يحل محل manage_quick_replies)"
+ },
+ {
+  "capability": "admin.stages.manage",
+  "action_type": "manage",
+  "description": "إدارة مراحل سير العمل"
+ },
+ {
+  "capability": "api.tokens.manage",
+  "action_type": "manage",
+  "description": "إنشاء وإلغاء مفاتيح/توكنز الوصول لتكاملات الأنظمة الخارجية."
+ },
+ {
+  "capability": "appointments.add_to_calendar",
+  "action_type": "manage",
+  "description": "إضافة الموعد إلى تقويم خارجي."
+ },
+ {
+  "capability": "appointments.approve_reschedule",
+  "action_type": "manage",
+  "description": "قبول طلب إعادة جدولة من العميل."
+ },
+ {
+  "capability": "appointments.cancel",
+  "action_type": "manage",
+  "description": "إلغاء موعد."
+ },
+ {
+  "capability": "appointments.confirm",
+  "action_type": "manage",
+  "description": "تأكيد موعد قيد الانتظار."
+ },
+ {
+  "capability": "appointments.create",
+  "action_type": "create",
+  "description": "إنشاء موعد جديد."
+ },
+ {
+  "capability": "appointments.edit",
+  "action_type": "edit",
+  "description": "تعديل بيانات الموعد (الوقت، النوع، الملاحظات، الموقع)."
+ },
+ {
+  "capability": "appointments.manage_availability",
+  "action_type": "manage",
+  "description": "إدارة الأوقات المتاحة وأيام العمل ومنع التعارض."
+ },
+ {
+  "capability": "appointments.manage_settings",
+  "action_type": "manage",
+  "description": "إدارة إعدادات النظام للمواعيد (أنواع، قواعد، إشعارات)."
+ },
+ {
+  "capability": "appointments.propose_alternative",
+  "action_type": "manage",
+  "description": "اقتراح وقت بديل للعميل."
+ },
+ {
+  "capability": "appointments.reject",
+  "action_type": "manage",
+  "description": "رفض موعد قيد الانتظار."
+ },
+ {
+  "capability": "appointments.reject_reschedule",
+  "action_type": "manage",
+  "description": "رفض طلب إعادة جدولة من العميل."
+ },
+ {
+  "capability": "appointments.reschedule",
+  "action_type": "manage",
+  "description": "إعادة جدولة موعد."
+ },
+ {
+  "capability": "appointments.send_invite",
+  "action_type": "manage",
+  "description": "إرسال دعوة بحضور الموعد لطرف ثالث."
+ },
+ {
+  "capability": "appointments.share",
+  "action_type": "manage",
+  "description": "مشاركة بيانات الموعد (نسخ رابط/نص)."
+ },
+ {
+  "capability": "appointments.view",
+  "action_type": "view",
+  "description": "عرض المواعيد المرتبطة بالمستخدم أو فريقه."
+ },
+ {
+  "capability": "appointments.view_activity_log",
+  "action_type": "view",
+  "description": "الاطلاع على سجل إجراءات الموعد."
+ },
+ {
+  "capability": "appointments.view_all",
+  "action_type": "view",
+  "description": "عرض جميع المواعيد في النظام بصرف النظر عن المسؤولية."
+ },
+ {
+  "capability": "appointments.view_reports",
+  "action_type": "view",
+  "description": "الاطلاع على لوحة مؤشرات وتقارير المواعيد."
+ },
+ {
+  "capability": "availability.manage_status",
+  "action_type": "edit",
+  "description": "إدارة حالات التوفر للموظفين"
+ },
+ {
+  "capability": "comments.view_internal",
+  "action_type": "view",
+  "description": "قراءة التعليقات الداخلية بين الفريق على الطلبات (مفصول عن صلاحية كتابتها)."
+ },
+ {
+  "capability": "contacts.create",
+  "action_type": "create",
+  "description": "إضافة جهة اتصال جديدة"
+ },
+ {
+  "capability": "contacts.delete",
+  "action_type": "delete",
+  "description": "حذف جهة اتصال"
+ },
+ {
+  "capability": "contacts.edit",
+  "action_type": "edit",
+  "description": "تعديل جهة اتصال"
+ },
+ {
+  "capability": "contacts.view",
+  "action_type": "view",
+  "description": "عرض جهات اتصال العميل"
+ },
+ {
+  "capability": "data.export.customers",
+  "action_type": "export",
+  "description": "تصدير بيانات العملاء"
+ },
+ {
+  "capability": "data.export.requests",
+  "action_type": "export",
+  "description": "تصدير الطلبات"
+ },
+ {
+  "capability": "data.export.staff",
+  "action_type": "export",
+  "description": "تصدير بيانات الموظفين"
+ },
+ {
+  "capability": "data.export.suggestions",
+  "action_type": "export",
+  "description": "تصدير الاقتراحات"
+ },
+ {
+  "capability": "data.import",
+  "action_type": "manage",
+  "description": "استيراد بيانات (Excel/CSV)"
+ },
+ {
+  "capability": "governance.review_matrix",
+  "action_type": "view",
+  "description": "مراجعة مصفوفة الصلاحيات دون صلاحية تعديلها (Audit-only للحوكمة)."
+ },
+ {
+  "capability": "governance.run_healthcheck",
+  "action_type": "manage",
+  "description": "تشغيل فحص صحة الحوكمة"
+ },
+ {
+  "capability": "leaves.approve",
+  "action_type": "manage",
+  "description": "الموافقة على طلب إجازة"
+ },
+ {
+  "capability": "leaves.cancel",
+  "action_type": "edit",
+  "description": "إلغاء طلب إجازة"
+ },
+ {
+  "capability": "leaves.manage_policy",
+  "action_type": "manage",
+  "description": "إدارة سياسات الإجازات وأنواعها"
+ },
+ {
+  "capability": "leaves.reject",
+  "action_type": "manage",
+  "description": "رفض طلب إجازة"
+ },
+ {
+  "capability": "leaves.request",
+  "action_type": "create",
+  "description": "طلب إجازة (للموظف نفسه)"
+ },
+ {
+  "capability": "leaves.view_all",
+  "action_type": "view",
+  "description": "عرض جميع الإجازات"
+ },
+ {
+  "capability": "leaves.view_own",
+  "action_type": "view",
+  "description": "عرض إجازاتي"
+ },
+ {
+  "capability": "leaves.view_team",
+  "action_type": "view",
+  "description": "عرض إجازات الفريق"
+ },
+ {
+  "capability": "manage_quick_replies",
+  "action_type": "manage",
+  "description": "إدارة الردود السريعة/الجاهزة المستخدمة في الرد على العملاء وإرجاع الطلبات للعملاء"
+ },
+ {
+  "capability": "pii.export",
+  "action_type": "export",
+  "description": "تصدير بيانات تحوي معلومات شخصية للعميل (PII). يُفصل عن تصدير التقارير العام للحوكمة."
+ },
+ {
+  "capability": "request.bulk_action",
+  "action_type": "manage",
+  "description": "تنفيذ عمليات جماعية على عدة طلبات في وقت واحد (إغلاق/إسناد/تغيير الحالة)."
+ },
+ {
+  "capability": "request.close",
+  "action_type": "write",
+  "description": "إغلاق الطلب نهائياً عند استيفاء شروط المرحلة وحالة الطلب."
+ },
+ {
+  "capability": "request.close_admin_override",
+  "action_type": "write",
+  "description": "إغلاق الطلب إدارياً مع تجاوز بعض الشروط (تأكيد العميل، اعتماد المشرف، ...)."
+ },
+ {
+  "capability": "request.close.edit_reason",
+  "action_type": "update",
+  "description": "تعديل سبب الإغلاق وملاحظته بعد الإغلاق"
+ },
+ {
+  "capability": "request.close.view_internal_note",
+  "action_type": "read",
+  "description": "عرض ملاحظة الإغلاق الداخلية في صفحة الطلب"
+ },
+ {
+  "capability": "request.closure_reasons.manage",
+  "action_type": "manage",
+  "description": "إدارة قوائم أسباب الإغلاق السريعة"
+ },
+ {
+  "capability": "request.create",
+  "action_type": "view",
+  "description": ""
+ },
+ {
+  "capability": "request.customer_wait.override",
+  "action_type": "manage",
+  "description": "تجاوز حالة بانتظار العميل"
+ },
+ {
+  "capability": "request.customer_wait.remind",
+  "action_type": "send",
+  "description": "إعادة إرسال تذكير للعميل"
+ },
+ {
+  "capability": "request.customer_wait.return",
+  "action_type": "edit",
+  "description": "تحويل الطلب إلى بانتظار العميل"
+ },
+ {
+  "capability": "request.reopen",
+  "action_type": "write",
+  "description": "إعادة فتح طلب مغلق وإرجاعه إلى مرحلة قابلة للعمل."
+ },
+ {
+  "capability": "request.reopen.manual",
+  "action_type": "manage",
+  "description": "إعادة فتح الطلب يدوياً من الفريق"
+ },
+ {
+  "capability": "security.impersonate_user",
+  "action_type": "manage",
+  "description": "انتحال هوية مستخدم لأغراض تشخيص الأعطال. عملية حساسة جداً ويُسجَّل كل استخدام."
+ },
+ {
+  "capability": "staff.deactivate",
+  "action_type": "manage",
+  "description": "تعليق/إعادة تفعيل موظف"
+ },
+ {
+  "capability": "staff.view_directory",
+  "action_type": "view",
+  "description": "عرض دليل الموظفين"
+ },
+ {
+  "capability": "staff.view_profile",
+  "action_type": "view",
+  "description": "عرض ملف موظف كامل"
+ },
+ {
+  "capability": "system_log.view",
+  "action_type": "view",
+  "description": "عرض سجل النظام التقني"
+ },
+ {
+  "capability": "teams.members.manage",
+  "action_type": "manage",
+  "description": "إدارة عضوية أعضاء الفرق"
+ }
+]

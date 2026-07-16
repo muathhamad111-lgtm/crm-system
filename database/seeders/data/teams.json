@@ -1,0 +1,57 @@
+[
+ {
+  "id": "02f0a05e-7fc7-4c11-9134-a3a52311d899",
+  "key": "tech team",
+  "name_ar": "فريق التقنية",
+  "description": "",
+  "color": "#10b981",
+  "manager_id": null,
+  "active": true,
+  "sort_order": 40,
+  "icon": "Code"
+ },
+ {
+  "id": "2370c707-56a0-4814-8ee1-f9a9ad23024d",
+  "key": "management team",
+  "name_ar": "فريق الإدارة",
+  "description": "",
+  "color": "#ef4444",
+  "manager_id": null,
+  "active": true,
+  "sort_order": 60,
+  "icon": "Users"
+ },
+ {
+  "id": "82819da9-7176-4320-9ea0-1c3e71d1cd49",
+  "key": "product team",
+  "name_ar": "فريق المنتج",
+  "description": "",
+  "color": "#8b5cf6",
+  "manager_id": null,
+  "active": true,
+  "sort_order": 30,
+  "icon": "Layers"
+ },
+ {
+  "id": "ad46b3e2-c56d-4e50-95cf-630d1cddd010",
+  "key": "finance team",
+  "name_ar": "فريق المالية",
+  "description": "",
+  "color": "#f59e0b",
+  "manager_id": null,
+  "active": true,
+  "sort_order": 50,
+  "icon": "DollarSign"
+ },
+ {
+  "id": "d13727f6-22f6-4d61-828e-0518d51e19ba",
+  "key": "Customer Success Team",
+  "name_ar": "فريق نجاح العملاء",
+  "description": "",
+  "color": "#3b82f6",
+  "manager_id": null,
+  "active": true,
+  "sort_order": 10,
+  "icon": "HeartHandshake"
+ }
+]

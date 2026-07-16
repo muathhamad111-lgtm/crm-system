@@ -1,0 +1,79 @@
+[
+ {
+  "id": "1af45730-87ad-455b-8c04-dadeb04ac75d",
+  "key": "webhook_outbound",
+  "name_ar": "Webhook خارجي للأحداث",
+  "config": "{\"url\": \"\", \"events\": [\"status_change\", \"new_request\"], \"secret_set\": false}",
+  "active": false
+ },
+ {
+  "id": "2a9b1f89-895e-48e0-81a9-a15778dc467b",
+  "key": "asana",
+  "name_ar": "Asana — مزامنة التذاكر",
+  "config": "{\"workspace_gid\": \"\", \"sync_on_create\": true, \"category_projects\": {}, \"default_project_gid\": \"\", \"close_on_asana_completed\": true}",
+  "active": false
+ },
+ {
+  "id": "539928c5-ce4a-42b0-89ac-fa9c7d171875",
+  "key": "ivr_local",
+  "name_ar": "مزود مكالمات IVR محلي",
+  "config": "{\"base_url\": \"\", \"provider\": \"unifonic\"}",
+  "active": false
+ },
+ {
+  "id": "5bc4c9d9-dee4-41d9-9c47-4aa01150bf02",
+  "key": "ai_web_chat",
+  "name_ar": "شات دعم بالذكاء الاصطناعي (داخل التطبيق)",
+  "config": "{\"model\": \"google/gemini-2.5-flash\", \"system_prompt\": \"\"}",
+  "active": true
+ },
+ {
+  "id": "a534f0cb-c424-4087-a411-f2a137ebd7d7",
+  "key": "email_smtp",
+  "name_ar": "البريد الإلكتروني (SMTP/Resend)",
+  "config": "{\"provider\": \"resend\", \"from_name\": \"نظام الطلبات\", \"from_email\": \"\", \"api_key_set\": false}",
+  "active": false
+ },
+ {
+  "id": "ea05495e-a5dd-4ef2-8122-7f61b66e8662",
+  "key": "rest_webhook_customers",
+  "name_ar": "مزامنة العملاء (REST/Webhook مخصص)",
+  "config": "{\"base_url\": \"\", \"auth_header\": \"Authorization\"}",
+  "active": false
+ },
+ {
+  "id": "fbc5d279-0624-4232-bc22-cd267eccc000",
+  "key": "api_access",
+  "name_ar": "مفتاح API للتكامل",
+  "config": "{\"key_set\": false, \"allowed_ips\": []}",
+  "active": false
+ },
+ {
+  "key": "analytics_bi_webhook",
+  "name_ar": "تحليلات BI — Webhook صادر",
+  "config": "{\"url\": \"\", \"events\": [], \"payload_format\": \"json\"}",
+  "active": false,
+  "id": "f9ce7d0c-2c21-40d2-92f1-205f563d46aa"
+ },
+ {
+  "key": "sentry",
+  "name_ar": "مراقبة الأخطاء (Sentry)",
+  "config": "{\"dsn_set\": false, \"environment\": \"production\", \"sample_rate\": 1.0}",
+  "active": false,
+  "id": "4646857c-c4e6-48fa-81ce-167cb7c5abaa"
+ },
+ {
+  "key": "whatsapp_business",
+  "name_ar": "WhatsApp Business (Twilio)",
+  "config": "{\"provider\": \"twilio\", \"from_number\": \"\", \"messaging_service_sid\": \"\"}",
+  "active": false,
+  "id": "823e5963-ab3e-450f-86dc-6651111cc323"
+ },
+ {
+  "key": "sms_provider",
+  "name_ar": "الرسائل القصيرة SMS (Twilio)",
+  "config": "{\"custom\": {\"method\": \"POST\", \"headers\": {}, \"auth_type\": \"bearer\", \"content_type\": \"application/json\", \"endpoint_url\": \"\", \"success_path\": \"status\", \"body_template\": \"{\"to\":\"{{to}}\",\"from\":\"{{from}}\",\"message\":\"{{body}}\"}\", \"success_value\": \"sent\", \"message_id_path\": \"message_id\", \"auth_header_name\": \"Authorization\"}, \"api_url\": \"\", \"provider\": \"twilio\", \"username\": \"\", \"sender_id\": \"\", \"api_key_set\": false, \"password_set\": false, \"api_secret_set\": false, \"default_country_code\": \"+966\"}",
+  "active": false,
+  "id": "7a8f9bda-0437-46c0-a32d-0edd09809e86"
+ }
+]

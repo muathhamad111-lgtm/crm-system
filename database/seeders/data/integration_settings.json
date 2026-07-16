@@ -1,0 +1,23 @@
+[
+ {
+  "id": "334ba0ed-2e62-4f19-8a92-14bc77824e92",
+  "key": "web_chat_ai",
+  "label": "شات بوت ذكاء اصطناعي داخل التطبيق",
+  "config": "{\"model\": \"google/gemini-2.5-flash\", \"system_prompt\": \"أنت مساعد دعم باللغة العربية. أجب باختصار واحترافية.\"}",
+  "enabled": true
+ },
+ {
+  "id": "ac6fd297-42dc-440a-9715-deaabe851b77",
+  "key": "rest_customers",
+  "label": "منصة العملاء (REST/Webhook)",
+  "config": "{\"base_url\": \"\", \"secret_env\": \"CUSTOMERS_API_KEY\", \"auth_header\": \"Authorization\"}",
+  "enabled": false
+ },
+ {
+  "id": "d2ee61f4-215f-42e4-9e90-3bf5897cf261",
+  "key": "ivr_local",
+  "label": "مزود IVR محلي",
+  "config": "{\"base_url\": \"\", \"provider\": \"unifonic\", \"secret_env\": \"IVR_API_KEY\"}",
+  "enabled": false
+ }
+]

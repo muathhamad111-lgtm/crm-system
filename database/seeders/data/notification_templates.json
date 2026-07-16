@@ -1,0 +1,242 @@
+[
+ {
+  "id": "0750182f-dfe9-4402-b7ea-3507039787b4",
+  "event_key": "subcategory_change",
+  "name_ar": "تغيير التصنيف الفرعي",
+  "title_template": "🏷️ تم تحديث التصنيف الفرعي لـ{{request_number}}",
+  "body_template": "",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "0fc6f0dd-dd82-4574-b0bd-868c3a5aaef2",
+  "event_key": "assigned",
+  "name_ar": "إسناد طلب",
+  "title_template": "تم إسناد طلب {{request_number}} إليك",
+  "body_template": "تم إسناد الطلب: {{title}}",
+  "channels": "{in_app,email}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "11f49d9e-54a1-44e5-a5f9-815088b81d20",
+  "event_key": "escalation_l2",
+  "name_ar": "تصعيد المستوى الثاني",
+  "title_template": "🚨 تصعيد L2 للطلب {{request_number}}",
+  "body_template": "الطلب {{request_number}} للعميل {{customer_name}} يحتاج تدخّل المستوى الثاني. الموعد النهائي: {{next_action_at}}.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "staff"
+ },
+ {
+  "id": "1a31966d-76d6-48ce-a8bb-256894fefe06",
+  "event_key": "role_changed",
+  "name_ar": "تغيير دور",
+  "title_template": "🔒 تغيير في الأدوار",
+  "body_template": "{{user_name}} — {{role}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "32c1ce5e-28c6-4f4b-8ef1-5d2f1af23333",
+  "event_key": "suggestion_comment_reply",
+  "name_ar": "رد على تعليق مقترح",
+  "title_template": "↩️ رد على تعليقك في {{request_number}}",
+  "body_template": "{{comment}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "32e7fe71-44d9-4fed-bbbb-7bf4336a463d",
+  "event_key": "sla_warning",
+  "name_ar": "تحذير SLA",
+  "title_template": "⚠️ اقتراب تجاوز SLA على {{request_number}}",
+  "body_template": "الموعد النهائي: {{due_at}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "3f335e6d-a050-4e4f-88b1-a9eda8e38efa",
+  "event_key": "permission_changed",
+  "name_ar": "تغيير صلاحية",
+  "title_template": "🔒 تغيير في الصلاحيات",
+  "body_template": "{{role}} — {{capability}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "44853409-12f5-4d9c-96b7-3c3cbc6c0dd6",
+  "event_key": "reopen",
+  "name_ar": "إعادة فتح الطلب",
+  "title_template": "🔄 تم إعادة فتح {{request_number}}",
+  "body_template": "{{title}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "49fed9df-931a-44a5-9ecc-67823b966d40",
+  "event_key": "attachment_added",
+  "name_ar": "إضافة مرفق",
+  "title_template": "📎 مرفق جديد على {{request_number}}",
+  "body_template": "{{file_name}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "524d70ff-fb52-4c81-ac1a-81a7df914df1",
+  "event_key": "category_change",
+  "name_ar": "تغيير التصنيف",
+  "title_template": "🏷️ تم تحديث تصنيف {{request_number}}",
+  "body_template": "",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "54df6fb0-5107-4677-8498-72e02e2f85b4",
+  "event_key": "sla_breach",
+  "name_ar": "تجاوز SLA",
+  "title_template": "تنبيه: تجاوز SLA للطلب {{request_number}}",
+  "body_template": "تجاوز الطلب الموعد المحدد للحل",
+  "channels": "{in_app,email}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "5af26abd-2145-43a3-83b2-34d4bf13752e",
+  "event_key": "auto_close_customer",
+  "name_ar": "إغلاق تلقائي - عميل",
+  "title_template": "🔒 تم إغلاق طلبك {{request_number}}",
+  "body_template": "مرحباً {{customer_name}}، تم إغلاق طلبك تلقائياً بعد {{auto_close_days}} أيام دون رد. شاركنا تقييمك للخدمة، ويمكنك إعادة الفتح خلال 7 أيام.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "67d00e62-093d-42b9-a8fa-77f0afe04dbe",
+  "event_key": "suggestion_published",
+  "name_ar": "نشر مقترح",
+  "title_template": "🚀 تم نشر مقترحك {{request_number}}",
+  "body_template": "",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "838763d2-bcfc-4c57-a2be-a92547b3d6f2",
+  "event_key": "csat_request",
+  "name_ar": "طلب تقييم الخدمة",
+  "title_template": "⭐ كيف كانت تجربتك مع الطلب {{request_number}}؟",
+  "body_template": "نسعد بتقييمك للخدمة المقدمة في طلب \"{{request_title}}\". تقييمك يساعدنا على التحسين المستمر.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "8903ddd7-f148-459d-9a70-f91d035f6223",
+  "event_key": "suggestion_comment",
+  "name_ar": "تعليق على مقترح",
+  "title_template": "💬 تعليق جديد على مقترحك {{request_number}}",
+  "body_template": "{{comment}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "8c56b57f-4738-4d85-be56-f354e3d95990",
+  "event_key": "escalation_l3",
+  "name_ar": "تصعيد المستوى الثالث (إدارة عليا)",
+  "title_template": "🔴 تصعيد L3 عاجل: {{request_number}}",
+  "body_template": "تنبيه إدارة: الطلب {{request_number}} ({{customer_name}}) تجاوز جميع مستويات الـSLA ويتطلب تدخلاً فورياً.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "staff"
+ },
+ {
+  "id": "9f89e398-806f-4602-80e9-5351e6528512",
+  "event_key": "new_request",
+  "name_ar": "طلب جديد",
+  "title_template": "تم استلام طلبك {{request_number}}",
+  "body_template": "شكراً لتواصلك. طلبك قيد المراجعة.",
+  "channels": "{in_app,email}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "a82ca091-6510-4b86-8ff2-92f35c8e8fa9",
+  "event_key": "status_change",
+  "name_ar": "تغيير حالة الطلب",
+  "title_template": "تحديث حالة طلبك {{request_number}}",
+  "body_template": "تم تحديث حالة طلبك إلى: {{status}}",
+  "channels": "{in_app,email}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "b7045eb8-fc8c-44aa-a0bf-38581aaf21ed",
+  "event_key": "priority_change",
+  "name_ar": "تغيير الأولوية",
+  "title_template": "🎯 تغيّرت أولوية {{request_number}}",
+  "body_template": "الأولوية الجديدة: {{priority}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "c2280019-8551-4551-9df4-944240b8825f",
+  "event_key": "suggestion_new",
+  "name_ar": "مقترح جديد",
+  "title_template": "💡 مقترح جديد {{request_number}}",
+  "body_template": "{{title}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "e440391b-df34-47b4-b679-9f0404f40a47",
+  "event_key": "auto_close_staff",
+  "name_ar": "إغلاق تلقائي - موظف",
+  "title_template": "🔒 إغلاق تلقائي: {{request_number}}",
+  "body_template": "أُغلق الطلب تلقائياً لعدم استجابة العميل {{customer_name}}.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "staff"
+ },
+ {
+  "id": "ec44cf01-7855-4c63-a6a6-e6572481311a",
+  "event_key": "low_rating",
+  "name_ar": "تقييم منخفض",
+  "title_template": "تقييم منخفض على الطلب {{request_number}}",
+  "body_template": "تم تقييم الطلب بـ {{stars}} نجوم",
+  "channels": "{in_app,email}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "f8aaa6f8-b334-4e4d-be4c-913c2df4818a",
+  "event_key": "cancelled",
+  "name_ar": "إلغاء الطلب",
+  "title_template": "🚫 تم إلغاء {{request_number}}",
+  "body_template": "{{title}}",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "customer"
+ },
+ {
+  "id": "f9c60e99-8e4c-4d07-a49e-fb954f6b3cf2",
+  "event_key": "escalation_l1",
+  "name_ar": "تصعيد المستوى الأول",
+  "title_template": "⚠️ تصعيد L1 للطلب {{request_number}}",
+  "body_template": "تم تصعيد طلب العميل {{customer_name}} إلى المستوى الأول. الإجراء المطلوب خلال {{next_action_in}}.",
+  "channels": "{in_app}",
+  "active": true,
+  "recipient_type": "staff"
+ }
+]

@@ -1,0 +1,9 @@
+[
+ {
+  "id": "6f9dcca8-c6d5-4e76-8a39-fa24f0476c92",
+  "name": "الافتراضي",
+  "timezone": "Asia/Riyadh",
+  "is_default": true,
+  "weekly_schedule": "[{\"end\": \"17:00\", \"start\": \"08:00\", \"enabled\": true}, {\"end\": \"17:00\", \"start\": \"08:00\", \"enabled\": true}, {\"end\": \"17:00\", \"start\": \"08:00\", \"enabled\": true}, {\"end\": \"17:00\", \"start\": \"08:00\", \"enabled\": true}, {\"end\": \"17:00\", \"start\": \"08:00\", \"enabled\": true}, {\"end\": \"00:00\", \"start\": \"00:00\", \"enabled\": false}, {\"end\": \"00:00\", \"start\": \"00:00\", \"enabled\": false}]"
+ }
+]

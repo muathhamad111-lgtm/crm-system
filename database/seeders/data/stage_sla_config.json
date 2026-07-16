@@ -1,0 +1,822 @@
+[
+ {
+  "id": "0768baa4-b0a4-4a68-9e8b-e6d6d8d47176",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 1,
+  "stage_name": "التحقق من الصلاحيات والمتطلبات",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "083a0c40-192e-4a2f-a978-6a4817615e74",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "09a97fe8-f06d-4c92-9c75-90ebc60aeba8",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "0db6f8da-5950-46da-8b1e-a385692aec28",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "1001713a-8818-4f9b-b391-9b6c3685b7a6",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "1522478b-6740-44fc-8f2c-de7882d3c9a2",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 4,
+  "stage_name": "تأكيد العميل",
+  "base_minutes": 2880,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "19fba41e-f35f-45a7-bd52-22aa96bc79d9",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "1f6fbe51-8180-4c98-bfd1-b16e63a4c07b",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "24e935b7-1172-43f6-9813-75f60c21e45b",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "26898f43-a8dd-4b8c-81c5-ad8cb067ff23",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 2,
+  "stage_name": "التشخيص الأولي",
+  "base_minutes": 120,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "2789152d-bba6-46aa-88c4-eade7f3f5c00",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "stage_index": 1,
+  "stage_name": "الرد على الاستفسار",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "29da9210-357c-41d4-b7f8-1187905bde1b",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "2c6cfdf2-da2b-493c-a881-f620c0dfb25c",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "365255f6-d747-4710-88ea-074207e28b04",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 3,
+  "stage_name": "التصعيد للفريق التقني",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "390c7e23-5383-49c3-97e3-459eaea4b40b",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "3aef4f38-ff58-47e0-9107-563d17f2144f",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "3b54f23c-36f7-49a1-a7db-9840ccb7b6d9",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 1,
+  "stage_name": "الفرز وتحديد الأولوية",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "3ccfdd06-a573-4ea4-b7ab-7bbbbfb293eb",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 5,
+  "stage_name": "الإغلاق",
+  "base_minutes": 120,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "3cd4c00a-fcba-4b85-a5b3-b9cc56a70dd8",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "3e7e95a3-a253-42c1-8213-eedf84e011c3",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 5,
+  "stage_name": "الإغلاق وتوثيق الدروس المستفادة",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "40b43a31-ff45-4039-b098-74a22ed8fc5f",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "stage_index": 1,
+  "stage_name": "الفرز والتوجيه",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "4276b695-6959-4f92-9616-80dcd7de8e5d",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "445e5fd3-8742-43b3-b491-f7b0a3bf20df",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "45417115-fe12-4270-ae88-9a7f27169957",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 7,
+  "stage_name": "الإغلاق",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "4b5d95a1-7ee7-4adc-8773-ed594f0a5dd7",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 4,
+  "stage_name": "الحل والاختبار",
+  "base_minutes": 480,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "4c19a9b6-fee3-4169-9071-e8fa5d46eedc",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "4d5452be-6873-4236-9dc3-7cb72e9b5baa",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "4fb51f38-a44e-4307-beef-9818db3761cc",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "stage_index": 3,
+  "stage_name": "الإغلاق",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "528d3807-1f0b-4e49-8c52-4def10e7aa39",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "5937ad79-a5d4-4d02-92f4-d44021f7eb9d",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "5bb4143e-4d95-4443-b343-bd94a2d23758",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 3,
+  "stage_name": "تنفيذ التدريب",
+  "base_minutes": 480,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "62fb9ab6-93d3-4e46-942c-32f1458f28c8",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "64d81688-b23b-486c-81bf-1797bde3dce8",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "6b7e6fc7-e82f-425e-b61a-ab35da8c8778",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "6ee42411-7448-413b-9f38-940f116fac63",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "73ab289d-8e96-4c56-897d-5c884b5a533d",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 0,
+  "stage_name": "استلام طلب التدريب",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "7967e90e-7ea4-406f-8edf-2af1558331ed",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 3,
+  "stage_name": "اعتماد المعالجة من الإدارة",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "7a84f0bc-f8a1-48ee-9bc7-0d65f67ad762",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 0,
+  "stage_name": "استلام الطلب",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "7b361c38-d027-4e31-87e5-79f35987c891",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 4,
+  "stage_name": "الرد للعميل والاعتذار/التعويض",
+  "base_minutes": 480,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "7d049113-fd6a-4778-9847-497d7668aea6",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "815a752d-cf32-41e6-be9b-d19b852e3a1d",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "850ec579-089c-4317-91ec-3c951dbe0d14",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "8c235d68-98de-44c2-a5e9-fa4a0a1965a2",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 1,
+  "stage_name": "فرز الاحتياج التدريبي",
+  "base_minutes": 480,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "90ad855f-17dc-4111-bfa4-8fbcce60d775",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "stage_index": 2,
+  "stage_name": "تأكيد فهم العميل",
+  "base_minutes": 2880,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "937f209a-56e8-4647-a9f6-c20232be9395",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "959da1b0-04d2-42b1-9ff1-80bd01970a7c",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "96c51338-4d26-42b8-9232-99787ed4bc57",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "9700a547-b230-4ee9-8b3b-5d351be72b65",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 0,
+  "stage_name": "استلام البلاغ",
+  "base_minutes": 30,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "98f2c5a7-a41a-4167-a515-6c0b192b078d",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 6,
+  "stage_name": "التحقق مع العميل",
+  "base_minutes": 2880,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "99175089-4144-47ca-8f3d-124ecd41932f",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "9d4f8056-c95d-42b0-8fa9-cb05f177ea6c",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "9e02d9d9-bf0d-434f-b55b-15a530250499",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "9fc1c7bf-bbd0-4165-a261-b182377fce6e",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 2,
+  "stage_name": "معالجة الشكوى",
+  "base_minutes": 2880,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "a0ff6da5-6b67-4aca-afe7-f7360c829b7e",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "a116e3af-66fd-4759-8915-c991a9e54f94",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 7,
+  "stage_name": "ملاحظات ما بعد التنفيذ",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "a3869be3-c306-4ac7-828b-384e7175c4c4",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "a86cc514-23f2-415d-a38d-5d0bc2e6f72e",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "stage_index": 3,
+  "stage_name": "الإغلاق",
+  "base_minutes": 30,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "a992648d-2f0e-442f-a8b1-286485684494",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "a9a3ef92-cd4a-4f23-a10e-fabc1aa1d1c9",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "ab5ac18b-ad4d-4f2f-a88b-fe516f71d291",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "af930513-58d3-4380-b175-d4fffea640ed",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "b0a1a7ee-f723-4c6b-bc1e-ec958816ef6a",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 4,
+  "stage_name": "استبيان تقييم التدريب",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": true,
+  "is_terminal": false
+ },
+ {
+  "id": "b3fdb5a9-71bb-4086-abf8-8c2b7d35fdbe",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "stage_index": 2,
+  "stage_name": "جدولة الجلسة",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "bbff879e-67f7-4c42-99c6-1b62855fa650",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 1,
+  "stage_name": "التحقيق والتحليل",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "be07d2f5-98d6-470c-a484-68745551a3ff",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 0,
+  "stage_name": "استلام المقترح",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "c08ab49f-1c05-47cc-a383-11a9db26f81e",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 2,
+  "stage_name": "تنفيذ الإجراء",
+  "base_minutes": 720,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "c16df218-71aa-4130-96c8-09eddc97fe78",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 5,
+  "stage_name": "الإغلاق",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "d2dc58a6-c0cc-4c96-b0c7-3893c79c2cff",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "d712ac9b-55b7-4624-bb3a-f7fcc20e0573",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "d9b0242b-15fd-43ac-96b6-a4b20fe4ff28",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "stage_index": 2,
+  "stage_name": "التقييم (RICE)",
+  "base_minutes": 7200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "dab7e581-87bc-40c8-8b79-6a76dab094f2",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "stage_index": 3,
+  "stage_name": "قرار الإدارة",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "de2ef7eb-7f59-4b81-82da-61d4384ebaf9",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "stage_index": 0,
+  "stage_name": "استلام الشكوى وإقرار الاستلام",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "e58e0960-ab89-4df9-b831-c455f6a9ea6a",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 4,
+  "stage_name": "التخطيط وخارطة الطريق",
+  "base_minutes": 20160,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "e9786936-6e77-481f-9885-885873e6279c",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "stage_index": 6,
+  "stage_name": "الإطلاق والإعلان للعملاء",
+  "base_minutes": 10080,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "ea182ea4-e850-4275-bfb9-e7ae351c7c26",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "ecc6abcc-b30c-43ed-9a98-a31efd76684e",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "stage_index": 1,
+  "stage_name": "الفرز الأولي والتأهيل",
+  "base_minutes": 4320,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "efe21e62-a38f-4a10-9198-ac51273ae9e1",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "stage_index": 2,
+  "stage_name": "المعالجة",
+  "base_minutes": 1440,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "f3700563-54e3-48aa-9729-49ce5a17d675",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "stage_index": 3,
+  "stage_name": "مراجعة الجودة",
+  "base_minutes": 240,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "f57b7aad-9d04-4517-a54c-b772584229d6",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "stage_index": 5,
+  "stage_name": "التنفيذ والتطوير",
+  "base_minutes": 43200,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "fbfb7686-4aa7-41ef-9bed-6504f1adf2f2",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "stage_index": 5,
+  "stage_name": "اعتماد المشرف",
+  "base_minutes": 120,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "fcfab5b6-3781-461d-9508-058ba2199ea6",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "stage_index": 0,
+  "stage_name": "استلام الاستفسار",
+  "base_minutes": 30,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ },
+ {
+  "id": "ffe9ab26-71ed-4418-b834-24669133bb0a",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "stage_index": 0,
+  "stage_name": "استلام الطلب",
+  "base_minutes": 60,
+  "max_minutes": null,
+  "pauses_sla": false,
+  "is_terminal": false
+ }
+]

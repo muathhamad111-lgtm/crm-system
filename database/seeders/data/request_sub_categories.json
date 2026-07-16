@@ -1,0 +1,970 @@
+[
+ {
+  "id": "027851d4-fb8f-43c3-ae3f-a98000ea483d",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "الربط مع أدوات التحليل",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "02b9db0e-a22f-42c9-bb97-75073aebbf2a",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "نقل ملكية حساب",
+  "sla_hours": null,
+  "sort_order": 11,
+  "active": true
+ },
+ {
+  "id": "054a5cb3-17be-4a5f-acb1-140afb2c4c99",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين الأداء",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "05859234-840f-421d-b158-8e2ce886ae4d",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب خطاب أو مستند رسمي",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "06c32722-59ab-41e1-8c0a-e995ede35567",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين التقارير",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "08112c1f-f325-4e76-9077-ce97379ee298",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "واجهات API",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "0cb0518e-9e11-4ea7-a9c5-df1f85e04fdb",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "فقدان بيانات",
+  "sla_hours": null,
+  "sort_order": 13,
+  "active": true
+ },
+ {
+  "id": "0e7495ae-ae54-4243-897d-851788d32c7b",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "تدريب فريق عمل",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "11243034-c8ef-459a-9b92-2657c8c182da",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في الإشعارات",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "1436eb4b-b582-43d3-bc66-e2c2c05dbf54",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "تدريب مدير النظام",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "14596e37-be59-4066-a08d-1187b0167a80",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "تكامل جديد",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "14c0952c-3d2f-4d67-af1d-7c86f22bbdf8",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في الدفع الإلكتروني",
+  "sla_hours": null,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "14f11a29-1c18-4c71-94e9-5ff4e3f1ec57",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "ورشة تعريفية",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "18417c15-5bd0-4eb0-8457-b7db27b59e65",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "تصدير بيانات",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "18ed79ee-4fb8-4192-af84-d8bcd925ff87",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "تطوير تكامل قائم",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "195f8518-6c00-4e78-9a36-7c6c29c3210d",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن التقارير",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "19cc5c4c-cb34-4a72-a345-94378ac9f4e2",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تحسين إدارة الطلبات",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "1edd4dcb-0def-4d07-9db3-dfdcce10d40c",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "خطأ في التقارير",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "23a77196-fd81-41f1-8aea-b1f4e738c627",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "فكرة ابتكارية",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "242f1fad-ea3a-451a-b56c-369b0818ce07",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "برنامج تمكين",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "27e798b7-e150-4fdd-9347-7b09c84b486e",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تحسين الحوكمة",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "2a756d08-61d2-467e-aa84-c00c4fabfd7f",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تطوير المواد التعليمية",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "2b6b760c-6c54-40c7-881c-281d08b9e978",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين التواصل",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "2eca77f6-4802-4d6a-b4af-d3e4779ef450",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين الإشعارات",
+  "sla_hours": 72,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "2f00e05a-71ab-40d1-8f23-24d380c9174f",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في التكاملات",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "356d9954-a391-4696-828c-fafdf87b431e",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "نموذج عمل جديد",
+  "sla_hours": 72,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "3aafeaf5-a5da-477a-983c-d6926527815b",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب آخر",
+  "sla_hours": null,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "3d1b4d44-ed36-4148-b315-78a114b18ef4",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "الربط مع منصات التبرعات",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "3d2db93b-6d1d-4138-a24d-bbb2f251951a",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "طلب دليل استخدام",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "3d43e772-6039-47ae-a0b9-7b202676740d",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "طلب تقرير",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "3ec685f4-f908-44d2-8850-72bc9a057636",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين تجربة الاستخدام",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "3fcb8d49-16d7-4351-a4b0-8706b4a42b3f",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على التدريب",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "425f4f73-df8e-44f3-a8b0-7dbf67cb7dfb",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "أخرى",
+  "sla_hours": null,
+  "sort_order": 15,
+  "active": true
+ },
+ {
+  "id": "428a5720-59a5-444e-afb5-3e3056db61ef",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين إمكانية الوصول",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "4393be11-d029-41e2-818c-3a860bb7ae4c",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "طلب نسخة احتياطية",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "4647c8e4-13df-475e-9cbc-d112cca92d0f",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "طلب تكامل",
+  "sla_hours": null,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "472fc677-0445-4345-9700-5ad638fb0742",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "فرصة استثمارية",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "4b2a0a6f-b451-4c7b-ab90-48c19c475bd7",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين قنوات الخدمة",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "4dd81da6-d098-49bb-9159-e1e6264057e8",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تطوير مركز المساعدة",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "5193a63a-83fb-4c25-8937-1da2593bacce",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في تطبيق الجوال",
+  "sla_hours": null,
+  "sort_order": 11,
+  "active": true
+ },
+ {
+  "id": "5412ce4c-bb8d-4eb0-8c04-af7476ac8727",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "استيراد بيانات",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "556bba4f-d76a-4256-9834-aa87aca9f66f",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "مبادرة مجتمعية",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "579409d5-fcc0-43e7-8c6c-cffa9c1fae62",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب محتوى أو مواد تسويقية",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "57fd1674-b077-4867-9ee1-3690a44fff61",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على الفواتير",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "5b4fbf4f-acba-4232-8dbc-b3b5ba67df7f",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "الربط مع الجهات الحكومية",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "5e1d9574-6cc9-4eed-8740-81cf5586eece",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "منتج جديد",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "5e2e3718-fd8c-41da-8366-9bce8a603ffc",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تطوير ميزة قائمة",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "62aa2f0c-0328-40a9-b007-f6ad62eb9083",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تحسين البرامج التدريبية",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "6a2d9ef1-eba0-49f7-9c97-222dc30b51cc",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "إدارة المستخدمين",
+  "sla_hours": null,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "6cafbd37-c612-4b74-a404-053431272c51",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين تطبيق الجوال",
+  "sla_hours": 72,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "6cb38381-985c-4e47-8431-83ac178816a3",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب نقل بيانات",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "6e0f8fe7-9da6-4518-8181-5eebb6a94eae",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تطوير المحتوى التدريبي",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "6effc3d6-c569-4eb6-aba8-fb7062c10646",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تحسين الأدلة الإرشادية",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "75b26fb1-9892-42c9-9106-90d8e58cc21e",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب استشارة",
+  "sla_hours": null,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "762de55a-6611-4023-9c4c-45e9fb61d571",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب تجديد اشتراك",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "79abca00-54b2-4bc5-8b72-b38ebfbe0b25",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في مزامنة البيانات",
+  "sla_hours": null,
+  "sort_order": 12,
+  "active": true
+ },
+ {
+  "id": "7d63c08d-4e0c-4c4c-a82c-d564e846e463",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة أمنية",
+  "sla_hours": null,
+  "sort_order": 14,
+  "active": true
+ },
+ {
+  "id": "7e3f21d4-6538-4157-9a1f-409932a8a8d2",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "إدارة الخدمات",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "8337c4ea-e6fc-4a56-a4b5-5aba7d3a538d",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تبسيط الإجراءات",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "85af46f6-7da7-4fa9-beab-458fa79abfc6",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن الفواتير",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "87b95495-9bc3-463a-a94b-5a3b19bb8a9b",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن الاستخدام",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "882e3a32-db5e-4aa5-967e-87ba3c6af088",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تحسين قنوات الدعم",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "891162c0-4728-4ff5-8d69-92355ca14015",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "سوق أو شريحة مستهدفة جديدة",
+  "sla_hours": 72,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "8acc26b6-8c5d-4cbc-960b-5e47f6deba6f",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "أخرى",
+  "sla_hours": null,
+  "sort_order": 13,
+  "active": true
+ },
+ {
+  "id": "8d041513-34b7-4a5c-9291-2a1426e48d7a",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على المنتج",
+  "sla_hours": null,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "8e4626dc-43a4-43e1-b16f-f849920ce684",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تحسين الصلاحيات والموافقات",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "90546409-1404-4069-bd34-4d24f20e8d14",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على الخدمة",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "91eb3872-d1d9-4b5e-b71d-0198506b9c60",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "تقنيات الأتمتة الذكية",
+  "sla_hours": 72,
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "943e82b2-6efb-4ac4-8903-1cc6ed81c6b4",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين واجهات المستخدم",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "94d57110-2e77-4321-998e-2dc93ebd64e6",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تحسين سير العمل",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "9666e052-d735-45c6-8830-f6ca9bf826f5",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "الربط مع الأنظمة المالية",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "973f9568-45d1-4b59-ad1a-431e1ecda5ba",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى أخرى",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "97b79e53-c164-4f64-acc7-273f0c72db8d",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين تجربة التجديد",
+  "sla_hours": 72,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "9cc2229d-18ac-4133-a9c2-f03846ef5e3f",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "11",
+  "sla_hours": 1,
+  "sort_order": 11,
+  "active": true
+ },
+ {
+  "id": "9e072c45-f435-4e9e-ad0e-a93a5994899f",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "أتمتة العمليات",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "a2c54ce1-dc31-4bb1-b94d-fc09e1fccf61",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "تعديل إعدادات النظام",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "a3d2a80e-bd9f-4224-957a-decac1455f92",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب إلغاء اشتراك",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "a5157c38-b584-47a4-b976-98fa51a0dfec",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على تجربة المستخدم",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "aa56d6e5-781f-4201-b3e7-7458fc782ddf",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن الصلاحيات",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "ab5baef9-9bd7-42f4-98ad-4d00fa5514d5",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين سرعة الاستجابة",
+  "sla_hours": 72,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "abadbdb5-6ef2-4b32-92c7-e06dfeb3390d",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "تقنيات الذكاء الاصطناعي",
+  "sla_hours": 72,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "aeba4371-0467-4da0-b119-ef0bb3a8d0dd",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب زيارة أو اجتماع",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "af062842-41d8-46e9-b6db-d9cb96c31013",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن التحديثات",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "b0f39d09-f96f-4690-9c75-aa712f20b1cd",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "خدمة جديدة",
+  "sla_hours": 72,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "b668a48e-e90f-4cc7-8b79-eb83e2232691",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "إدارة الصلاحيات",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "b7372a54-4acd-403d-a135-19b4f5b609dd",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين رحلة العميل",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "ba4cee21-e323-4e9e-bc68-2d47cd8a153f",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "تدريب مستخدم جديد",
+  "sla_hours": null,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "ba8edee1-b696-4ee1-bd2f-ace6aab38c13",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على موظف",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "bb7acf41-95c7-41b5-8f8b-d5059b05ab4d",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن المنتج أو المزايا",
+  "sla_hours": null,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "bd087abf-a9e5-4ec6-b23b-65048a2b845d",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين تجربة التسجيل",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "c29b3c30-4ff2-41b7-85df-7f26c5609ac9",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "تدريب بعد الإطلاق",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "c315982d-fc6a-4956-908f-44f8bc549f9a",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن التكاملات",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "c581b4f8-e956-408f-bded-e29339a1e133",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "طلب مواد تعليمية",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "c981c2da-2f05-4a4a-984b-3cd3c6f9d948",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "بطء النظام أو الأداء",
+  "sla_hours": null,
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "cc42a730-f579-48f3-90f7-637dc567dd2c",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "شرح ميزة محددة",
+  "sla_hours": null,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "cd37a486-517f-4b5d-9a4e-38f1e9daf9fb",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "تحسين لوحة المؤشرات",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "cecb9799-50f8-4b17-a22f-ccad33c03fba",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "إدارة الاشتراك",
+  "sla_hours": null,
+  "sort_order": 12,
+  "active": true
+ },
+ {
+  "id": "d311f1cb-2596-4030-bb69-ed0941b4a8c4",
+  "category_id": "b36b1c63-31a8-4087-bac1-6d3a52fd5ce5",
+  "name_ar": "طلب تسجيلات تدريبية",
+  "sla_hours": null,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "d3d3903c-d9b1-4ae1-ba49-4932805f684d",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين المحتوى الإرشادي",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "d4067d14-f99d-42cb-ab27-c81090e329c1",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في رفع الملفات",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "d4aaa962-1078-4a5f-9988-4fdc5d42a951",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن السياسات",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "d5e6cb04-e794-47c6-a227-a0fe90c44884",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تطوير آلية المتابعة",
+  "sla_hours": 72,
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "d892ceff-5962-46c2-afe6-6c697145011a",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عن الاشتراك",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "e1e80a54-7c7b-423f-b72c-4d6d2835eca0",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تحسين النماذج",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "ecec16fa-1937-465e-b2ed-9e4a1b98c198",
+  "category_id": "b0681d61-1d03-4783-8f0c-967d60209897",
+  "name_ar": "تقليل الخطوات",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "edd2d900-a3ff-4312-b735-37bb181f8962",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب عرض سعر",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "eebb636c-522f-4a93-983b-87aa33ca3c73",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "شراكة استراتيجية",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "ef67a930-0269-4926-8d18-2bb8bfbda28b",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين إجراءات الخدمة",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "f148e8d5-c9cd-4d6e-9d37-17cfc6312d0b",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "توقف النظام بالكامل",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "f438c16d-23df-4642-91aa-78cdb507567d",
+  "category_id": "65dfb960-b669-414c-b61f-91f9e8f330f8",
+  "name_ar": "تحسين تجربة التفعيل",
+  "sla_hours": 72,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "f683e224-2b07-4540-bb53-71292c05878d",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "مشكلة في الصلاحيات",
+  "sla_hours": null,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "f7a61c09-7c4c-44e8-9417-179f797d74d4",
+  "category_id": "f87ea4e4-c56f-4848-a32d-7c31a8d790b1",
+  "name_ar": "استعادة بيانات",
+  "sla_hours": null,
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "f898d440-adff-49b5-9415-c29a78aba627",
+  "category_id": "e28ab48b-4293-40f2-8e11-8bced2466641",
+  "name_ar": "مبادرة نوعية",
+  "sla_hours": 72,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "f9b26f26-c978-4271-88f8-4c5abe67bfed",
+  "category_id": "540e9199-9c2e-4c30-870b-3ae3ba497de0",
+  "name_ar": "طلب شراكة أو تعاون",
+  "sla_hours": null,
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "f9d5e514-a3e7-453d-98af-a6f960fc36e7",
+  "category_id": "802e4c2c-d6cb-465f-acd3-e8f669e3368f",
+  "name_ar": "إضافة ميزة جديدة",
+  "sla_hours": 72,
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "fb2840d1-2e8d-4c41-b21a-cd19c6b34541",
+  "category_id": "c8043868-ce91-4506-81ea-a810c4c82c26",
+  "name_ar": "خطأ في شاشة أو نموذج",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "fc2196b5-2fb7-4850-b164-027b9bcc4473",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على التأخير",
+  "sla_hours": null,
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "fe7c5473-e8fc-4037-8bb1-7c638b861baa",
+  "category_id": "b57c55e3-ed73-4a95-8987-0deaf56c90e8",
+  "name_ar": "الربط مع أنظمة الموارد البشرية",
+  "sla_hours": 72,
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "ff76a414-d766-4235-a10f-353240973a3c",
+  "category_id": "d8c36ab3-20c0-4b6b-a341-c2aa53080b0e",
+  "name_ar": "تطوير قاعدة المعرفة",
+  "sla_hours": 72,
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "fff0dd3e-ad40-4c92-9692-e8280b80f49a",
+  "category_id": "28b1c007-edfa-4288-81e0-75c611b12469",
+  "name_ar": "شكوى على الدعم الفني",
+  "sla_hours": null,
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "fff7d331-8089-4a17-98ef-57f233d7f33e",
+  "category_id": "bd7446c3-7b19-4d39-96ce-44d5fbf973bc",
+  "name_ar": "استفسار عام",
+  "sla_hours": null,
+  "sort_order": 10,
+  "active": true
+ }
+]

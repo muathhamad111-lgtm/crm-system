@@ -1,0 +1,47 @@
+[
+ {
+  "id": "2a3a7a35-1620-40de-ad2d-7465acd26edc",
+  "assignee_id": null,
+  "team_id": null,
+  "day_of_week": 3,
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "is_active": true
+ },
+ {
+  "id": "5a6a51e3-65e9-49be-ada4-b7f3bd80c4a7",
+  "assignee_id": null,
+  "team_id": null,
+  "day_of_week": 2,
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "is_active": true
+ },
+ {
+  "id": "694e3307-966f-46ab-925e-f1eab29de049",
+  "assignee_id": null,
+  "team_id": null,
+  "day_of_week": 0,
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "is_active": true
+ },
+ {
+  "id": "8b9f7799-2e76-49b2-8f9a-d5aad1a8f176",
+  "assignee_id": null,
+  "team_id": null,
+  "day_of_week": 1,
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "is_active": true
+ },
+ {
+  "id": "ae607e65-c325-462a-be51-0a3c62ccc4e3",
+  "assignee_id": null,
+  "team_id": null,
+  "day_of_week": 4,
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "is_active": true
+ }
+]
