@@ -116,9 +116,10 @@ class SuggestionController extends Controller
             $q->where('published_to_customers', true);
         }
 
-        $rows = $q->orderByDesc('published_at')
+        $rows = $q->with('product:id,name_ar')
+            ->orderByDesc('published_at')
             ->orderByDesc('created_at')
-            ->get(['id', 'request_number', 'title', 'description', 'idea_stage', 'comments_locked', 'published_to_customers', 'published_at', 'created_at']);
+            ->get(['id', 'request_number', 'title', 'description', 'idea_stage', 'comments_locked', 'published_to_customers', 'published_at', 'created_at', 'product_id']);
 
         $engagement = $this->engagementFor($rows->pluck('id')->all());
 
@@ -132,6 +133,7 @@ class SuggestionController extends Controller
             'published' => (bool) $r->published_to_customers,
             'published_at' => $r->published_at,
             'created_at' => $r->created_at,
+            'product' => $r->product?->name_ar,
         ], $engagement[$r->id] ?? []))->all();
 
         $totalRatings = array_sum(array_column($suggestions, 'ratings_count'));
@@ -213,9 +215,10 @@ class SuggestionController extends Controller
         $user = $request->user();
 
         $rows = $this->baseQuery()
+            ->with(['product:id,name_ar', 'category:id,name_ar,color'])
             ->where('customer_id', $user->id)
             ->orderByDesc('created_at')
-            ->get(['id', 'request_number', 'title', 'description', 'status', 'idea_stage', 'decision', 'published_to_customers', 'created_at']);
+            ->get(['id', 'request_number', 'title', 'description', 'status', 'idea_stage', 'decision', 'published_to_customers', 'category_id', 'product_id', 'created_at', 'updated_at']);
 
         $engagement = $this->engagementFor($rows->pluck('id')->all());
 
@@ -228,30 +231,92 @@ class SuggestionController extends Controller
             'idea_stage' => $r->idea_stage?->value ?? $r->idea_stage,
             'decision' => $r->decision?->value ?? $r->decision,
             'published' => (bool) $r->published_to_customers,
+            'category' => $r->category?->name_ar,
+            'category_color' => $r->category?->color,
+            'product' => $r->product?->name_ar,
             'created_at' => $r->created_at,
+            'updated_at' => $r->updated_at,
         ], $engagement[$r->id] ?? []))->all();
+
+        $counts = [
+            'total' => count($suggestions),
+            'open' => 0, 'in_progress' => 0, 'done' => 0,
+        ];
+        foreach ($suggestions as $s) {
+            if (in_array($s['status'], ['new', 'reopened', 'awaiting_customer'], true)) {
+                $counts['open']++;
+            } elseif (in_array($s['status'], ['in_progress', 'under_review', 'awaiting_internal', 'escalated'], true)) {
+                $counts['in_progress']++;
+            } elseif (in_array($s['status'], ['completed', 'closed'], true)) {
+                $counts['done']++;
+            }
+        }
 
         return Inertia::render('Suggestions/Mine', [
             'suggestions' => $suggestions,
+            'counts' => $counts,
         ]);
     }
 
-    /** Staff triage list with stage / product / search filters. */
+    /** Staff triage list with stage / product / team / range / search / quick filters. */
     public function inbox(Request $request)
     {
         $filters = [
             'stage' => $request->query('stage', 'all'),
             'product' => $request->query('product', 'all'),
+            'team' => $request->query('team', 'all'),
+            'range' => $request->query('range', 'all'),
             'q' => $request->query('q', ''),
+            'customer' => $request->query('customer', ''),
+            'overdue' => filter_var($request->query('overdue'), FILTER_VALIDATE_BOOLEAN),
+            'reopened' => filter_var($request->query('reopened'), FILTER_VALIDATE_BOOLEAN),
         ];
 
-        $q = $this->baseQuery();
+        $rangeDays = ['7d' => 7, '30d' => 30, '90d' => 90, '365d' => 365];
+        $fromDate = isset($rangeDays[$filters['range']])
+            ? now()->subDays($rangeDays[$filters['range']])
+            : null;
+
+        // Staff ids belonging to the selected team (for assigned_to filtering).
+        $teamStaffIds = $filters['team'] !== 'all'
+            ? DB::table('profiles')->where('team_id', $filters['team'])->pluck('id')->all()
+            : null;
+
+        // Customer ids whose name matches the customer search.
+        $customerIds = $filters['customer'] !== ''
+            ? DB::table('profiles')->where('full_name', 'like', '%'.$filters['customer'].'%')->pluck('id')->all()
+            : null;
+
+        // Scope shared by list + stats (product / team / range / customer), excludes
+        // the stage / overdue / reopened toggles so pill counts stay meaningful.
+        $applyScope = function ($qb) use ($filters, $fromDate, $teamStaffIds, $customerIds) {
+            if ($fromDate) {
+                $qb->where('created_at', '>=', $fromDate);
+            }
+            if ($filters['product'] !== 'all') {
+                $qb->where('product_id', $filters['product']);
+            }
+            if ($teamStaffIds !== null) {
+                $qb->whereIn('assigned_to', $teamStaffIds ?: ['-']);
+            }
+            if ($customerIds !== null) {
+                $qb->whereIn('customer_id', $customerIds ?: ['-']);
+            }
+            return $qb;
+        };
+
+        $q = $applyScope($this->baseQuery());
 
         if ($filters['stage'] !== 'all') {
             $q->where('idea_stage', $filters['stage']);
         }
-        if ($filters['product'] !== 'all') {
-            $q->where('product_id', $filters['product']);
+        if ($filters['overdue']) {
+            $q->whereNotNull('due_at')
+                ->where('due_at', '<', now())
+                ->whereNotIn('status', ['closed', 'completed', 'rejected']);
+        }
+        if ($filters['reopened']) {
+            $q->where('reopened_count', '>', 0);
         }
         if ($filters['q'] !== '') {
             $term = '%'.$filters['q'].'%';
@@ -260,8 +325,9 @@ class SuggestionController extends Controller
                 ->orWhere('description', 'like', $term));
         }
 
-        $rows = $q->orderByDesc('created_at')
-            ->get(['id', 'request_number', 'title', 'description', 'status', 'priority', 'idea_stage', 'decision', 'published_to_customers', 'customer_id', 'product_id', 'created_at']);
+        $rows = $q->with(['product:id,name_ar', 'category:id,name_ar,color'])
+            ->orderByDesc('created_at')
+            ->get(['id', 'request_number', 'title', 'description', 'status', 'priority', 'idea_stage', 'decision', 'published_to_customers', 'comments_locked', 'customer_id', 'category_id', 'product_id', 'reopened_count', 'due_at', 'source_product_code', 'source_customer_url', 'created_at']);
 
         $engagement = $this->engagementFor($rows->pluck('id')->all());
 
@@ -269,6 +335,7 @@ class SuggestionController extends Controller
             ->whereIn('id', $rows->pluck('customer_id')->filter()->unique()->all())
             ->pluck('full_name', 'id');
 
+        $now = now();
         $suggestions = $rows->map(fn ($r) => array_merge([
             'id' => $r->id,
             'request_number' => $r->request_number,
@@ -279,33 +346,49 @@ class SuggestionController extends Controller
             'idea_stage' => $r->idea_stage?->value ?? $r->idea_stage,
             'decision' => $r->decision?->value ?? $r->decision,
             'published' => (bool) $r->published_to_customers,
+            'comments_locked' => (bool) $r->comments_locked,
             'customer_name' => $customerNames[$r->customer_id] ?? null,
+            'category' => $r->category?->name_ar,
+            'category_color' => $r->category?->color,
+            'product' => $r->product?->name_ar,
+            'source_product_code' => $r->source_product_code,
+            'source_customer_url' => $r->source_customer_url,
+            'reopened_count' => (int) $r->reopened_count,
+            'due_at' => $r->due_at,
+            'overdue' => $r->due_at
+                && $r->due_at < $now
+                && ! in_array($r->status?->value ?? $r->status, ['closed', 'completed', 'rejected'], true),
             'created_at' => $r->created_at,
         ], $engagement[$r->id] ?? []))->all();
 
-        // Stage counts (unfiltered by stage, keeps product/search scope).
-        $countScope = $this->baseQuery();
-        if ($filters['product'] !== 'all') {
-            $countScope->where('product_id', $filters['product']);
-        }
-        $stageCounts = $countScope
-            ->select('idea_stage', DB::raw('count(*) as c'))
-            ->groupBy('idea_stage')
-            ->pluck('c', 'idea_stage');
+        // Stat pills computed over the shared scope (product/team/range/customer).
+        $statScope = $applyScope($this->baseQuery())
+            ->get(['idea_stage', 'status', 'due_at', 'reopened_count']);
+
+        $countStage = fn ($stage) => $statScope->filter(
+            fn ($r) => ($r->idea_stage?->value ?? $r->idea_stage) === $stage
+        )->count();
+
+        $stats = [
+            'total' => $statScope->count(),
+            'received' => $countStage('received'),
+            'under_review' => $countStage('under_review'),
+            'accepted' => $countStage('accepted'),
+            'in_progress' => $countStage('in_progress'),
+            'implemented' => $countStage('implemented'),
+            'rejected' => $countStage('rejected'),
+            'overdue' => $statScope->filter(fn ($r) => $r->due_at
+                && $r->due_at < $now
+                && ! in_array($r->status?->value ?? $r->status, ['closed', 'completed', 'rejected'], true))->count(),
+            'reopened' => $statScope->filter(fn ($r) => (int) $r->reopened_count > 0)->count(),
+        ];
 
         return Inertia::render('Suggestions/Inbox', [
             'suggestions' => $suggestions,
             'filters' => $filters,
             'products' => Product::where('active', true)->orderBy('sort_order')->get(['id', 'name_ar']),
-            'stats' => [
-                'total' => count($suggestions),
-                'received' => (int) ($stageCounts['received'] ?? 0),
-                'under_review' => (int) ($stageCounts['under_review'] ?? 0),
-                'accepted' => (int) ($stageCounts['accepted'] ?? 0),
-                'in_progress' => (int) ($stageCounts['in_progress'] ?? 0),
-                'implemented' => (int) ($stageCounts['implemented'] ?? 0),
-                'rejected' => (int) ($stageCounts['rejected'] ?? 0),
-            ],
+            'teams' => DB::table('teams')->where('active', true)->orderBy('sort_order')->get(['id', 'name_ar']),
+            'stats' => $stats,
         ]);
     }
 
@@ -315,7 +398,9 @@ class SuggestionController extends Controller
         $user = $request->user();
         $isStaff = $user->isStaff();
 
-        $suggestion = $this->baseQuery()->findOrFail($id);
+        $suggestion = $this->baseQuery()
+            ->with(['category:id,name_ar,color', 'subCategory:id,name_ar', 'product:id,name_ar,type'])
+            ->findOrFail($id);
 
         // Customers may only view published suggestions or their own.
         if (! $isStaff && ! $suggestion->published_to_customers && $suggestion->customer_id !== $user->id) {
@@ -367,6 +452,42 @@ class SuggestionController extends Controller
                 ->get(['dl.id', 'dl.action', 'dl.from_value', 'dl.to_value', 'dl.notes', 'dl.created_at', 'p.full_name as actor_name'])
             : [];
 
+        // Unique participants across votes + ratings + comments.
+        $voterIds = collect()
+            ->merge(DB::table('suggestion_votes')->where('request_id', $id)->pluck('user_id'))
+            ->merge(DB::table('suggestion_ratings')->where('request_id', $id)->pluck('customer_id'))
+            ->merge(DB::table('suggestion_comments')->where('request_id', $id)->whereNull('deleted_at')->pluck('user_id'))
+            ->filter()->unique()->count();
+
+        $votesTotal = (int) ($voteRows['support'] ?? 0) + (int) ($voteRows['strong_support'] ?? 0) + (int) ($voteRows['against'] ?? 0);
+        $commentsCount = collect($comments)->whereNull('deleted_at')->count();
+
+        // Attachments.
+        $attachments = DB::table('request_attachments')
+            ->where('request_id', $id)
+            ->orderBy('created_at')
+            ->get(['id', 'file_name', 'file_url', 'file_size', 'mime_type']);
+
+        // Possible duplicates: other suggestions in the same category (hint only).
+        $duplicates = $this->baseQuery()
+            ->where('id', '!=', $id)
+            ->where('category_id', $suggestion->category_id)
+            ->when(! $isStaff, fn ($qb) => $qb->where('published_to_customers', true))
+            ->orderByDesc('created_at')
+            ->limit(4)
+            ->get(['id', 'request_number', 'title', 'idea_stage'])
+            ->map(fn ($r) => [
+                'id' => $r->id,
+                'request_number' => $r->request_number,
+                'title' => $r->title,
+                'idea_stage' => $r->idea_stage?->value ?? $r->idea_stage,
+            ]);
+
+        // Staff attribution names.
+        $names = DB::table('profiles')
+            ->whereIn('id', array_filter([$suggestion->decision_by, $suggestion->published_by]))
+            ->pluck('full_name', 'id');
+
         return Inertia::render('Suggestions/Show', [
             'suggestion' => [
                 'id' => $suggestion->id,
@@ -386,9 +507,27 @@ class SuggestionController extends Controller
                 'confidence' => $confidence,
                 'effort' => $effort,
                 'rice_score' => $rice,
+                'priority' => $suggestion->priority?->value ?? $suggestion->priority,
+                'category' => $suggestion->category?->name_ar,
+                'category_color' => $suggestion->category?->color,
+                'sub_category' => $suggestion->subCategory?->name_ar,
+                'product' => $suggestion->product?->name_ar,
+                'decision_at' => $suggestion->decision_at,
+                'decision_by_name' => $names[$suggestion->decision_by] ?? null,
+                'published_by_name' => $names[$suggestion->published_by] ?? null,
                 'created_at' => $suggestion->created_at,
                 'updated_at' => $suggestion->updated_at,
             ],
+            'metrics' => [
+                'avg_stars' => round((float) ($ratingAgg->avg_stars ?? 0), 1),
+                'ratings_count' => (int) ($ratingAgg->c ?? 0),
+                'comments_count' => $commentsCount,
+                'votes_total' => $votesTotal,
+                'unique_voters' => $voterIds,
+                'rice_score' => $rice,
+            ],
+            'attachments' => $attachments,
+            'duplicates' => $duplicates,
             'customer' => $customer,
             'comments' => $comments,
             'votes' => [

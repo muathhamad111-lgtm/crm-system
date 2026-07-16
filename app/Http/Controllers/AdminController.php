@@ -60,6 +60,9 @@ class AdminController extends Controller
             ->orderBy('sort_order')
             ->get(['id', 'key', 'name_ar', 'description', 'color', 'icon', 'manager_id', 'active', 'sort_order']);
 
+        // Team id => Arabic name, for enriching the staff directory.
+        $teamNames = $teams->pluck('name_ar', 'id');
+
         // System settings as a key => value map.
         $settings = SystemSetting::query()->get(['key', 'value'])
             ->mapWithKeys(fn ($s) => [$s->key => $s->value]);
@@ -80,8 +83,9 @@ class AdminController extends Controller
             ->orderBy('staff_sort_order')
             ->orderBy('full_name')
             ->get(['id', 'full_name', 'email', 'phone', 'team_id', 'account_status', 'suspended', 'staff_sort_order'])
-            ->map(function ($p) use ($rolesByUser) {
+            ->map(function ($p) use ($rolesByUser, $teamNames) {
                 $p->role_keys = $rolesByUser[$p->id] ?? [];
+                $p->team_name = $p->team_id ? ($teamNames[$p->team_id] ?? null) : null;
 
                 return $p;
             });
@@ -129,7 +133,26 @@ class AdminController extends Controller
         ];
         $priorityOptions = ['urgent', 'high', 'medium', 'low'];
 
+        // Hero KPI ribbon stats.
+        $stats = [
+            'categories' => $categories->count(),
+            'active_categories' => $categories->where('active', true)->count(),
+            'products' => $products->count(),
+            'teams' => $teams->count(),
+            'staff' => $staff->count(),
+            'roles' => (int) DB::table('role_permissions')->distinct('role')->count('role'),
+            'capabilities' => $capabilityMeta->count(),
+            'sensitive_caps' => 0,
+            'templates' => $notificationTemplates->count(),
+            'integrations' => $systemIntegrations->count() + $integrationSettings->count(),
+            'active_integrations' => $systemIntegrations->where('active', true)->count()
+                + $integrationSettings->where('enabled', true)->count(),
+            'audit_entries' => $auditLog->count(),
+        ];
+
         return Inertia::render('Admin/Index', [
+            'stats' => $stats,
+            'teamNames' => $teamNames,
             'categories' => $categories,
             'products' => $products,
             'teams' => $teams,

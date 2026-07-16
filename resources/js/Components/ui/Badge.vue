@@ -14,6 +14,7 @@ const variants = {
     warning: 'border-transparent bg-warning text-warning-foreground',
     destructive: 'border-transparent bg-destructive text-destructive-foreground',
     muted: 'border-transparent bg-muted text-muted-foreground',
+    info: 'border-transparent bg-info text-info-foreground',
 };
 const classes = computed(() => cn(
     'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums',

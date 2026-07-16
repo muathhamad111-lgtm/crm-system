@@ -34,6 +34,8 @@ class CalendarController extends Controller
                 'total' => $events->count(),
                 'scheduled' => $events->where('status', 'scheduled')->count(),
                 'completed' => $events->where('status', 'completed')->count(),
+                'today' => $events->filter(fn ($e) => $e['starts_at'] >= now()->startOfDay()->toIso8601String()
+                    && $e['starts_at'] <= now()->endOfDay()->toIso8601String())->count(),
                 'upcoming' => $events->filter(fn ($e) => $e['starts_at'] >= now()->toIso8601String())->count(),
             ],
         ]);
@@ -76,6 +78,8 @@ class CalendarController extends Controller
             'visibility' => ['nullable', 'string', 'in:internal,shared'],
             'starts_at' => ['required', 'date'],
             'ends_at' => ['required', 'date', 'after_or_equal:starts_at'],
+            'all_day' => ['nullable', 'boolean'],
+            'reminder_minutes_before' => ['nullable', 'integer', 'min:0', 'max:10080'],
             'description' => ['nullable', 'string', 'max:2000'],
             'location' => ['nullable', 'string', 'max:255'],
             'meeting_url' => ['nullable', 'string', 'max:500'],
@@ -88,6 +92,8 @@ class CalendarController extends Controller
             'visibility' => $data['visibility'] ?? 'internal',
             'starts_at' => Carbon::parse($data['starts_at']),
             'ends_at' => Carbon::parse($data['ends_at']),
+            'all_day' => (bool) ($data['all_day'] ?? false),
+            'reminder_minutes_before' => $data['reminder_minutes_before'] ?? null,
             'description' => $data['description'] ?? null,
             'location' => $data['location'] ?? null,
             'meeting_url' => $data['meeting_url'] ?? null,
@@ -105,6 +111,8 @@ class CalendarController extends Controller
             'visibility' => $e->visibility?->value ?? $e->visibility,
             'starts_at' => optional($e->starts_at)->toIso8601String(),
             'ends_at' => optional($e->ends_at)->toIso8601String(),
+            'all_day' => (bool) $e->all_day,
+            'reminder_minutes_before' => $e->reminder_minutes_before,
             'location' => $e->location,
             'meeting_url' => $e->meeting_url,
         ];

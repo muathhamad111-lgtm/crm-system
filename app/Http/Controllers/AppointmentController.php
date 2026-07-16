@@ -41,26 +41,38 @@ class AppointmentController extends Controller
     {
         $user = $request->user();
 
-        $appointments = Appointment::query()
-            ->with('type:id,name_ar,mode,icon_name,color,duration_minutes')
+        $rows = Appointment::query()
+            ->with('type:id,name_ar,mode,icon_name,color,duration_minutes,buffer_minutes')
             ->where('customer_id', $user->id)
             ->orderByDesc('starts_at')
-            ->get()
-            ->map(fn ($a) => $this->present($a));
+            ->get();
+
+        $requestsMap = $this->requestsMap($rows->pluck('related_request_id')->all());
+        $appointments = $rows->map(fn ($a) => $this->present($a, true, $requestsMap));
 
         $now = now();
         $upcoming = $appointments->filter(fn ($a) => $a['starts_at'] >= $now->toIso8601String()
-            && ! in_array($a['status'], ['cancelled', 'completed', 'no_show'], true))->values();
+            && ! in_array($a['status'], ['cancelled', 'completed', 'no_show'], true))
+            ->sortBy('starts_at')->values();
         $past = $appointments->reject(fn ($a) => in_array($a['id'], $upcoming->pluck('id')->all(), true))->values();
+
+        // Types the customer actually has (for the reschedule slot picker).
+        $typeIds = $rows->pluck('type_id')->filter()->unique()->values();
+        $types = AppointmentType::query()
+            ->whereIn('id', $typeIds)
+            ->get(['id', 'duration_minutes', 'buffer_minutes']);
 
         return Inertia::render('Appointments/Index', [
             'upcoming' => $upcoming,
             'past' => $past,
+            'slotsByType' => $this->slotsForTypes($types),
             'stats' => [
                 'total' => $appointments->count(),
                 'upcoming' => $upcoming->count(),
                 'confirmed' => $appointments->where('status', 'confirmed')->count(),
                 'pending' => $appointments->where('status', 'pending_confirmation')->count(),
+                'completed' => $appointments->where('status', 'completed')->count(),
+                'next_at' => $upcoming->first()['starts_at'] ?? null,
             ],
         ]);
     }
@@ -157,9 +169,16 @@ class AppointmentController extends Controller
             ->orderByDesc('created_at')
             ->get(['id', 'action', 'old_status', 'new_status', 'notes', 'metadata', 'created_at']);
 
+        $requestsMap = $this->requestsMap([$appointment->related_request_id]);
+
+        $types = AppointmentType::query()
+            ->whereKey($appointment->type_id)
+            ->get(['id', 'duration_minutes', 'buffer_minutes']);
+
         return Inertia::render('Appointments/Show', [
-            'appointment' => $this->present($appointment, true),
+            'appointment' => $this->present($appointment, true, $requestsMap),
             'activity' => $activity,
+            'slotsByType' => $this->slotsForTypes($types),
             'can' => $this->gates($appointment, $user, $isStaff),
         ]);
     }
@@ -273,28 +292,51 @@ class AppointmentController extends Controller
     {
         $status = $request->query('status');
 
-        $query = Appointment::query()
-            ->with(['type:id,name_ar,mode', 'customer:id,full_name,email'])
+        $rows = Appointment::query()
+            ->with(['type:id,name_ar,mode,icon_name,color,duration_minutes,buffer_minutes', 'customer:id,full_name,email,phone'])
             ->when($status && $status !== 'all', fn ($q) => $q->where('status', $status))
-            ->orderByDesc('starts_at');
+            ->orderByDesc('starts_at')
+            ->limit(200)
+            ->get();
 
-        $appointments = $query->limit(200)->get()->map(fn ($a) => $this->present($a, true));
+        $requestsMap = $this->requestsMap($rows->pluck('related_request_id')->all());
+        $appointments = $rows->map(fn ($a) => $this->present($a, true, $requestsMap));
 
         $counts = Appointment::query()
             ->select('status', DB::raw('count(*) as c'))
             ->groupBy('status')
             ->pluck('c', 'status');
 
+        $total = (int) $counts->sum();
+        $cancelled = (int) ($counts['cancelled'] ?? 0);
+
+        // Most requested appointment type (by name).
+        $topType = Appointment::query()
+            ->join('appointment_types', 'appointments.type_id', '=', 'appointment_types.id')
+            ->select('appointment_types.name_ar', DB::raw('count(*) as c'))
+            ->groupBy('appointment_types.name_ar')
+            ->orderByDesc('c')
+            ->value('appointment_types.name_ar');
+
+        // Slot buckets for the reschedule picker (only the types currently in view).
+        $typeIds = $rows->pluck('type_id')->filter()->unique()->values();
+        $types = AppointmentType::query()
+            ->whereIn('id', $typeIds)
+            ->get(['id', 'duration_minutes', 'buffer_minutes']);
+
         return Inertia::render('Appointments/Manage', [
             'appointments' => $appointments,
             'filter' => $status ?: 'all',
+            'slotsByType' => $this->slotsForTypes($types),
             'stats' => [
-                'total' => (int) $counts->sum(),
+                'total' => $total,
                 'pending' => (int) ($counts['pending_confirmation'] ?? 0),
                 'confirmed' => (int) ($counts['confirmed'] ?? 0),
                 'completed' => (int) ($counts['completed'] ?? 0),
-                'cancelled' => (int) ($counts['cancelled'] ?? 0),
+                'cancelled' => $cancelled,
                 'no_show' => (int) ($counts['no_show'] ?? 0),
+                'cancel_rate' => $total > 0 ? (int) round($cancelled / $total * 100) : 0,
+                'top_type' => $topType ?: '—',
             ],
         ]);
     }
@@ -302,9 +344,10 @@ class AppointmentController extends Controller
     /* ----------------------------- helpers ----------------------------- */
 
     /** Present an appointment row for the frontend. */
-    private function present(Appointment $a, bool $full = false): array
+    private function present(Appointment $a, bool $full = false, array $requestsMap = []): array
     {
         $type = $a->relationLoaded('type') ? $a->type : null;
+        $linkedRequest = $a->related_request_id ? ($requestsMap[$a->related_request_id] ?? null) : null;
 
         $row = [
             'id' => $a->id,
@@ -318,6 +361,9 @@ class AppointmentController extends Controller
             'duration_minutes' => $a->duration_minutes,
             'location' => $a->location,
             'meeting_url' => $a->meeting_url,
+            'type_id' => $a->type_id,
+            'related_request_id' => $a->related_request_id,
+            'related_request' => $linkedRequest,
             'type' => $type ? [
                 'id' => $type->id,
                 'name_ar' => $type->name_ar,
@@ -331,7 +377,9 @@ class AppointmentController extends Controller
             $row['customer_notes'] = $a->customer_notes;
             $row['staff_notes'] = $a->staff_notes;
             $row['cancellation_reason'] = $a->cancellation_reason;
+            $row['last_reschedule_reason'] = $a->last_reschedule_reason;
             $row['reschedule_count'] = $a->reschedule_count;
+            $row['proposed_starts_at'] = optional($a->proposed_starts_at)->toIso8601String();
             $row['created_at'] = optional($a->created_at)->toIso8601String();
             $customer = $a->relationLoaded('customer') ? $a->customer : null;
             $row['customer'] = $customer ? [
@@ -343,6 +391,22 @@ class AppointmentController extends Controller
         }
 
         return $row;
+    }
+
+    /** Fetch request_number/title for a set of related request ids. */
+    private function requestsMap(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter($ids)));
+        if (empty($ids)) {
+            return [];
+        }
+
+        return DB::table('requests')
+            ->whereIn('id', $ids)
+            ->get(['id', 'request_number', 'title'])
+            ->keyBy('id')
+            ->map(fn ($r) => ['request_number' => $r->request_number, 'title' => $r->title])
+            ->all();
     }
 
     /** Gated action flags for the detail view. */
@@ -357,6 +421,8 @@ class AppointmentController extends Controller
             'reschedule' => $activeState && $future && ($isStaff || $a->customer_id === $user->id),
             'confirm' => $isStaff && $status === 'pending_confirmation',
             'reject' => $isStaff && $status === 'pending_confirmation',
+            'share' => true,
+            'add_to_calendar' => true,
             'manage' => $isStaff,
         ];
     }

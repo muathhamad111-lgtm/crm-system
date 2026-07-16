@@ -17,7 +17,16 @@ const props = defineProps({
     stage: { type: Object, default: () => ({}) },
     byPriority: { type: Array, default: () => [] },
     byCategory: { type: Array, default: () => [] },
+    topDelayingStages: { type: Array, default: () => [] },
 });
+
+function fmtDelay(min) {
+    const m = Math.round(min);
+    if (m < 60) return `${m} د`;
+    const h = Math.floor(m / 60);
+    const rem = m % 60;
+    return rem ? `${h} س ${rem} د` : `${h} س`;
+}
 
 function toneFor(pct) {
     if (pct === null || pct === undefined) return 'muted';
@@ -180,6 +189,47 @@ const overallLabel = computed(() =>
                     <div class="sla-progress-track">
                         <div class="sla-progress-fill"
                             :style="{ width: (stage.pct ?? 0) + '%', backgroundColor: fillColor[toneFor(stage.pct)] }"></div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <!-- Top delaying stages -->
+            <Card>
+                <CardHeader>
+                    <CardTitle class="flex items-center gap-2">
+                        <AlertTriangle class="size-5 text-destructive" />
+                        أكثر المراحل تأخيراً
+                    </CardTitle>
+                </CardHeader>
+                <CardContent class="p-0">
+                    <p v-if="!topDelayingStages.length" class="p-6 text-center text-sm text-muted-foreground">
+                        لا توجد تجاوزات مسجّلة في المراحل حالياً.
+                    </p>
+                    <div v-else class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-muted/40 text-xs text-muted-foreground">
+                                <tr>
+                                    <th class="p-3 text-right font-semibold">المرحلة</th>
+                                    <th class="p-3 text-center font-semibold">عدد التجاوزات</th>
+                                    <th class="p-3 text-center font-semibold">متوسط التأخير</th>
+                                    <th class="p-3 text-center font-semibold">أقصى تأخير</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                <tr v-for="(s, i) in topDelayingStages" :key="i" class="transition hover:bg-muted/20">
+                                    <td class="p-3 font-medium text-foreground">{{ s.stage_name }}</td>
+                                    <td class="p-3 text-center tabular-nums">
+                                        <Badge variant="destructive">{{ s.breach_count }}</Badge>
+                                    </td>
+                                    <td class="p-3 text-center font-semibold tabular-nums text-destructive">
+                                        +{{ fmtDelay(s.avg_breach_minutes) }}
+                                    </td>
+                                    <td class="p-3 text-center tabular-nums text-muted-foreground">
+                                        +{{ fmtDelay(s.max_breach_minutes) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </CardContent>
             </Card>

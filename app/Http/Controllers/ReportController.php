@@ -109,12 +109,32 @@ class ReportController extends Controller
         $assigned = (int) $scope()->count();
         $closed = (int) $scope()->whereIn('status', ['completed', 'closed'])->count();
         $open = (int) $scope()->whereNotIn('status', ['completed', 'closed', 'rejected', 'cancelled'])->count();
+        $overdue = (int) $scope()
+            ->whereNotIn('status', ['completed', 'closed', 'rejected', 'cancelled'])
+            ->whereNotNull('due_at')
+            ->where('due_at', '<', now())
+            ->count();
         $reopened = (int) $scope()->where('reopened_count', '>', 0)->count();
 
         $avgSeconds = $scope()
             ->whereNotNull('closed_at')
             ->avg(DB::raw('TIMESTAMPDIFF(SECOND, created_at, closed_at)'));
         $avgResolutionHours = $avgSeconds ? round(((float) $avgSeconds) / 3600, 1) : 0;
+
+        // First-response metrics.
+        $avgRespSeconds = $scope()
+            ->whereNotNull('first_response_at')
+            ->avg(DB::raw('TIMESTAMPDIFF(SECOND, created_at, first_response_at)'));
+        $avgFirstResponseHours = $avgRespSeconds ? round(((float) $avgRespSeconds) / 3600, 1) : 0;
+
+        $respTotal = (int) $scope()->whereNotNull('first_response_at')->count();
+        $respCompliant = (int) $scope()
+            ->whereNotNull('first_response_at')
+            ->where(function ($q) {
+                $q->whereNull('response_due_at')->orWhereColumn('first_response_at', '<=', 'response_due_at');
+            })
+            ->count();
+        $responseSlaCompliance = $respTotal > 0 ? round($respCompliant / $respTotal * 100, 1) : 0;
 
         $closedTotal = (int) $scope()->whereNotNull('closed_at')->count();
         $compliant = (int) $scope()
@@ -136,23 +156,35 @@ class ReportController extends Controller
 
         $recent = $scope()
             ->orderByDesc('updated_at')
-            ->limit(12)
-            ->get(['id', 'request_number', 'title', 'status', 'priority', 'updated_at']);
+            ->limit(15)
+            ->get(['id', 'request_number', 'title', 'status', 'priority', 'created_at', 'updated_at']);
+
+        $roles = DB::table('user_roles')
+            ->where('user_id', $profile->id)
+            ->pluck('role')
+            ->all();
 
         return Inertia::render('Reports/Employee', [
             'profile' => [
                 'id' => $profile->id,
                 'full_name' => $profile->full_name,
                 'email' => $profile->email,
+                'phone' => $profile->phone,
+                'city' => $profile->city,
+                'region' => $profile->region,
                 'team_id' => $profile->team_id,
+                'roles' => $roles,
             ],
             'stats' => [
                 'assigned' => $assigned,
                 'closed' => $closed,
                 'open' => $open,
+                'overdue' => $overdue,
                 'reopened' => $reopened,
                 'avg_resolution_hours' => $avgResolutionHours,
+                'avg_first_response_hours' => $avgFirstResponseHours,
                 'sla_compliance' => $slaCompliance,
+                'response_sla_compliance' => $responseSlaCompliance,
                 'csat' => $csat,
                 'ratings_count' => $ratingsCount,
             ],

@@ -79,6 +79,34 @@ class SlaComplianceController extends Controller
         $stageMet = max($stageTotal - $stageBreached, 0);
         $stagePct = $stageTotal > 0 ? (int) round(($stageMet / $stageTotal) * 100) : null;
 
+        // ---- Top delaying stages: which stages breach most, and by how much ----
+        $delayScope = DB::table('request_stage_sla_log as l');
+        if (! $isStaff) {
+            $delayScope->join('requests as r', 'r.id', '=', 'l.request_id')
+                ->where('r.customer_id', $user->id);
+        }
+        $topDelayingStages = (clone $delayScope)
+            ->where('l.breached', true)
+            ->whereNotNull('l.due_at')
+            ->whereNotNull('l.ended_at')
+            ->groupBy('l.stage_name')
+            ->select(
+                'l.stage_name',
+                DB::raw('count(*) as breach_count'),
+                DB::raw('round(avg(TIMESTAMPDIFF(MINUTE, l.due_at, l.ended_at))) as avg_breach_minutes'),
+                DB::raw('max(TIMESTAMPDIFF(MINUTE, l.due_at, l.ended_at)) as max_breach_minutes')
+            )
+            ->orderByDesc('avg_breach_minutes')
+            ->limit(10)
+            ->get()
+            ->map(fn ($r) => [
+                'stage_name' => $r->stage_name,
+                'breach_count' => (int) $r->breach_count,
+                'avg_breach_minutes' => (int) $r->avg_breach_minutes,
+                'max_breach_minutes' => (int) $r->max_breach_minutes,
+            ])
+            ->values();
+
         return Inertia::render('SlaCompliance/Index', [
             'target' => self::TARGET,
             'overall' => [
@@ -98,6 +126,7 @@ class SlaComplianceController extends Controller
             ],
             'byPriority' => $byPriority,
             'byCategory' => $byCategory,
+            'topDelayingStages' => $topDelayingStages,
         ]);
     }
 

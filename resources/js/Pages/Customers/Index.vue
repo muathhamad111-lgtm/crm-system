@@ -1,146 +1,183 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
-import KpiCard from '@/Components/KpiCard.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardContent from '@/Components/ui/CardContent.vue';
 import Input from '@/Components/ui/Input.vue';
-import Table from '@/Components/ui/Table.vue';
-import TableHeader from '@/Components/ui/TableHeader.vue';
-import TableBody from '@/Components/ui/TableBody.vue';
-import TableRow from '@/Components/ui/TableRow.vue';
-import TableHead from '@/Components/ui/TableHead.vue';
-import TableCell from '@/Components/ui/TableCell.vue';
+import Select from '@/Components/ui/Select.vue';
 import Avatar from '@/Components/ui/Avatar.vue';
 import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
 import {
-    Users, Search, Star, FileText, ChevronLeft, Briefcase, AlertTriangle,
+    Users, Search, Star, FileText, ChevronLeft, Briefcase, AlertTriangle, Activity,
 } from 'lucide-vue-next';
 
 const props = defineProps({
     customers: { type: Object, required: true },
     filters: { type: Object, default: () => ({}) },
+    fields: { type: Array, default: () => [] },
     kpis: { type: Object, default: () => ({}) },
 });
 
 const q = ref(props.filters.q ?? '');
+
+function apply(patch = {}) {
+    router.get(route('customers.index'),
+        { q: q.value, field: props.filters.field, sort: props.filters.sort, ...patch },
+        { preserveState: true, replace: true, preserveScroll: true });
+}
 let timer = null;
-watch(q, (val) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-        router.get(route('customers.index'), { q: val }, {
-            preserveState: true, replace: true, preserveScroll: true,
-        });
-    }, 350);
-});
+watch(q, () => { clearTimeout(timer); timer = setTimeout(() => apply(), 350); });
+
+const kpiRibbon = computed(() => [
+    { key: 'total_customers', label: 'عدد العملاء', value: num(props.kpis.total_customers ?? 0), icon: Users, tone: 'bg-primary/10 text-primary', num: 'text-primary' },
+    { key: 'total_requests', label: 'إجمالي الطلبات', value: num(props.kpis.total_requests ?? 0), icon: FileText, tone: 'bg-accent/10 text-accent', num: 'text-accent' },
+    { key: 'avg_csat', label: 'متوسط الرضا', value: props.kpis.avg_csat != null ? `${props.kpis.avg_csat}/5` : '—', icon: Star, tone: 'bg-warning/15 text-warning', num: 'text-warning' },
+    { key: 'open_requests', label: 'طلبات مفتوحة', value: num(props.kpis.open_requests ?? 0), icon: Activity, tone: 'bg-info/15 text-info', num: 'text-info' },
+    { key: 'overdue_requests', label: 'طلبات متأخرة', value: num(props.kpis.overdue_requests ?? 0), icon: AlertTriangle, tone: 'bg-destructive/15 text-destructive', num: 'text-destructive' },
+]);
 </script>
 
 <template>
     <Head title="قائمة العملاء" />
     <AppShell>
-        <div class="space-y-6">
-            <PageHero
-                title="قائمة العملاء"
-                subtitle="إدارة جميع العملاء ومتابعة طلباتهم ومستوى رضاهم — اضغط على أي صف لفتح الملف التفصيلي"
-                :icon="Users" />
-
-            <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                <KpiCard label="عدد العملاء" :value="kpis.total_customers ?? 0" :icon="Users" tone="primary" />
-                <KpiCard label="إجمالي الطلبات" :value="kpis.total_requests ?? 0" :icon="FileText" tone="accent" />
-                <KpiCard label="متوسط الرضا" :value="kpis.avg_csat != null ? `${kpis.avg_csat}/5` : '—'"
-                    :format-number="false" :icon="Star" tone="warning" />
+        <div class="space-y-5">
+            <!-- Gradient hero -->
+            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
+                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
+                <div class="relative flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <p class="text-xs text-white/60">العملاء · لوحة المتابعة · {{ num(kpis.total_customers ?? 0) }} عميل</p>
+                        <h1 class="mt-1 text-2xl font-bold">قائمة العملاء</h1>
+                        <p class="mt-1 max-w-xl text-sm text-white/80">
+                            إدارة جميع العملاء، متابعة طلباتهم ومستوى رضاهم — اضغط على أي صف لفتح الملف التفصيلي.
+                        </p>
+                    </div>
+                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ num(customers.total) }} عميل</span>
+                </div>
             </div>
 
+            <!-- KPI ribbon -->
+            <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+                <Card v-for="k in kpiRibbon" :key="k.key" class="p-4">
+                    <div class="flex items-start gap-3">
+                        <div :class="`flex size-10 shrink-0 items-center justify-center rounded-xl ${k.tone}`">
+                            <component :is="k.icon" class="size-5" />
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{{ k.label }}</div>
+                            <div :class="`text-xl font-black tabular-nums ${k.num}`">{{ k.value }}</div>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+
+            <!-- Toolbar -->
             <Card>
-                <CardContent class="p-3">
-                    <div class="relative">
-                        <Search class="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <CardContent class="flex flex-wrap items-center gap-2 p-3">
+                    <div class="relative min-w-[220px] flex-1">
+                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input v-model="q" placeholder="ابحث بالاسم، البريد، الجوال، المدينة..." class="pr-9" />
                     </div>
+                    <Select :model-value="filters.field ?? 'all'" class="w-[180px]" @update:model-value="v => apply({ field: v })">
+                        <option value="all">كل المجالات</option>
+                        <option v-for="f in fields" :key="f" :value="f">{{ f }}</option>
+                    </Select>
+                    <Select :model-value="filters.sort ?? 'requests'" class="w-[180px]" @update:model-value="v => apply({ sort: v })">
+                        <option value="requests">الأكثر طلبات</option>
+                        <option value="csat">الأعلى رضا</option>
+                        <option value="recent">الأحدث نشاطاً</option>
+                    </Select>
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardContent class="p-0">
-                    <Table v-if="customers.data.length">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>العميل</TableHead>
-                                <TableHead>المجال</TableHead>
-                                <TableHead>المنطقة</TableHead>
-                                <TableHead class="text-center">الطلبات</TableHead>
-                                <TableHead class="text-center">مفتوحة</TableHead>
-                                <TableHead class="text-center">الرضا</TableHead>
-                                <TableHead class="text-center">آخر تواصل</TableHead>
-                                <TableHead></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow v-for="c in customers.data" :key="c.id"
-                                class="cursor-pointer"
+            <!-- Table -->
+            <Card class="overflow-hidden p-0">
+                <div v-if="customers.data.length" class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-muted/50 text-xs text-muted-foreground">
+                            <tr class="border-b border-border">
+                                <th class="px-3 py-3 text-start font-semibold">العميل</th>
+                                <th class="px-3 py-3 text-start font-semibold">المجال</th>
+                                <th class="px-3 py-3 text-start font-semibold">المنطقة</th>
+                                <th class="px-3 py-3 text-center font-semibold">الطلبات</th>
+                                <th class="px-3 py-3 text-center font-semibold">مفتوحة</th>
+                                <th class="px-3 py-3 text-center font-semibold">متأخرة</th>
+                                <th class="px-3 py-3 text-center font-semibold">الرضا</th>
+                                <th class="px-3 py-3 text-center font-semibold">آخر نشاط</th>
+                                <th class="px-2 py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="c in customers.data" :key="c.id"
+                                class="group cursor-pointer border-b border-border transition-colors hover:bg-muted/40"
                                 @click="router.visit(route('customers.show', c.id))">
-                                <TableCell>
+                                <td class="px-3 py-3">
                                     <div class="flex items-center gap-3">
                                         <Avatar :name="c.full_name" />
                                         <div class="min-w-0">
-                                            <div class="font-bold text-foreground truncate">{{ c.full_name || '—' }}</div>
-                                            <div class="text-xs text-muted-foreground truncate">{{ c.email || '—' }}</div>
+                                            <div class="truncate font-bold text-foreground">{{ c.full_name || '—' }}</div>
+                                            <div class="truncate text-[11px] text-muted-foreground">{{ c.email || '—' }}</div>
                                         </div>
                                     </div>
-                                </TableCell>
-                                <TableCell>
-                                    <span v-if="c.business_field" class="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                </td>
+                                <td class="px-3 py-3">
+                                    <span v-if="c.business_field" class="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-foreground/80">
                                         <Briefcase class="size-3" /> {{ c.business_field }}
                                     </span>
                                     <span v-else class="text-muted-foreground">—</span>
-                                </TableCell>
-                                <TableCell class="text-xs text-muted-foreground">
+                                </td>
+                                <td class="px-3 py-3 text-xs text-muted-foreground">
                                     {{ [c.city, c.region].filter(Boolean).join('، ') || '—' }}
-                                </TableCell>
-                                <TableCell class="text-center font-bold tabular-nums">{{ num(c.requests_count ?? 0) }}</TableCell>
-                                <TableCell class="text-center tabular-nums">
+                                </td>
+                                <td class="px-3 py-3 text-center font-bold tabular-nums text-foreground">{{ num(c.requests_count ?? 0) }}</td>
+                                <td class="px-3 py-3 text-center tabular-nums">
                                     <span :class="c.open_requests_count > 0 ? 'font-bold text-accent' : 'text-muted-foreground'">
                                         {{ num(c.open_requests_count ?? 0) }}
                                     </span>
-                                </TableCell>
-                                <TableCell class="text-center">
+                                </td>
+                                <td class="px-3 py-3 text-center tabular-nums">
+                                    <span v-if="c.overdue_requests_count > 0" class="inline-flex items-center gap-1 font-bold text-destructive">
+                                        <AlertTriangle class="size-3" /> {{ num(c.overdue_requests_count) }}
+                                    </span>
+                                    <span v-else class="text-muted-foreground">0</span>
+                                </td>
+                                <td class="px-3 py-3 text-center">
                                     <span v-if="c.avg_csat != null" class="inline-flex items-center gap-1">
                                         <Star class="size-3.5 fill-warning text-warning" />
                                         <span class="font-medium tabular-nums">{{ c.avg_csat }}</span>
+                                        <span class="text-[10px] text-muted-foreground">({{ num(c.rating_count ?? 0) }})</span>
                                     </span>
                                     <span v-else class="text-muted-foreground">—</span>
-                                </TableCell>
-                                <TableCell class="text-center text-xs text-muted-foreground whitespace-nowrap">
-                                    {{ c.last_contact_at ? fmtDateAr(c.last_contact_at) : '—' }}
-                                </TableCell>
-                                <TableCell class="text-muted-foreground">
+                                </td>
+                                <td class="px-3 py-3 text-center text-[11px] text-muted-foreground whitespace-nowrap">
+                                    {{ c.last_request_at ? fmtDateAr(c.last_request_at) : (c.last_contact_at ? fmtDateAr(c.last_contact_at) : '—') }}
+                                </td>
+                                <td class="px-2 py-3 text-muted-foreground transition group-hover:text-primary">
                                     <ChevronLeft class="mx-auto size-4" />
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                    <div v-else class="p-12 text-center text-muted-foreground">
-                        <Users class="mx-auto mb-3 size-10 opacity-40" />
-                        <p class="text-sm">لا يوجد عملاء مطابقون لمعايير البحث</p>
-                    </div>
-                </CardContent>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else class="p-12 text-center text-muted-foreground">
+                    <Users class="mx-auto mb-3 size-10 opacity-40" />
+                    <p class="text-sm">لا يوجد عملاء مطابقون لمعايير البحث</p>
+                </div>
             </Card>
 
+            <!-- Pagination -->
             <div v-if="customers.data.length" class="flex flex-wrap items-center justify-between gap-3">
                 <p class="text-xs text-muted-foreground">
                     عرض {{ num(customers.from ?? 0) }}–{{ num(customers.to ?? 0) }} من {{ num(customers.total) }}
                 </p>
                 <div class="flex flex-wrap gap-1">
                     <Link v-for="link in customers.links" :key="link.label"
-                        :href="link.url || '#'"
-                        preserve-scroll
-                        v-html="link.label"
-                        class="min-w-9 rounded-md border border-border px-3 py-1.5 text-sm text-center transition-colors"
+                        :href="link.url || '#'" preserve-scroll v-html="link.label"
+                        class="min-w-9 rounded-md border border-border px-3 py-1.5 text-center text-sm transition-colors"
                         :class="[
-                            link.active ? 'bg-primary text-primary-foreground border-primary' : 'bg-card hover:bg-muted',
+                            link.active ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-muted',
                             !link.url ? 'pointer-events-none opacity-40' : '',
                         ]" />
                 </div>

@@ -109,12 +109,28 @@ class KbController extends Controller
             ->orderByDesc('created_at')
             ->first(['was_helpful']);
 
+        $versions = DB::table('kb_article_versions')
+            ->where('article_id', $article->id)
+            ->orderByDesc('version_number')
+            ->limit(20)
+            ->get(['id', 'version_number', 'title', 'summary', 'change_note', 'created_at']);
+
+        // Author / approver display names (identity: users.id == profiles.id).
+        $personIds = array_values(array_filter([$article->author_id, $article->approver_id]));
+        $people = $personIds
+            ? DB::table('profiles')->whereIn('id', $personIds)->pluck('full_name', 'id')
+            : collect();
+
         return Inertia::render('Kb/Show', [
             'article' => $article->fresh(),
             'category' => $category,
             'product' => $product,
             'myRating' => $myRating,
             'myFeedback' => $myFeedback,
+            'versions' => $versions,
+            'authorName' => $article->author_id ? ($people[$article->author_id] ?? null) : null,
+            'approverName' => $article->approver_id ? ($people[$article->approver_id] ?? null) : null,
+            'currentUserId' => $user->id,
             'can' => [
                 'author' => $user->hasCapability('kb.author'),
                 'approve' => $user->hasCapability('kb.approve'),
@@ -130,20 +146,24 @@ class KbController extends Controller
         return Inertia::render('Kb/New', $this->formOptions());
     }
 
-    /** Persist a new draft article. */
+    /** Persist a new article (draft or straight to review). */
     public function store(Request $request)
     {
         $data = $this->validateArticle($request);
-        $data['status'] = 'draft';
+        $data['status'] = $request->input('status') === 'in_review' ? 'in_review' : 'draft';
         $data['author_id'] = $request->user()->id;
         $data['slug'] = $this->makeSlug($data['title']);
         $data['current_version'] = 1;
 
         $article = KbArticle::create($data);
 
+        $message = $data['status'] === 'in_review'
+            ? 'تم إنشاء المقال وإرساله للمراجعة'
+            : 'تم إنشاء المقال كمسودة';
+
         return redirect()
             ->route('kb.show', $article->id)
-            ->with('success', 'تم إنشاء المقال كمسودة');
+            ->with('success', $message);
     }
 
     /** Edit article form (author/manage). */
@@ -186,6 +206,22 @@ class KbController extends Controller
             ->limit(80)
             ->get();
 
+        // Most-used approved articles (views + reuse).
+        $topUsed = KbArticle::query()
+            ->where('status', 'approved')
+            ->orderByDesc('views_count')
+            ->limit(8)
+            ->get(['id', 'title', 'views_count', 'insert_solution_count', 'sent_to_customer_count']);
+
+        // Lowest-rated approved articles that have been rated.
+        $lowRated = KbArticle::query()
+            ->where('status', 'approved')
+            ->where('rating_count', '>', 0)
+            ->orderBy('avg_rating')
+            ->orderByDesc('not_helpful_count')
+            ->limit(8)
+            ->get(['id', 'title', 'avg_rating', 'rating_count', 'not_helpful_count']);
+
         $kpis = [
             'pending' => (int) DB::table('kb_articles')->where('status', 'in_review')->count(),
             'gaps_open' => (int) DB::table('kb_gap_reports')->where('status', 'open')->count(),
@@ -196,6 +232,8 @@ class KbController extends Controller
         return Inertia::render('Kb/Manage', [
             'pending' => $pending,
             'gaps' => $gaps,
+            'topUsed' => $topUsed,
+            'lowRated' => $lowRated,
             'kpis' => $kpis,
             'can' => [
                 'approve' => $user->hasCapability('kb.approve'),
