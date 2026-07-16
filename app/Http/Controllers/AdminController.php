@@ -13,11 +13,16 @@ use App\Models\Profile;
 use App\Models\SystemIntegration;
 use App\Models\SystemSetting;
 use App\Models\Team;
+use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -225,6 +230,73 @@ class AdminController extends Controller
     }
 
     /** Assign a role to a profile (idempotent). */
+    /**
+     * Create a staff account from name + email + role only (no password).
+     * The employee sets their own password via the returned setup link, or
+     * signs in with Google (internal-domain accounts become staff automatically).
+     */
+    public function storeStaff(Request $request): RedirectResponse
+    {
+        $staffRoles = [
+            'support_staff', 'support_supervisor', 'product_team', 'product_manager',
+            'tech_team', 'tech_manager', 'management team', 'system_admin',
+        ];
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'role' => ['required', 'string', Rule::in($staffRoles)],
+        ]);
+
+        $email = strtolower($data['email']);
+        $id = (string) Str::uuid();
+        $now = now();
+
+        DB::transaction(function () use ($id, $data, $email, $now) {
+            DB::table('users')->insert([
+                'id' => $id,
+                'name' => $data['name'],
+                'email' => $email,
+                // Random unusable password — the employee sets their own.
+                'password' => Hash::make(Str::random(40)),
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+            DB::table('profiles')->insert([
+                'id' => $id,
+                'email' => $email,
+                'full_name' => $data['name'],
+                'account_status' => 'active',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+            DB::table('user_roles')->insert([
+                'id' => (string) Str::uuid(),
+                'user_id' => $id,
+                'role' => $data['role'],
+                'created_at' => $now,
+            ]);
+        });
+
+        // One-time password-setup link (works without email delivery — admin shares it).
+        $setupLink = null;
+        try {
+            $user = User::find($id);
+            $token = Password::createToken($user);
+            $setupLink = url('/reset-password/'.$token).'?email='.urlencode($email);
+        } catch (\Throwable $e) {
+            // token generation is best-effort; Google sign-in still works
+        }
+
+        $this->audit($request, 'staff.create', 'users', $id, ['email' => $email, 'role' => $data['role']]);
+
+        return back()
+            ->with('success', 'تم إنشاء حساب الموظف: '.$data['name'])
+            ->with('setup_link', $setupLink);
+    }
+
+    /** Assign a role to a profile. */
     public function assignRole(Request $request): RedirectResponse
     {
         $data = $request->validate([

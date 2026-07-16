@@ -1,12 +1,17 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
 import PageHero from '@/Components/PageHero.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardContent from '@/Components/ui/CardContent.vue';
 import Button from '@/Components/ui/Button.vue';
 import Badge from '@/Components/ui/Badge.vue';
+import Input from '@/Components/ui/Input.vue';
+import Label from '@/Components/ui/Label.vue';
+import Select from '@/Components/ui/Select.vue';
+import Dialog from '@/Components/ui/Dialog.vue';
+import { UserPlus, Copy } from 'lucide-vue-next';
 import Tabs from '@/Components/ui/Tabs.vue';
 import TabsList from '@/Components/ui/TabsList.vue';
 import TabsTrigger from '@/Components/ui/TabsTrigger.vue';
@@ -38,6 +43,23 @@ const props = defineProps({
 });
 
 const tab = ref('categories');
+
+// --- Add employee ---
+const page = usePage();
+const staffRoles = ['support_staff', 'support_supervisor', 'product_team', 'product_manager', 'tech_team', 'tech_manager', 'management team', 'system_admin'];
+const addOpen = ref(false);
+const staffForm = useForm({ name: '', email: '', role: 'support_staff' });
+const setupLink = computed(() => page.props.flash?.setup_link ?? null);
+function submitStaff() {
+    staffForm.post('/admin/staff', {
+        preserveScroll: true,
+        onSuccess: () => staffForm.reset('name', 'email'),
+    });
+}
+function copyLink() {
+    if (setupLink.value) navigator.clipboard?.writeText(setupLink.value);
+}
+function roleLabel(r) { return ROLE_LABELS[r] ?? r; }
 </script>
 
 <template>
@@ -96,6 +118,9 @@ const tab = ref('categories');
                 </TabsContent>
 
                 <TabsContent value="staff">
+                    <div class="mb-3 flex justify-end">
+                        <Button variant="accent" @click="addOpen = true"><UserPlus class="size-4" /> إضافة موظف</Button>
+                    </div>
                     <Card class="p-4"><Table>
                         <TableHeader><TableRow><TableHead>الاسم</TableHead><TableHead>البريد</TableHead><TableHead>الأدوار</TableHead></TableRow></TableHeader>
                         <TableBody>
@@ -103,11 +128,57 @@ const tab = ref('categories');
                                 <TableCell class="font-medium">{{ s.full_name }}</TableCell>
                                 <TableCell class="text-sm text-muted-foreground" dir="ltr">{{ s.email }}</TableCell>
                                 <TableCell class="flex flex-wrap gap-1">
-                                    <Badge v-for="r in (s.roles ?? [])" :key="r" variant="secondary">{{ ROLE_LABELS[r] ?? r }}</Badge>
+                                    <Badge v-for="r in (s.role_keys ?? s.roles ?? [])" :key="r" variant="secondary">{{ roleLabel(r) }}</Badge>
                                 </TableCell>
                             </TableRow>
+                            <TableRow v-if="!staff.length"><TableCell colspan="3" class="py-8 text-center text-muted-foreground">لا يوجد موظفون.</TableCell></TableRow>
                         </TableBody>
                     </Table></Card>
+
+                    <Dialog v-model:open="addOpen" title="إضافة موظف جديد" description="أنشئ حساب موظف بالاسم والبريد والدور فقط — دون كلمة مرور.">
+                        <div class="space-y-3">
+                            <!-- Success: show the password-setup link -->
+                            <div v-if="setupLink" class="space-y-3">
+                                <div class="rounded-lg bg-success/10 p-3 text-sm text-success">تم إنشاء الحساب بنجاح.</div>
+                                <div>
+                                    <Label>رابط تعيين كلمة المرور (شاركه مع الموظف)</Label>
+                                    <div class="mt-1.5 flex gap-2">
+                                        <Input :model-value="setupLink" readonly class="text-xs" dir="ltr" />
+                                        <Button size="icon" variant="outline" @click="copyLink" title="نسخ"><Copy class="size-4" /></Button>
+                                    </div>
+                                    <p class="mt-1 text-xs text-muted-foreground">أو يمكن للموظف الدخول مباشرةً عبر Google إن كان بريده ضمن نطاق المؤسسة.</p>
+                                </div>
+                                <div class="flex justify-end">
+                                    <Button variant="outline" @click="addOpen = false">إغلاق</Button>
+                                </div>
+                            </div>
+
+                            <!-- Form -->
+                            <template v-else>
+                                <div>
+                                    <Label>الاسم الكامل</Label>
+                                    <Input v-model="staffForm.name" class="mt-1.5" />
+                                    <p v-if="staffForm.errors.name" class="mt-1 text-xs text-destructive">{{ staffForm.errors.name }}</p>
+                                </div>
+                                <div>
+                                    <Label>البريد الإلكتروني</Label>
+                                    <Input v-model="staffForm.email" type="email" class="mt-1.5" dir="ltr" placeholder="employee@altqniah.sa" />
+                                    <p v-if="staffForm.errors.email" class="mt-1 text-xs text-destructive">{{ staffForm.errors.email }}</p>
+                                </div>
+                                <div>
+                                    <Label>الدور</Label>
+                                    <Select v-model="staffForm.role" class="mt-1.5">
+                                        <option v-for="r in staffRoles" :key="r" :value="r">{{ roleLabel(r) }}</option>
+                                    </Select>
+                                    <p v-if="staffForm.errors.role" class="mt-1 text-xs text-destructive">{{ staffForm.errors.role }}</p>
+                                </div>
+                                <div class="flex justify-end gap-2 pt-1">
+                                    <Button variant="outline" @click="addOpen = false">إلغاء</Button>
+                                    <Button variant="accent" :disabled="staffForm.processing" @click="submitStaff">إنشاء الحساب</Button>
+                                </div>
+                            </template>
+                        </div>
+                    </Dialog>
                 </TabsContent>
 
                 <TabsContent value="permissions">
