@@ -22,7 +22,7 @@ import {
     ArrowRight, Tag, Package, Clock, Paperclip, Star, MessageSquare, Lock,
     GaugeCircle, UserCog, ArrowUpCircle, ListTodo, CheckCircle2, CircleDot,
     Undo2, Play, RotateCcw, ShieldCheck, Activity, Plus,
-    ClipboardCheck, Upload, FileText, Trash2, Download,
+    ClipboardCheck, Upload, FileText, Trash2, Download, Zap,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -102,6 +102,12 @@ function doClose() { closeForm.post(`/requests/${r.value.id}/close`, { preserveS
 function reopen() { post('reopen', { reason: '' }); }
 function resume() { post('resume'); }
 function assignSelf() { post('assign-self'); }
+
+// --- Tech-escalation bypass ---
+const bypassOpen = ref(false);
+const bypassForm = useForm({ reason_code: 'low_complexity', description: '' });
+function doBypass() { bypassForm.post(`/requests/${r.value.id}/tech-bypass`, { preserveScroll: true, onSuccess: () => { bypassOpen.value = false; bypassForm.reset(); } }); }
+function approveBypass() { post('tech-bypass/approve'); }
 
 // --- Customer rating & verification ---
 const rateForm = useForm({ stars: 5, notes: '' });
@@ -372,6 +378,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                             <Button v-if="can.update_status || can.change_priority" size="sm" class="w-full" :disabled="statusForm.processing" @click="saveStatus">حفظ التغييرات</Button>
                             <Separator />
                             <Button v-if="can.escalate && !isTerminal" variant="destructive" size="sm" class="w-full gap-1" @click="escalateOpen = true"><ArrowUpCircle class="size-4" /> تصعيد</Button>
+                            <Button v-if="can.tech_bypass" variant="outline" size="sm" class="w-full gap-1" @click="bypassOpen = true"><Zap class="size-4" /> تجاوز التصعيد التقني</Button>
                             <Button v-if="can.return_to_customer && !isTerminal" variant="warning" size="sm" class="w-full gap-1" @click="returnOpen = true"><Undo2 class="size-4" /> إعادة للعميل</Button>
                             <Button v-if="request.status === 'awaiting_customer' || request.status === 'awaiting_internal'" variant="outline" size="sm" class="w-full gap-1" @click="resume"><Play class="size-4" /> استئناف</Button>
                             <Button v-if="can.close && !isTerminal" variant="success" size="sm" class="w-full" @click="closeOpen = true">إغلاق الطلب</Button>
@@ -406,6 +413,20 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                                     <ClipboardCheck class="size-4" /> رفع للموافقة الإشرافية
                                 </Button>
                             </template>
+                        </CardContent>
+                    </Card>
+
+                    <!-- Tech bypass state -->
+                    <Card v-if="isStaff && request.tech_bypass_at" :class="!request.tech_bypass_approved && 'sla-card-warn'">
+                        <CardHeader><CardTitle class="flex items-center gap-2"><Zap class="size-5" /> تجاوز التصعيد التقني</CardTitle></CardHeader>
+                        <CardContent class="space-y-2 text-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-muted-foreground">الحالة</span>
+                                <Badge :variant="request.tech_bypass_approved ? 'success' : 'warning'">{{ request.tech_bypass_approved ? 'معتمد' : 'بانتظار الاعتماد' }}</Badge>
+                            </div>
+                            <p class="text-muted-foreground">{{ request.tech_bypass_reason_code }}</p>
+                            <p v-if="request.tech_bypass_description">{{ request.tech_bypass_description }}</p>
+                            <Button v-if="can.approve_tech_bypass" size="sm" variant="success" class="w-full" @click="approveBypass">اعتماد التجاوز</Button>
                         </CardContent>
                     </Card>
 
@@ -483,6 +504,21 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
             <div class="space-y-3">
                 <Textarea v-model="returnForm.reason" placeholder="ما المطلوب من العميل؟" class="min-h-20" />
                 <div class="flex justify-end gap-2"><Button variant="outline" @click="returnOpen = false">إلغاء</Button><Button variant="warning" :disabled="returnForm.processing || !returnForm.reason" @click="doReturn">إرسال للعميل</Button></div>
+            </div>
+        </Dialog>
+        <Dialog v-model:open="bypassOpen" title="تجاوز التصعيد التقني" description="تخطّي خطوة التصعيد التقني بمبرّر موثّق.">
+            <div class="space-y-3">
+                <div><Label>سبب التجاوز</Label>
+                    <Select v-model="bypassForm.reason_code" class="mt-1">
+                        <option value="low_complexity">تعقيد منخفض</option>
+                        <option value="known_issue">مشكلة معروفة/حل جاهز</option>
+                        <option value="customer_urgency">إلحاح العميل</option>
+                        <option value="already_diagnosed">تم التشخيص مسبقًا</option>
+                        <option value="other">أخرى</option>
+                    </Select></div>
+                <Textarea v-model="bypassForm.description" placeholder="مبرّر التجاوز" class="min-h-20" />
+                <p v-if="bypassForm.errors.description" class="text-xs text-destructive">{{ bypassForm.errors.description }}</p>
+                <div class="flex justify-end gap-2"><Button variant="outline" @click="bypassOpen = false">إلغاء</Button><Button :disabled="bypassForm.processing || !bypassForm.description" @click="doBypass">تنفيذ</Button></div>
             </div>
         </Dialog>
         <Dialog v-model:open="closeOpen" title="إغلاق الطلب">

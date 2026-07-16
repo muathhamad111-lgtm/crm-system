@@ -16,6 +16,7 @@ Route::post('/suggestions/{request}/vote', [SuggestionController::class, 'vote']
 Route::post('/suggestions/{request}/comment', [SuggestionController::class, 'comment'])->name('suggestions.comment');
 Route::post('/suggestions/{request}/rate', [SuggestionController::class, 'rate'])->name('suggestions.rate');
 Route::post('/suggestions/{request}/advance', [SuggestionController::class, 'advance'])->middleware('staff')->name('suggestions.advance');
+Route::post('/suggestions/{request}/score', [SuggestionController::class, 'score'])->middleware('staff')->name('suggestions.score');
 Route::post('/suggestions/{request}/publish', [SuggestionController::class, 'publish'])->middleware('staff')->name('suggestions.publish');
 
 // Ratings (CSAT)

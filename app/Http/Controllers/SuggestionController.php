@@ -534,6 +534,44 @@ class SuggestionController extends Controller
         return back()->with('success', 'تم تحديث المقترح');
     }
 
+    /**
+     * Staff: RICE scoring. Stores reach / impact (value_score) / confidence /
+     * effort; the score is derived as (reach × impact × confidence) / effort.
+     */
+    public function score(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'reach' => ['required', 'numeric', 'min:0'],
+            'value_score' => ['required', 'numeric', 'min:0'],       // impact factor
+            'confidence' => ['required', 'numeric', 'min:0', 'max:1'], // 0..1
+            'effort' => ['required', 'numeric', 'min:0.1'],           // person-weeks
+        ]);
+
+        $suggestion = $this->baseQuery()->findOrFail($id);
+        $user = $request->user();
+
+        $suggestion->fill([
+            'reach' => $data['reach'],
+            'value_score' => $data['value_score'],
+            'confidence' => $data['confidence'],
+            'effort' => $data['effort'],
+        ])->save();
+
+        $rice = round(($data['reach'] * $data['value_score'] * $data['confidence']) / $data['effort'], 1);
+
+        DB::table('suggestion_decisions_log')->insert([
+            'id' => (string) Str::uuid(),
+            'request_id' => $suggestion->id,
+            'actor_id' => $user->id,
+            'action' => 'rice_scored',
+            'to_value' => (string) $rice,
+            'notes' => "R={$data['reach']} · I={$data['value_score']} · C={$data['confidence']} · E={$data['effort']}",
+            'created_at' => now(),
+        ]);
+
+        return back()->with('success', "تم احتساب درجة RICE: {$rice}");
+    }
+
     /** Staff: publish (or unpublish) a suggestion to customers. */
     public function publish(Request $request, string $id)
     {

@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
 import Card from '@/Components/ui/Card.vue';
@@ -8,9 +9,11 @@ import CardContent from '@/Components/ui/CardContent.vue';
 import Button from '@/Components/ui/Button.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
+import Input from '@/Components/ui/Input.vue';
+import Label from '@/Components/ui/Label.vue';
 import Separator from '@/Components/ui/Separator.vue';
 import Badge from '@/Components/ui/Badge.vue';
-import { ArrowRight, ThumbsUp, MessageSquare, Star } from 'lucide-vue-next';
+import { ArrowRight, ThumbsUp, MessageSquare, Star, Calculator } from 'lucide-vue-next';
 import { timeAgoAr } from '@/lib/date';
 import { IDEA_STAGE, statusLabel } from '@/lib/labels';
 
@@ -29,6 +32,20 @@ function addComment(){ commentForm.post(`/suggestions/${s.id}/comment`, { preser
 const stageForm = useForm({ idea_stage: s.idea_stage, decision: s.decision, decision_reason: s.decision_reason ?? '' });
 function advance(){ stageForm.post(`/suggestions/${s.id}/advance`, { preserveScroll:true }); }
 function publish(){ router.post(`/suggestions/${s.id}/publish`, {}, { preserveScroll:true }); }
+
+// RICE scoring: score = (reach × impact × confidence) / effort
+const riceForm = useForm({
+  reach: s.reach ?? 100,
+  value_score: s.value_score ?? 2,
+  confidence: s.confidence ?? 0.8,
+  effort: s.effort ?? 2,
+});
+const liveRice = computed(() => {
+  const { reach, value_score, confidence, effort } = riceForm;
+  if (!reach || !value_score || !confidence || !effort) return '—';
+  return Math.round((reach * value_score * confidence / effort) * 10) / 10;
+});
+function saveScore(){ riceForm.post(`/suggestions/${s.id}/score`, { preserveScroll:true }); }
 </script>
 <template>
   <Head :title="s.request_number ?? 'مقترح'" />
@@ -70,9 +87,31 @@ function publish(){ router.post(`/suggestions/${s.id}/publish`, {}, { preserveSc
               <Button size="sm" class="w-full" :disabled="stageForm.processing" @click="advance">حفظ المرحلة</Button>
               <Separator />
               <Button size="sm" variant="accent" class="w-full" @click="publish">نشر للعملاء</Button>
-              <div v-if="s.rice_score" class="rounded-lg bg-muted p-3 text-sm">
-                <p class="text-muted-foreground">درجة RICE</p><p class="text-lg font-bold tabular-nums">{{ s.rice_score }}</p>
+            </CardContent></Card>
+
+          <!-- RICE scoring -->
+          <Card v-if="isStaff">
+            <CardHeader><CardTitle class="flex items-center gap-2"><Calculator class="size-5" /> تسجيل RICE</CardTitle></CardHeader>
+            <CardContent class="space-y-3">
+              <div class="grid grid-cols-2 gap-2">
+                <div><Label class="text-xs">الوصول (Reach)</Label><Input type="number" min="0" v-model="riceForm.reach" class="mt-1" /></div>
+                <div><Label class="text-xs">الأثر (Impact)</Label>
+                  <Select v-model.number="riceForm.value_score" class="mt-1">
+                    <option :value="0.25">ضئيل (0.25)</option><option :value="0.5">منخفض (0.5)</option>
+                    <option :value="1">متوسط (1)</option><option :value="2">مرتفع (2)</option><option :value="3">هائل (3)</option>
+                  </Select></div>
+                <div><Label class="text-xs">الثقة (Confidence)</Label>
+                  <Select v-model.number="riceForm.confidence" class="mt-1">
+                    <option :value="0.5">50%</option><option :value="0.8">80%</option><option :value="1">100%</option>
+                  </Select></div>
+                <div><Label class="text-xs">الجهد (Effort)</Label><Input type="number" min="0.1" step="0.5" v-model="riceForm.effort" class="mt-1" /></div>
               </div>
+              <div class="rounded-lg bg-primary-soft p-3 text-center">
+                <p class="text-xs text-primary/70">درجة RICE المحتسبة</p>
+                <p class="text-2xl font-bold tabular-nums text-primary">{{ liveRice }}</p>
+              </div>
+              <p v-if="riceForm.errors.confidence" class="text-xs text-destructive">{{ riceForm.errors.confidence }}</p>
+              <Button size="sm" class="w-full" :disabled="riceForm.processing" @click="saveScore">حفظ التقييم</Button>
             </CardContent></Card>
           <Card><CardContent class="space-y-2 pt-6 text-sm">
             <div class="flex justify-between"><span class="text-muted-foreground">أُنشئ</span><span>{{ timeAgoAr(s.created_at) }}</span></div>

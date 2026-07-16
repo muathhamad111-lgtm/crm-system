@@ -28,6 +28,10 @@ Route::post('/requests/{request}/verify', [RequestController::class, 'verifySolu
 Route::post('/requests/{request}/request-approval', [RequestController::class, 'requestApproval'])->name('requests.requestApproval');
 Route::post('/requests/{request}/decide-approval', [RequestController::class, 'decideApproval'])->name('requests.decideApproval');
 
+// Tech-escalation bypass
+Route::post('/requests/{request}/tech-bypass', [RequestController::class, 'techBypass'])->name('requests.techBypass');
+Route::post('/requests/{request}/tech-bypass/approve', [RequestController::class, 'approveTechBypass'])->name('requests.approveTechBypass');
+
 // Attachments
 Route::post('/requests/{request}/attachments', [RequestController::class, 'uploadAttachment'])->name('requests.uploadAttachment');
 Route::delete('/requests/{request}/attachments/{attachment}', [RequestController::class, 'deleteAttachment'])->name('requests.deleteAttachment');

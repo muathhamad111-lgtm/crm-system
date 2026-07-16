@@ -407,6 +407,10 @@ class RequestController extends Controller
                 'approval_requested_at' => $request->approval_requested_at,
                 'approval_decided_at' => $request->approval_decided_at,
                 'approval_notes' => $request->approval_notes,
+                'tech_bypass_at' => $request->tech_bypass_at,
+                'tech_bypass_approved' => (bool) $request->tech_bypass_approved_by,
+                'tech_bypass_reason_code' => $request->tech_bypass_reason_code,
+                'tech_bypass_description' => $request->tech_bypass_description,
             ],
             'fieldValues' => $fieldValues,
             'stages' => $stages,
@@ -435,6 +439,8 @@ class RequestController extends Controller
                 'request_approval' => $isStaff && ! $user->isSupervisor() && $request->approval_status !== 'pending' && ! in_array($status, self::TERMINAL, true),
                 'approve' => $user->isSupervisor() && $request->approval_status === 'pending',
                 'upload' => $isStaff || $isOwner,
+                'tech_bypass' => $isStaff && ($user->hasCapability('request.escalate') || $user->isSupervisor()) && ! $request->tech_bypass_at && ! in_array($status, self::TERMINAL, true),
+                'approve_tech_bypass' => $user->isSupervisor() && $request->tech_bypass_at && ! $request->tech_bypass_approved_by,
             ],
         ]);
     }
@@ -914,6 +920,65 @@ class RequestController extends Controller
         }
 
         return back()->with('success', $data['decision'] === 'approved' ? 'تمت الموافقة' : 'تم الرفض');
+    }
+
+    /**
+     * Technical-escalation bypass — skip the tech step with a justified reason.
+     * A supervisor's bypass is self-approved; a regular agent's is pending approval.
+     */
+    public function techBypass(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! ($user->hasCapability('request.escalate') || $user->isSupervisor())) {
+            abort(403, 'لا تملك صلاحية تجاوز التصعيد التقني.');
+        }
+        $data = $httpRequest->validate([
+            'reason_code' => ['required', 'string', 'max:100'],
+            'description' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $selfApproved = $user->isSupervisor();
+
+        $request->fill([
+            'tech_bypass_at' => now(),
+            'tech_bypass_by' => $user->id,
+            'tech_bypass_approved_by' => $selfApproved ? $user->id : null,
+            'tech_bypass_reason_code' => $data['reason_code'],
+            'tech_bypass_description' => $data['description'],
+        ])->save();
+
+        $this->log($request->id, $user->id, $selfApproved ? 'tech_bypass_approved' : 'tech_bypass_requested', null, $data['reason_code'], $data['description']);
+
+        if (! $selfApproved) {
+            app(\App\Services\NotificationService::class)->notifyRoles(
+                ['tech_manager', 'support_supervisor', 'system_admin'], 'طلب تجاوز تصعيد تقني',
+                "الطلب {$request->request_number} يطلب تجاوز التصعيد التقني.", $request->id, "/requests/{$request->id}"
+            );
+        }
+
+        return back()->with('success', $selfApproved ? 'تم تجاوز التصعيد التقني' : 'تم رفع طلب تجاوز التصعيد التقني للاعتماد');
+    }
+
+    /** A supervisor approves a pending tech-bypass request. */
+    public function approveTechBypass(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isSupervisor()) {
+            abort(403);
+        }
+        if (! $request->tech_bypass_at || $request->tech_bypass_approved_by) {
+            return back()->with('error', 'لا يوجد طلب تجاوز معلّق.');
+        }
+        $request->fill(['tech_bypass_approved_by' => $user->id])->save();
+        $this->log($request->id, $user->id, 'tech_bypass_approved', null, $request->tech_bypass_reason_code);
+        if ($request->tech_bypass_by) {
+            app(\App\Services\NotificationService::class)->notify(
+                $request->tech_bypass_by, 'تم اعتماد تجاوز التصعيد التقني',
+                "الطلب {$request->request_number}: اعتُمد التجاوز.", $request->id, "/requests/{$request->id}", 'request'
+            );
+        }
+
+        return back()->with('success', 'تم اعتماد التجاوز التقني');
     }
 
     /** Upload one or more attachments to the request. */
