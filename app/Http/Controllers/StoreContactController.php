@@ -52,6 +52,7 @@ class StoreContactController extends Controller
         $kpis = [
             'total' => (clone $base)->count(),
             'new' => (clone $base)->where('status', 'new')->count(),
+            'read' => (clone $base)->where('status', 'read')->count(),
             'handled' => (clone $base)->where('status', 'handled')->count(),
             'archived' => (clone $base)->where('status', 'archived')->count(),
         ];

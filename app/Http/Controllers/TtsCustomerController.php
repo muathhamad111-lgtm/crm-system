@@ -70,6 +70,9 @@ class TtsCustomerController extends Controller
 
         $kpis = [
             'total_customers' => (clone $base)->count(),
+            'individuals' => (clone $base)->where('entity_type', 'individual')->count(),
+            'non_profit' => (clone $base)->where('entity_type', 'non_profit')->count(),
+            'private_org' => (clone $base)->where('entity_type', 'private_org')->count(),
             'organizations' => (clone $base)->whereIn('entity_type', ['non_profit', 'private_org'])->count(),
             'active_subscriptions' => TtsSubscription::query()
                 ->whereNull('deleted_at')->where('status', 'active')->count(),

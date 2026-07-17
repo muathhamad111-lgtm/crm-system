@@ -65,6 +65,8 @@ class RatingController extends Controller
         $avg = $total ? round($rows->avg('stars'), 2) : 0;
         $promoters = $rows->where('stars', '>=', 4)->count();
         $detractors = $rows->where('stars', '<=', 2)->count();
+        // Net Promoter Score proxy from the CSAT distribution (-100..100).
+        $nps = $total ? (int) round((($promoters - $detractors) / $total) * 100) : 0;
 
         // Business-field options (staff filter).
         $businessFields = $isStaff
@@ -84,6 +86,7 @@ class RatingController extends Controller
                 'avg' => $avg,
                 'promoters' => $promoters,
                 'detractors' => $detractors,
+                'nps' => $nps,
             ],
             'filters' => $filters,
             'businessFields' => $businessFields,

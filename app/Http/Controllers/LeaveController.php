@@ -23,17 +23,24 @@ class LeaveController extends Controller
             ->get();
 
         $today = Carbon::today();
+        $yearStart = Carbon::create($today->year, 1, 1);
+
+        // The status column is an enum-cast; normalise to its string value.
+        $statusOf = fn ($l) => $l->status?->value ?? $l->status;
 
         $stats = [
             'total' => $leaves->count(),
-            'active' => $leaves->where('status', 'active')->count(),
+            'active' => $leaves->filter(fn ($l) => $statusOf($l) === 'active')->count(),
+            'open' => $leaves->filter(fn ($l) => in_array($statusOf($l), ['approved', 'active'], true))->count(),
             'upcoming' => $leaves->filter(
-                fn ($l) => $l->status === 'approved' && $l->start_date && $l->start_date->gt($today)
+                fn ($l) => $statusOf($l) === 'approved' && $l->start_date && $l->start_date->gt($today)
             )->count(),
-            'history' => $leaves->whereIn('status', ['completed', 'cancelled'])->count(),
+            'history' => $leaves->filter(fn ($l) => in_array($statusOf($l), ['completed', 'cancelled'], true))->count(),
             'days_used' => (int) $leaves
-                ->whereIn('status', ['approved', 'active', 'completed'])
+                ->filter(fn ($l) => in_array($statusOf($l), ['approved', 'active', 'completed'], true)
+                    && $l->start_date && $l->start_date->gte($yearStart))
                 ->sum(fn ($l) => (int) ($l->duration_days ?? 0)),
+            'year' => $today->year,
         ];
 
         $types = LeaveType::query()

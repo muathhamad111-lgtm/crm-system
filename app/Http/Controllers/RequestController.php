@@ -252,10 +252,21 @@ class RequestController extends Controller
                 ->get(['profiles.id', 'profiles.full_name', 'profiles.email']);
         }
 
+        // Intake channels (staff pick how the request reached them).
+        $channels = [
+            ['key' => 'portal', 'label' => 'بوابة العميل', 'icon' => '🌐'],
+            ['key' => 'phone', 'label' => 'اتصال هاتفي', 'icon' => '📞'],
+            ['key' => 'email', 'label' => 'بريد إلكتروني', 'icon' => '✉️'],
+            ['key' => 'whatsapp', 'label' => 'واتساب', 'icon' => '💬'],
+            ['key' => 'in_product', 'label' => 'من داخل المنتج', 'icon' => '📱'],
+            ['key' => 'other', 'label' => 'أخرى', 'icon' => '🔗'],
+        ];
+
         return Inertia::render('Requests/New', [
             'categories' => $categoriesOut,
             'products' => $products,
             'customers' => $customers,
+            'channels' => $channels,
             'isStaff' => $isStaff,
         ]);
     }
@@ -273,6 +284,7 @@ class RequestController extends Controller
             'title' => ['required', 'string', 'min:5', 'max:200'],
             'description' => ['required', 'string', 'min:10'],
             'customer_id' => [$isStaff ? 'required' : 'nullable', 'string', 'exists:profiles,id'],
+            'channel' => ['nullable', 'string', 'in:portal,phone,email,whatsapp,in_product,other'],
             'fields' => ['nullable', 'array'],
         ]);
 
@@ -308,7 +320,7 @@ class RequestController extends Controller
                 'customer_id' => $customerId,
                 'status' => 'new',
                 'priority' => $category->default_priority?->value ?? 'medium',
-                'channel' => 'portal',
+                'channel' => $isStaff ? ($data['channel'] ?? 'portal') : 'portal',
                 'source' => $isStaff ? 'staff_on_behalf' : 'portal',
                 'assigned_team' => $category->target_team?->value,
                 'progress' => 0,

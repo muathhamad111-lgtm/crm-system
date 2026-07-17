@@ -2,7 +2,6 @@
 import { ref, watch, computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
 import KpiCard from '@/Components/KpiCard.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardContent from '@/Components/ui/CardContent.vue';
@@ -20,7 +19,7 @@ import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
 import {
     Users, Search, Building2, User as UserIcon, Mail, Phone, Briefcase,
-    CheckCircle2, ChevronLeft, Store,
+    CheckCircle2, ChevronLeft, Store, Clock,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -66,15 +65,28 @@ function entityLabel(e) {
 <template>
     <Head title="عملاء المتجر" />
     <AppShell>
-        <div class="space-y-6">
-            <PageHero
-                title="عملاء المتجر"
-                subtitle="جميع العملاء المُزامَنون من متجر التحول التقني — أفراد، قطاع غير ربحي، وقطاع خاص"
-                :icon="Store" />
+        <div class="space-y-5">
+            <!-- Gradient hero -->
+            <div class="relative overflow-hidden rounded-2xl p-6 sm:p-8 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
+                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
+                <div class="relative flex flex-wrap items-start justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
+                            <Store class="size-6" />
+                        </div>
+                        <div>
+                            <p class="text-xs text-white/60">متجر التحول التقني · مزامنة المشتركين</p>
+                            <h1 class="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight">عملاء المتجر</h1>
+                            <p class="mt-1 max-w-xl text-sm text-white/80">جميع العملاء المُزامَنون من متجر التحول التقني — أفراد، قطاع غير ربحي، وقطاع خاص. اضغط على أي صف لفتح الملف.</p>
+                        </div>
+                    </div>
+                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ num(customers.total ?? 0) }} عميل</span>
+                </div>
+            </div>
 
-            <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                <KpiCard label="إجمالي العملاء" :value="kpis.total_customers ?? 0" :icon="Users" tone="primary" />
-                <KpiCard label="منظمات" :value="kpis.organizations ?? 0" :icon="Building2" tone="accent" />
+            <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <KpiCard label="إجمالي العملاء" :value="kpis.total_customers ?? 0" :hint="`أفراد: ${num(kpis.individuals ?? 0)}`" :icon="Users" tone="primary" />
+                <KpiCard label="منظمات" :value="kpis.organizations ?? 0" :hint="`غير ربحي ${num(kpis.non_profit ?? 0)} · خاص ${num(kpis.private_org ?? 0)}`" :icon="Building2" tone="accent" />
                 <KpiCard label="اشتراكات نشطة" :value="kpis.active_subscriptions ?? 0" :icon="CheckCircle2" tone="success" />
                 <KpiCard label="موظفون ومفوّضون" :value="kpis.contacts ?? 0" :icon="UserIcon" tone="muted" />
             </div>
@@ -137,7 +149,7 @@ function entityLabel(e) {
                                 <TableCell class="text-center font-bold tabular-nums text-primary">{{ num(c.active_subscriptions_count ?? 0) }}</TableCell>
                                 <TableCell class="text-center font-bold tabular-nums text-accent">{{ num(c.contacts_count ?? 0) }}</TableCell>
                                 <TableCell class="text-center text-xs text-muted-foreground whitespace-nowrap">
-                                    {{ c.last_synced_at ? fmtDateAr(c.last_synced_at) : '—' }}
+                                    <span class="inline-flex items-center gap-1"><Clock class="size-3" /> {{ c.last_synced_at ? fmtDateAr(c.last_synced_at) : '—' }}</span>
                                 </TableCell>
                                 <TableCell class="text-muted-foreground"><ChevronLeft class="mx-auto size-4" /></TableCell>
                             </TableRow>
