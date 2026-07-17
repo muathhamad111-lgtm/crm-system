@@ -170,12 +170,12 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
             <Card class="p-3">
                 <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                     <div class="relative sm:col-span-2 lg:col-span-1">
-                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input v-model="q" placeholder="ابحث برقم الطلب أو العنوان…" class="pr-9" />
+                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="q" label="بحث برقم الطلب أو العنوان…" />
                     </div>
-                    <Select :model-value="filters.priority" @update:model-value="v => apply({ priority: v })">
+                    <Select :model-value="filters.priority" header="مستوى الأولوية" @update:model-value="v => apply({ priority: v })">
                         <option value="all">كل الأولويات</option>
-                        <option v-for="[k, m] in Object.entries(REQUEST_PRIORITY)" :key="k" :value="k">{{ m.label }}</option>
+                        <option v-for="[k, m] in Object.entries(REQUEST_PRIORITY)" :key="k" :value="k" :data-dot="m.tone">{{ m.label }}</option>
                     </Select>
                     <template v-if="isStaff && options">
                         <Select :model-value="filters.category" @update:model-value="v => apply({ category: v })">
