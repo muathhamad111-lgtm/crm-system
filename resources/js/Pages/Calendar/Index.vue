@@ -32,7 +32,7 @@ const EVENT_TYPES = [
 ];
 const typeMeta = (t) => EVENT_TYPES.find((e) => e.v === t) ?? EVENT_TYPES[5];
 
-const AR = 'ar-SA-u-ca-gregory';
+const AR = 'ar-SA-u-ca-gregory-nu-latn';
 const TZ = 'Asia/Riyadh';
 const fmt = (v, opts) => (v ? new Intl.DateTimeFormat(AR, { timeZone: TZ, ...opts }).format(new Date(v)) : '—');
 const dayFull = (v) => fmt(v, { weekday: 'long', day: 'numeric', month: 'long' });

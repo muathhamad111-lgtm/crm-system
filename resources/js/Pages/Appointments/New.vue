@@ -25,7 +25,7 @@ const props = defineProps({
 const MODE_ICON = { phone: Phone, video: Video, onsite: MapPin, training: GraduationCap, followup: Workflow, other: HelpCircle };
 const modeIcon = (m) => MODE_ICON[m] ?? HelpCircle;
 
-const AR = 'ar-SA-u-ca-gregory';
+const AR = 'ar-SA-u-ca-gregory-nu-latn';
 const TZ = 'Asia/Riyadh';
 const fmt = (v, opts) => (v ? new Intl.DateTimeFormat(AR, { timeZone: TZ, ...opts }).format(new Date(v)) : '—');
 const dayMonth = (v) => fmt(v, { weekday: 'long', day: 'numeric', month: 'long' });

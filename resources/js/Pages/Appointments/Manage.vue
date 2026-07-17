@@ -33,7 +33,7 @@ const STATUS_DOT = {
     cancelled: 'bg-destructive', no_show: 'bg-muted-foreground', rescheduled: 'bg-info',
 };
 
-const AR = 'ar-SA-u-ca-gregory';
+const AR = 'ar-SA-u-ca-gregory-nu-latn';
 const TZ = 'Asia/Riyadh';
 const fmt = (v, opts) => (v ? new Intl.DateTimeFormat(AR, { timeZone: TZ, ...opts }).format(new Date(v)) : '—');
 const dayTime = (v) => fmt(v, { weekday: 'long', day: 'numeric', month: 'short' });

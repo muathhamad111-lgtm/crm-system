@@ -42,7 +42,7 @@ const STATUS_DOT = {
 };
 
 /* ---------- date helpers ---------- */
-const AR = 'ar-SA-u-ca-gregory';
+const AR = 'ar-SA-u-ca-gregory-nu-latn';
 const TZ = 'Asia/Riyadh';
 const fmt = (v, opts) => (v ? new Intl.DateTimeFormat(AR, { timeZone: TZ, ...opts }).format(new Date(v)) : '—');
 const dayNum = (v) => fmt(v, { day: 'numeric' });

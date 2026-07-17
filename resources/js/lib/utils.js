@@ -6,10 +6,10 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }
 
-/** Arabic-Indic-aware number formatting (kept Western digits, grouped). */
+/** Number formatting — Western (English) digits, grouped. */
 export function num(n) {
     if (n === null || n === undefined || n === '') return '—';
-    return new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 1 }).format(n);
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(n);
 }
 
 /** Cap a badge count at 99+. */

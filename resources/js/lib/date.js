@@ -15,15 +15,15 @@ function toDate(v) {
 export function fmtDateAr(v) {
     const d = toDate(v);
     if (!d) return '—';
-    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', {
         timeZone: TZ, day: 'numeric', month: 'long', year: 'numeric',
-    }).format(d).replace(/[٠-٩]/g, (x) => '٠١٢٣٤٥٦٧٨٩'.indexOf(x));
+    }).format(d);
 }
 
 export function fmtFullDateTimeAr(v) {
     const d = toDate(v);
     if (!d) return '—';
-    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', {
         timeZone: TZ, day: 'numeric', month: 'long', year: 'numeric',
         hour: '2-digit', minute: '2-digit',
     }).format(d);
@@ -32,7 +32,7 @@ export function fmtFullDateTimeAr(v) {
 export function fmtTimeAr(v) {
     const d = toDate(v);
     if (!d) return '—';
-    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', {
         timeZone: TZ, hour: '2-digit', minute: '2-digit',
     }).format(d);
 }

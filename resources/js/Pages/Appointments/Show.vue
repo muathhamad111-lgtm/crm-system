@@ -45,7 +45,7 @@ const ACTION_META = {
 };
 const actionMeta = (act) => ACTION_META[act] ?? { label: act, icon: History, cls: 'text-muted-foreground' };
 
-const AR = 'ar-SA-u-ca-gregory';
+const AR = 'ar-SA-u-ca-gregory-nu-latn';
 const TZ = 'Asia/Riyadh';
 const fmt = (v, opts) => (v ? new Intl.DateTimeFormat(AR, { timeZone: TZ, ...opts }).format(new Date(v)) : '—');
 const dayMonth = (v) => fmt(v, { weekday: 'long', day: 'numeric', month: 'long' });

@@ -87,13 +87,13 @@ const statusUpdateLabel = (val) => statusLabel(REQUEST_STATUS, val).label;
 
 function fmtApptDate(iso) {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('ar-SA-u-ca-gregory', {
+    return new Date(iso).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn', {
         timeZone: 'Asia/Riyadh', weekday: 'short', day: 'numeric', month: 'short',
     });
 }
 function fmtApptTime(iso) {
     if (!iso) return '';
-    return new Date(iso).toLocaleTimeString('ar-SA-u-ca-gregory', {
+    return new Date(iso).toLocaleTimeString('ar-SA-u-ca-gregory-nu-latn', {
         timeZone: 'Asia/Riyadh', hour: '2-digit', minute: '2-digit',
     });
 }
@@ -306,7 +306,7 @@ const heroSubtitle = computed(() => props.isAdmin
                             <span class="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary"><CalendarClock class="size-4" /></span>
                             <div>
                                 <h2 class="text-[14.5px] font-bold leading-tight">مواعيدك القادمة</h2>
-                                <p class="mt-0.5 text-[10.5px] text-muted-foreground">المؤكدة فقط · خلال ١٤ يوم</p>
+                                <p class="mt-0.5 text-[10.5px] text-muted-foreground">المؤكدة فقط · خلال 14 يوم</p>
                             </div>
                         </div>
                         <Button href="/appointments" variant="ghost" size="sm">الكل <ArrowLeft class="size-3" /></Button>
@@ -345,7 +345,7 @@ const heroSubtitle = computed(() => props.isAdmin
                         <span class="flex size-8 items-center justify-center rounded-lg bg-foreground/5 text-foreground"><Bell class="size-4" /></span>
                         <div>
                             <h2 class="text-[14.5px] font-bold leading-tight">آخر التحديثات</h2>
-                            <p class="mt-0.5 text-[10.5px] text-muted-foreground">آخر ٣٠ يوم</p>
+                            <p class="mt-0.5 text-[10.5px] text-muted-foreground">آخر 30 يوم</p>
                         </div>
                     </div>
                     <div v-if="!recentUpdates.length" class="px-6 py-10 text-center">
