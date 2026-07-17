@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
 import PageHero from '@/Components/PageHero.vue';
@@ -14,6 +14,7 @@ import TableHeader from '@/Components/ui/TableHeader.vue';
 import TableBody from '@/Components/ui/TableBody.vue';
 import TableRow from '@/Components/ui/TableRow.vue';
 import TableHead from '@/Components/ui/TableHead.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
 import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
@@ -38,13 +39,24 @@ const q = ref(props.filters.q ?? '');
 const entity = ref(props.filters.entity ?? 'all');
 
 let timer = null;
-function reload() {
-    router.get(route('tts.index'), { q: q.value, entity: entity.value }, {
+function reload(extra = {}) {
+    router.get(route('tts.index'), {
+        q: q.value, entity: entity.value,
+        sort: props.filters.sort, dir: props.filters.dir, ...extra,
+    }, {
         preserveState: true, replace: true, preserveScroll: true,
     });
 }
 watch(q, () => { clearTimeout(timer); timer = setTimeout(reload, 350); });
-watch(entity, reload);
+watch(entity, () => reload());
+
+// --- Server-side sorting ---
+const sortKey = computed(() => props.filters.sort ?? 'synced');
+const sortDir = computed(() => props.filters.dir ?? 'desc');
+function setSort(col) {
+    const dir = sortKey.value === col && sortDir.value === 'desc' ? 'asc' : 'desc';
+    reload({ sort: col, dir });
+}
 
 function entityLabel(e) {
     return ENTITY_LABEL[e] ?? e;
@@ -87,12 +99,12 @@ function entityLabel(e) {
                     <Table v-if="customers.data.length">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>العميل</TableHead>
-                                <TableHead>النوع</TableHead>
-                                <TableHead>التواصل</TableHead>
-                                <TableHead class="text-center">اشتراكات نشطة</TableHead>
-                                <TableHead class="text-center">جهات</TableHead>
-                                <TableHead class="text-center">آخر مزامنة</TableHead>
+                                <SortableTh col="name" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">العميل</SortableTh>
+                                <SortableTh col="entity" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">النوع</SortableTh>
+                                <SortableTh col="contact" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">التواصل</SortableTh>
+                                <SortableTh col="active" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">اشتراكات نشطة</SortableTh>
+                                <SortableTh col="contacts" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">جهات</SortableTh>
+                                <SortableTh col="synced" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">آخر مزامنة</SortableTh>
                                 <TableHead></TableHead>
                             </TableRow>
                         </TableHeader>

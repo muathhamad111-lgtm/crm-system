@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
 import PageHero from '@/Components/PageHero.vue';
@@ -14,6 +14,7 @@ import TableHeader from '@/Components/ui/TableHeader.vue';
 import TableBody from '@/Components/ui/TableBody.vue';
 import TableRow from '@/Components/ui/TableRow.vue';
 import TableHead from '@/Components/ui/TableHead.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
 import { Mailbox } from 'lucide-vue-next';
 import { fmtDateAr } from '@/lib/date';
@@ -26,7 +27,20 @@ const props = defineProps({
 const statuses = [['new','جديدة'],['handled','تمّت المعالجة'],['archived','مؤرشفة']];
 const toneOf = (s) => ({ new:'warning', handled:'success', archived:'muted' }[s] ?? 'muted');
 const labelOf = (s) => (statuses.find(x=>x[0]===s)?.[1] ?? s);
-function setStatus(s){ router.get('/store-contact-inbox', { status:s }, { preserveState:true, replace:true }); }
+function go(extra = {}){
+  router.get('/store-contact-inbox', {
+    status: props.filters.status, sort: props.filters.sort, dir: props.filters.dir, ...extra,
+  }, { preserveState:true, replace:true, preserveScroll:true });
+}
+function setStatus(s){ go({ status:s }); }
+
+// --- Server-side sorting ---
+const sortKey = computed(() => props.filters.sort ?? 'date');
+const sortDir = computed(() => props.filters.dir ?? 'desc');
+function setSort(col){
+  const dir = sortKey.value === col && sortDir.value === 'desc' ? 'asc' : 'desc';
+  go({ sort: col, dir });
+}
 
 const open = ref(false); const current = ref(null);
 const form = useForm({ status:'handled', internal_note:'' });
@@ -47,8 +61,12 @@ function save(){ form.post(`/store-contact-inbox/${current.value.id}/status`, { 
       <Card class="p-4">
         <Table>
           <TableHeader><TableRow>
-            <TableHead>المرسل</TableHead><TableHead>البريد</TableHead><TableHead>الخدمة</TableHead>
-            <TableHead>الحالة</TableHead><TableHead>التاريخ</TableHead><TableHead></TableHead>
+            <SortableTh col="sender" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">المرسل</SortableTh>
+            <SortableTh col="email" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">البريد</SortableTh>
+            <SortableTh col="service" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">الخدمة</SortableTh>
+            <SortableTh col="status" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">الحالة</SortableTh>
+            <SortableTh col="date" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">التاريخ</SortableTh>
+            <TableHead></TableHead>
           </TableRow></TableHeader>
           <TableBody>
             <TableRow v-for="m in messages.data" :key="m.id">

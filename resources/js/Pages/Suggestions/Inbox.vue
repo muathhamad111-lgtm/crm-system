@@ -9,8 +9,10 @@ import Select from '@/Components/ui/Select.vue';
 import Badge from '@/Components/ui/Badge.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import PriorityBadge from '@/Components/PriorityBadge.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import { timeAgoAr } from '@/lib/date';
 import { IDEA_STAGE, statusLabel } from '@/lib/labels';
+import { useClientSort } from '@/lib/useSort';
 import {
     Inbox, Plus, Search, Sparkles, Loader2, Clock, AlertTriangle, CheckCircle2,
     RotateCcw, XCircle, MessageSquare, ThumbsUp, ChevronLeft, Star, Calendar,
@@ -78,6 +80,20 @@ const pillTones = {
 function stageBadge(stage) {
     return statusLabel(IDEA_STAGE, stage);
 }
+
+// Client-side column sorting (the list is served unpaginated).
+const { sorted, sortKey, sortDir, toggle } = useClientSort(() => props.suggestions, 'date', 'desc', {
+    number: 'request_number',
+    title: 'title',
+    stage: 'idea_stage',
+    priority: 'priority',
+    product: 'product',
+    customer: 'customer_name',
+    rating: (s) => s.avg_stars ?? 0,
+    support: (s) => s.support_count ?? 0,
+    comments: (s) => s.comments_count ?? 0,
+    date: 'created_at',
+});
 </script>
 
 <template>
@@ -152,8 +168,25 @@ function stageBadge(stage) {
 
             <!-- List -->
             <Card class="overflow-hidden p-0">
+                <!-- Sort bar -->
+                <div v-if="suggestions.length" class="overflow-x-auto border-b border-border bg-muted/50">
+                    <table class="w-full">
+                        <thead><tr>
+                            <SortableTh col="number" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الرقم</SortableTh>
+                            <SortableTh col="title" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">العنوان</SortableTh>
+                            <SortableTh col="stage" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المرحلة</SortableTh>
+                            <SortableTh col="priority" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الأولوية</SortableTh>
+                            <SortableTh col="product" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المنتج</SortableTh>
+                            <SortableTh col="customer" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">العميل</SortableTh>
+                            <SortableTh col="rating" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">التقييم</SortableTh>
+                            <SortableTh col="support" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الدعم</SortableTh>
+                            <SortableTh col="comments" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">التعليقات</SortableTh>
+                            <SortableTh col="date" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle" class="whitespace-nowrap">التاريخ</SortableTh>
+                        </tr></thead>
+                    </table>
+                </div>
                 <ul v-if="suggestions.length" class="divide-y divide-border">
-                    <li v-for="s in suggestions" :key="s.id"
+                    <li v-for="s in sorted" :key="s.id"
                         class="group relative cursor-pointer transition-colors hover:bg-muted/40"
                         :class="s.overdue && 'bg-destructive/[0.03]'"
                         @click="router.visit(route('suggestions.show', s.id))">

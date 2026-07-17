@@ -13,6 +13,20 @@ class StoreContactController extends Controller
     {
         $search = trim((string) $request->query('q', ''));
         $status = (string) $request->query('status', 'all');
+        $sort = (string) $request->query('sort', 'date');
+        $dir = strtolower((string) $request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        // Whitelisted sortable columns.
+        $sortMap = [
+            'sender' => 'first_name',
+            'email' => 'email',
+            'service' => 'service_type',
+            'status' => 'status',
+            'date' => 'created_at',
+        ];
+        if (! array_key_exists($sort, $sortMap)) {
+            $sort = 'date';
+        }
 
         $query = StoreContactMessage::query()
             ->when(
@@ -30,7 +44,7 @@ class StoreContactController extends Controller
                         ->orWhere('description', 'like', $like);
                 });
             })
-            ->orderByDesc('created_at');
+            ->orderBy($sortMap[$sort], $dir);
 
         $messages = $query->paginate(25)->withQueryString();
 
@@ -44,7 +58,7 @@ class StoreContactController extends Controller
 
         return Inertia::render('StoreInbox/Index', [
             'messages' => $messages,
-            'filters' => ['q' => $search, 'status' => $status],
+            'filters' => ['q' => $search, 'status' => $status, 'sort' => $sort, 'dir' => $dir],
             'kpis' => $kpis,
         ]);
     }

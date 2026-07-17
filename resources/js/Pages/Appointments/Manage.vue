@@ -10,8 +10,10 @@ import Avatar from '@/Components/ui/Avatar.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import Label from '@/Components/ui/Label.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import { APPOINTMENT_STATUS, statusLabel } from '@/lib/labels';
 import { fmtTimeAr } from '@/lib/date';
+import { useClientSort } from '@/lib/useSort';
 import {
     CalendarDays, Phone, Video, MapPin, GraduationCap, Workflow, HelpCircle, Clock,
     ListChecks, CheckCircle2, XCircle, UserX, TrendingUp, CalendarClock, RotateCcw, Hourglass,
@@ -59,6 +61,16 @@ const KPIS = computed(() => [
 ]);
 
 const isActive = (a) => a.status === 'pending_confirmation' || a.status === 'confirmed';
+
+// Client-side column sorting (list is served unpaginated).
+const { sorted, sortKey, sortDir, toggle } = useClientSort(() => props.appointments, 'time', 'desc', {
+    number: 'appointment_number',
+    type: (a) => a.type?.name_ar ?? '',
+    customer: (a) => a.customer?.full_name ?? '',
+    time: 'starts_at',
+    duration: (a) => a.duration_minutes ?? 0,
+    status: 'status',
+});
 
 /* actions */
 const processing = ref(false);
@@ -119,8 +131,21 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
 
             <!-- List -->
             <Card class="overflow-hidden p-0">
+                <!-- Sort bar -->
+                <div v-if="appointments.length" class="overflow-x-auto border-b border-border bg-muted/50">
+                    <table class="w-full">
+                        <thead><tr>
+                            <SortableTh col="number" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الرقم</SortableTh>
+                            <SortableTh col="type" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">النوع</SortableTh>
+                            <SortableTh col="customer" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">العميل</SortableTh>
+                            <SortableTh col="time" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle" class="whitespace-nowrap">وقت الموعد</SortableTh>
+                            <SortableTh col="duration" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المدة</SortableTh>
+                            <SortableTh col="status" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الحالة</SortableTh>
+                        </tr></thead>
+                    </table>
+                </div>
                 <div v-if="appointments.length" class="divide-y divide-border">
-                    <div v-for="a in appointments" :key="a.id" class="flex items-start gap-3 p-4 transition-colors hover:bg-muted/30">
+                    <div v-for="a in sorted" :key="a.id" class="flex items-start gap-3 p-4 transition-colors hover:bg-muted/30">
                         <div class="flex size-10 shrink-0 items-center justify-center rounded-lg"
                             :style="{ background: (a.type?.color || 'var(--primary)') + '1a', color: a.type?.color || 'var(--primary)' }">
                             <component :is="modeIcon(a.type?.mode)" class="size-5" />

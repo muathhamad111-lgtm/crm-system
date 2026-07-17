@@ -31,6 +31,7 @@ class CustomerController extends Controller
         $search = trim((string) $request->query('q', ''));
         $field = (string) $request->query('field', 'all');
         $sort = (string) $request->query('sort', 'requests');
+        $dir = strtolower((string) $request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
         $now = now();
 
         // Base filter (search + business field) — reused for both list and KPI totals.
@@ -84,12 +85,25 @@ class CustomerController extends Controller
                 'last_request_at'
             );
 
-        match ($sort) {
-            'csat' => $query->orderByDesc('avg_csat'),
-            'recent' => $query->orderByDesc('last_request_at')->orderByDesc('last_contact_at'),
-            default => $query->orderByDesc('requests_count'),
-        };
-        $query->orderBy('full_name');
+        // Whitelisted sortable columns (each maps to a real/derived select alias).
+        $sortMap = [
+            'name' => 'full_name',
+            'field' => 'business_field',
+            'region' => 'region',
+            'requests' => 'requests_count',
+            'open' => 'open_requests_count',
+            'overdue' => 'overdue_requests_count',
+            'csat' => 'avg_csat',
+            'recent' => 'last_request_at',
+        ];
+        if (! array_key_exists($sort, $sortMap)) {
+            $sort = 'requests';
+        }
+        $sortCol = $sortMap[$sort];
+        $query->orderBy($sortCol, $dir);
+        if ($sortCol !== 'full_name') {
+            $query->orderBy('full_name');
+        }
 
         $customers = $query->paginate(20)->withQueryString();
 
@@ -102,7 +116,7 @@ class CustomerController extends Controller
 
         return Inertia::render('Customers/Index', [
             'customers' => $customers,
-            'filters' => ['q' => $search, 'field' => $field, 'sort' => $sort],
+            'filters' => ['q' => $search, 'field' => $field, 'sort' => $sort, 'dir' => $dir],
             'fields' => $fields,
             'kpis' => [
                 'total_customers' => (clone $base)->count(),

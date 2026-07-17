@@ -10,6 +10,8 @@ import CardContent from '@/Components/ui/CardContent.vue';
 import Badge from '@/Components/ui/Badge.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import PriorityBadge from '@/Components/PriorityBadge.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
+import { useClientSort } from '@/lib/useSort';
 import {
     UserCircle, ArrowRight, Mail, Phone, MapPin, Inbox, CheckCircle2, FolderOpen,
     AlertTriangle, RotateCcw, Star, Clock, Timer, GaugeCircle, Zap,
@@ -29,6 +31,11 @@ function slaTone(pct) {
     if (pct >= 50) return 'warning';
     return 'destructive';
 }
+
+const { sorted: recentSorted, sortKey: recentSortKey, sortDir: recentSortDir, toggle: recentToggle } = useClientSort(
+    () => props.recent, 'created_at', 'desc',
+    { request_number: 'request_number', title: 'title', status: 'status', priority: 'priority', created_at: 'created_at' },
+);
 </script>
 
 <template>
@@ -91,15 +98,15 @@ function slaTone(pct) {
                         <table class="w-full text-sm">
                             <thead class="bg-muted/40 text-xs text-muted-foreground">
                                 <tr>
-                                    <th class="p-3 text-right font-semibold">الرقم</th>
-                                    <th class="p-3 text-right font-semibold">العنوان</th>
-                                    <th class="p-3 text-center font-semibold">الحالة</th>
-                                    <th class="p-3 text-center font-semibold">الأولوية</th>
-                                    <th class="p-3 text-center font-semibold">الإنشاء</th>
+                                    <SortableTh col="request_number" align="right" :sort-key="recentSortKey" :sort-dir="recentSortDir" @sort="recentToggle">الرقم</SortableTh>
+                                    <SortableTh col="title" align="right" :sort-key="recentSortKey" :sort-dir="recentSortDir" @sort="recentToggle">العنوان</SortableTh>
+                                    <SortableTh col="status" align="center" :sort-key="recentSortKey" :sort-dir="recentSortDir" @sort="recentToggle">الحالة</SortableTh>
+                                    <SortableTh col="priority" align="center" :sort-key="recentSortKey" :sort-dir="recentSortDir" @sort="recentToggle">الأولوية</SortableTh>
+                                    <SortableTh col="created_at" align="center" :sort-key="recentSortKey" :sort-dir="recentSortDir" @sort="recentToggle">الإنشاء</SortableTh>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-border">
-                                <tr v-for="r in recent" :key="r.id" class="transition hover:bg-muted/20">
+                                <tr v-for="r in recentSorted" :key="r.id" class="transition hover:bg-muted/20">
                                     <td class="p-3">
                                         <Link :href="`/requests/${r.id}`" class="font-mono text-xs text-primary hover:underline">
                                             {{ r.request_number }}

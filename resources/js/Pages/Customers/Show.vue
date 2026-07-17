@@ -17,6 +17,7 @@ import TableHeader from '@/Components/ui/TableHeader.vue';
 import TableBody from '@/Components/ui/TableBody.vue';
 import TableRow from '@/Components/ui/TableRow.vue';
 import TableHead from '@/Components/ui/TableHead.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import Button from '@/Components/ui/Button.vue';
@@ -28,6 +29,7 @@ import CustomerJourneyCard from '@/Components/customer/CustomerJourneyCard.vue';
 import CustomerHealthCard from '@/Components/customer/CustomerHealthCard.vue';
 import CustomerTimelineTab from '@/Components/customer/CustomerTimelineTab.vue';
 import { num } from '@/lib/utils';
+import { useClientSort } from '@/lib/useSort';
 import { REQUEST_PRIORITY, IDEA_STAGE, statusLabel } from '@/lib/labels';
 import { fmtDateAr, fmtFullDateTimeAr, timeAgoAr } from '@/lib/date';
 import {
@@ -89,6 +91,20 @@ const SUB_STATUS = {
     suspended: { label: 'موقوف', tone: 'muted' },
 };
 function subStatus(s) { return SUB_STATUS[s] ?? { label: s ?? '—', tone: 'muted' }; }
+
+// --- Client-side sorting for the contacts + subscriptions tables ---
+const {
+    sorted: sortedContacts, sortKey: contactsSortKey, sortDir: contactsSortDir, toggle: toggleContacts,
+} = useClientSort(() => props.contacts, null, 'asc', {
+    name: 'full_name', title: 'job_title', dept: 'department', email: 'email',
+    mobile: (r) => r.mobile || r.phone, primary: (r) => (r.is_primary ? 1 : 0),
+});
+const {
+    sorted: sortedSubs, sortKey: subsSortKey, sortDir: subsSortDir, toggle: toggleSubs,
+} = useClientSort(() => props.subscriptions, null, 'asc', {
+    product: 'product_name', plan: 'plan_name', status: 'status',
+    start: 'start_date', end: 'end_date', source: 'source',
+});
 function priorityLabel(p) { return statusLabel(REQUEST_PRIORITY, p).label; }
 function stageLabel(s) { return statusLabel(IDEA_STAGE, s).label; }
 
@@ -515,17 +531,17 @@ function deleteAttachment(at) {
                             <Table v-if="contacts.length">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>الاسم</TableHead>
-                                        <TableHead>المسمى</TableHead>
-                                        <TableHead>القسم</TableHead>
-                                        <TableHead>البريد</TableHead>
-                                        <TableHead>الجوال</TableHead>
-                                        <TableHead class="text-center">أساسي</TableHead>
+                                        <SortableTh col="name" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">الاسم</SortableTh>
+                                        <SortableTh col="title" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">المسمى</SortableTh>
+                                        <SortableTh col="dept" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">القسم</SortableTh>
+                                        <SortableTh col="email" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">البريد</SortableTh>
+                                        <SortableTh col="mobile" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">الجوال</SortableTh>
+                                        <SortableTh col="primary" align="center" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">أساسي</SortableTh>
                                         <TableHead v-if="isStaff" class="text-center">إجراءات</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow v-for="ct in contacts" :key="ct.id">
+                                    <TableRow v-for="ct in sortedContacts" :key="ct.id">
                                         <TableCell class="font-medium">{{ ct.full_name }}</TableCell>
                                         <TableCell class="text-muted-foreground">{{ ct.job_title || '—' }}</TableCell>
                                         <TableCell class="text-muted-foreground">{{ ct.department || '—' }}</TableCell>
@@ -560,17 +576,17 @@ function deleteAttachment(at) {
                             <Table v-if="subscriptions.length">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>المنتج</TableHead>
-                                        <TableHead>الباقة</TableHead>
-                                        <TableHead class="text-center">الحالة</TableHead>
-                                        <TableHead class="text-center">البداية</TableHead>
-                                        <TableHead class="text-center">النهاية</TableHead>
-                                        <TableHead class="text-center">المصدر</TableHead>
+                                        <SortableTh col="product" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">المنتج</SortableTh>
+                                        <SortableTh col="plan" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">الباقة</SortableTh>
+                                        <SortableTh col="status" align="center" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">الحالة</SortableTh>
+                                        <SortableTh col="start" align="center" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">البداية</SortableTh>
+                                        <SortableTh col="end" align="center" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">النهاية</SortableTh>
+                                        <SortableTh col="source" align="center" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">المصدر</SortableTh>
                                         <TableHead v-if="isStaff" class="text-center">إجراءات</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow v-for="s in subscriptions" :key="s.id">
+                                    <TableRow v-for="s in sortedSubs" :key="s.id">
                                         <TableCell class="font-medium">{{ s.product_name }}</TableCell>
                                         <TableCell class="text-muted-foreground">{{ s.plan_name || '—' }}</TableCell>
                                         <TableCell class="text-center"><Badge :variant="subStatus(s.status).tone">{{ subStatus(s.status).label }}</Badge></TableCell>

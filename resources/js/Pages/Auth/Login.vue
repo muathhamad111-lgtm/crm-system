@@ -31,17 +31,15 @@ const submit = () => {
 
         <form @submit.prevent="submit" class="space-y-4">
             <div>
-                <Label for="email">البريد الإلكتروني</Label>
-                <Input id="email" type="email" class="mt-1.5" v-model="form.email" required autofocus autocomplete="username" placeholder="you@example.com" />
+                <Input label="البريد الإلكتروني" type="email" v-model="form.email" required autofocus autocomplete="username" />
                 <p v-if="form.errors.email" class="mt-1 text-xs text-destructive">{{ form.errors.email }}</p>
             </div>
 
             <div>
-                <div class="flex items-center justify-between">
-                    <Label for="password">كلمة المرور</Label>
+                <Input label="كلمة المرور" type="password" v-model="form.password" required autocomplete="current-password" />
+                <div class="mt-1.5 flex justify-end">
                     <Link v-if="canResetPassword" :href="route('password.request')" class="text-xs text-primary hover:underline">نسيت كلمة المرور؟</Link>
                 </div>
-                <Input id="password" type="password" class="mt-1.5" v-model="form.password" required autocomplete="current-password" placeholder="••••••••" />
                 <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
             </div>
 

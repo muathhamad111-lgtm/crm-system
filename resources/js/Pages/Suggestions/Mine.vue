@@ -7,8 +7,10 @@ import Badge from '@/Components/ui/Badge.vue';
 import Button from '@/Components/ui/Button.vue';
 import Input from '@/Components/ui/Input.vue';
 import Select from '@/Components/ui/Select.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import { timeAgoAr } from '@/lib/date';
 import { REQUEST_STATUS, IDEA_STAGE, statusLabel } from '@/lib/labels';
+import { useClientSort } from '@/lib/useSort';
 import {
     Lightbulb, Plus, Search, Sparkles, Hourglass, CheckCircle2,
     Package, Clock, ChevronLeft, MessageSquare, Star,
@@ -46,6 +48,15 @@ const filtered = computed(() => {
 
 const statusOptions = computed(() =>
     Object.entries(REQUEST_STATUS).filter(([k]) => !HIDDEN.has(k)));
+
+const { sorted, sortKey, sortDir, toggle } = useClientSort(() => filtered.value, 'updated', 'desc', {
+    number: 'request_number',
+    status: (r) => visStatus(r.status),
+    stage: 'idea_stage',
+    category: 'category',
+    product: 'product',
+    updated: (r) => r.updated_at ?? r.created_at,
+});
 </script>
 
 <template>
@@ -96,17 +107,17 @@ const statusOptions = computed(() =>
                     <table class="w-full border-collapse text-sm">
                         <thead class="bg-muted/50">
                             <tr class="border-b border-border text-xs text-muted-foreground">
-                                <th class="px-3 py-3 text-start">المقترح</th>
-                                <th class="px-3 py-3 text-start">الحالة</th>
-                                <th class="px-3 py-3 text-start">المرحلة</th>
-                                <th class="px-3 py-3 text-start">التصنيف</th>
-                                <th class="px-3 py-3 text-start">المنتج</th>
-                                <th class="px-3 py-3 text-start whitespace-nowrap">آخر تحديث</th>
+                                <SortableTh col="number" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المقترح</SortableTh>
+                                <SortableTh col="status" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">الحالة</SortableTh>
+                                <SortableTh col="stage" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المرحلة</SortableTh>
+                                <SortableTh col="category" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">التصنيف</SortableTh>
+                                <SortableTh col="product" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle">المنتج</SortableTh>
+                                <SortableTh col="updated" :sort-key="sortKey" :sort-dir="sortDir" @sort="toggle" class="whitespace-nowrap">آخر تحديث</SortableTh>
                                 <th class="w-10 px-2 py-3"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="r in filtered" :key="r.id"
+                            <tr v-for="r in sorted" :key="r.id"
                                 class="group cursor-pointer border-b border-border transition-colors hover:bg-muted/40"
                                 @click="router.visit(route('suggestions.show', r.id))">
                                 <td class="px-3 py-3">
@@ -144,7 +155,7 @@ const statusOptions = computed(() =>
                                     <ChevronLeft class="size-4 text-muted-foreground/40 transition-all group-hover:-translate-x-0.5 group-hover:text-primary" />
                                 </td>
                             </tr>
-                            <tr v-if="!filtered.length">
+                            <tr v-if="!sorted.length">
                                 <td colspan="7" class="py-14 text-center">
                                     <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
                                         <Lightbulb class="size-7" />

@@ -12,6 +12,8 @@ import Textarea from '@/Components/ui/Textarea.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import Avatar from '@/Components/ui/Avatar.vue';
 import SettingRow from '@/Components/admin/SettingRow.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
+import { useClientSort } from '@/lib/useSort';
 import {
     Settings, Layers, Package, Users, ShieldCheck, Bell, Plug, FileSearch,
     Gauge, Network, Menu, ChevronLeft, UserPlus, Copy, Search, Save, X,
@@ -363,6 +365,28 @@ const filteredAudit = computed(() => props.auditLog.filter((a) =>
     (auditEntity.value === 'all' || a.entity_type === auditEntity.value)));
 
 const settingKeys = computed(() => Object.keys(props.settings));
+
+/* ------------------------------ Sorting ------------------------------- */
+const { sorted: catSorted, sortKey: catSortKey, sortDir: catSortDir, toggle: catToggle } = useClientSort(
+    () => props.categories, null, 'asc',
+    { name: 'name_ar', team: 'target_team', priority: 'default_priority', sla: 'sla_hours', requests: 'requests_count', status: 'active' },
+);
+const { sorted: prodSorted, sortKey: prodSortKey, sortDir: prodSortDir, toggle: prodToggle } = useClientSort(
+    () => props.products, null, 'asc',
+    { name: 'name_ar', type: 'type', description: 'description_ar', sla: 'sla_hours', escalation: 'escalation_hours', restricted: 'restricted', status: 'active' },
+);
+const { sorted: staffSorted, sortKey: staffSortKey, sortDir: staffSortDir, toggle: staffToggle } = useClientSort(
+    () => props.staff, null, 'asc',
+    { name: 'full_name', email: 'email', team: 'team_name', status: (r) => (r.suspended ? 'موقوف' : (r.account_status ?? '')) },
+);
+const { sorted: multSorted, sortKey: multSortKey, sortDir: multSortDir, toggle: multToggle } = useClientSort(
+    () => props.multipliers, null, 'asc',
+    { priority: (m) => (m.label_ar ?? statusLabel(REQUEST_PRIORITY, m.priority).label ?? m.priority), multiplier: (m) => Number(m.multiplier) },
+);
+const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggle: auditToggle } = useClientSort(
+    () => filteredAudit.value, 'date', 'desc',
+    { date: 'created_at', actor: 'actor_email', action: (a) => actionLabel(a.action), entity: (a) => entityLabel(a.entity_type) },
+);
 </script>
 
 <template>
@@ -432,17 +456,17 @@ const settingKeys = computed(() => Object.keys(props.settings));
                             <table class="w-full border-collapse text-sm">
                                 <thead class="bg-muted/50 text-xs text-muted-foreground">
                                     <tr class="border-b border-border">
-                                        <th class="px-3 py-3 text-start">التصنيف</th>
-                                        <th class="px-3 py-3 text-start">الفريق المستهدف</th>
-                                        <th class="px-3 py-3 text-start">الأولوية الافتراضية</th>
-                                        <th class="px-3 py-3 text-start">SLA (ساعة)</th>
-                                        <th class="px-3 py-3 text-start">الطلبات</th>
-                                        <th class="px-3 py-3 text-start">الحالة</th>
+                                        <SortableTh col="name" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">التصنيف</SortableTh>
+                                        <SortableTh col="team" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">الفريق المستهدف</SortableTh>
+                                        <SortableTh col="priority" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">الأولوية الافتراضية</SortableTh>
+                                        <SortableTh col="sla" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">SLA (ساعة)</SortableTh>
+                                        <SortableTh col="requests" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">الطلبات</SortableTh>
+                                        <SortableTh col="status" :sort-key="catSortKey" :sort-dir="catSortDir" @sort="catToggle">الحالة</SortableTh>
                                         <th class="px-3 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="c in categories" :key="c.id" class="border-b border-border hover:bg-muted/40">
+                                    <tr v-for="c in catSorted" :key="c.id" class="border-b border-border hover:bg-muted/40">
                                         <td class="px-3 py-3">
                                             <div class="flex items-center gap-2">
                                                 <span class="size-2.5 rounded-full" :style="{ background: c.color || 'var(--muted-foreground)' }"></span>
@@ -478,18 +502,18 @@ const settingKeys = computed(() => Object.keys(props.settings));
                                 <table class="w-full border-collapse text-sm">
                                     <thead class="bg-muted/50 text-xs text-muted-foreground">
                                         <tr class="border-b border-border">
-                                            <th class="px-3 py-3 text-start">المنتج / الخدمة</th>
-                                            <th class="px-3 py-3 text-start">النوع</th>
-                                            <th class="px-3 py-3 text-start">الوصف</th>
-                                            <th class="px-3 py-3 text-start">SLA</th>
-                                            <th class="px-3 py-3 text-start">التصعيد</th>
-                                            <th class="px-3 py-3 text-start">مقيّد</th>
-                                            <th class="px-3 py-3 text-start">الحالة</th>
+                                            <SortableTh col="name" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">المنتج / الخدمة</SortableTh>
+                                            <SortableTh col="type" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">النوع</SortableTh>
+                                            <SortableTh col="description" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">الوصف</SortableTh>
+                                            <SortableTh col="sla" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">SLA</SortableTh>
+                                            <SortableTh col="escalation" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">التصعيد</SortableTh>
+                                            <SortableTh col="restricted" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">مقيّد</SortableTh>
+                                            <SortableTh col="status" :sort-key="prodSortKey" :sort-dir="prodSortDir" @sort="prodToggle">الحالة</SortableTh>
                                             <th class="px-3 py-3"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="p in products" :key="p.id" class="border-b border-border hover:bg-muted/40">
+                                        <tr v-for="p in prodSorted" :key="p.id" class="border-b border-border hover:bg-muted/40">
                                             <td class="px-3 py-3">
                                                 <div class="flex items-center gap-2">
                                                     <span class="size-2.5 rounded-full" :style="{ background: p.color || 'var(--muted-foreground)' }"></span>
@@ -544,15 +568,15 @@ const settingKeys = computed(() => Object.keys(props.settings));
                                 <table class="w-full border-collapse text-sm">
                                     <thead class="bg-muted/50 text-xs text-muted-foreground">
                                         <tr class="border-b border-border">
-                                            <th class="px-3 py-3 text-start">الاسم</th>
-                                            <th class="px-3 py-3 text-start">البريد</th>
-                                            <th class="px-3 py-3 text-start">الفريق</th>
-                                            <th class="px-3 py-3 text-start">الحالة</th>
+                                            <SortableTh col="name" :sort-key="staffSortKey" :sort-dir="staffSortDir" @sort="staffToggle">الاسم</SortableTh>
+                                            <SortableTh col="email" :sort-key="staffSortKey" :sort-dir="staffSortDir" @sort="staffToggle">البريد</SortableTh>
+                                            <SortableTh col="team" :sort-key="staffSortKey" :sort-dir="staffSortDir" @sort="staffToggle">الفريق</SortableTh>
+                                            <SortableTh col="status" :sort-key="staffSortKey" :sort-dir="staffSortDir" @sort="staffToggle">الحالة</SortableTh>
                                             <th class="px-3 py-3 text-start">الأدوار</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="s in staff" :key="s.id" class="border-b border-border align-top hover:bg-muted/40">
+                                        <tr v-for="s in staffSorted" :key="s.id" class="border-b border-border align-top hover:bg-muted/40">
                                             <td class="px-3 py-3">
                                                 <div class="flex items-center gap-2">
                                                     <Avatar :name="s.full_name" class="size-7 text-[10px]" />
@@ -652,13 +676,13 @@ const settingKeys = computed(() => Object.keys(props.settings));
                             <table class="w-full border-collapse text-sm">
                                 <thead class="bg-muted/50 text-xs text-muted-foreground">
                                     <tr class="border-b border-border">
-                                        <th class="px-3 py-3 text-start">الأولوية</th>
-                                        <th class="px-3 py-3 text-start">المضاعف</th>
+                                        <SortableTh col="priority" :sort-key="multSortKey" :sort-dir="multSortDir" @sort="multToggle">الأولوية</SortableTh>
+                                        <SortableTh col="multiplier" :sort-key="multSortKey" :sort-dir="multSortDir" @sort="multToggle">المضاعف</SortableTh>
                                         <th class="px-3 py-3"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="m in multipliers" :key="m.priority" class="border-b border-border hover:bg-muted/40">
+                                    <tr v-for="m in multSorted" :key="m.priority" class="border-b border-border hover:bg-muted/40">
                                         <td class="px-3 py-3">
                                             <Badge :variant="statusLabel(REQUEST_PRIORITY, m.priority).tone">{{ m.label_ar ?? statusLabel(REQUEST_PRIORITY, m.priority).label }}</Badge>
                                         </td>
@@ -734,15 +758,15 @@ const settingKeys = computed(() => Object.keys(props.settings));
                                 <table class="w-full border-collapse text-sm">
                                     <thead class="bg-muted/50 text-xs text-muted-foreground">
                                         <tr class="border-b border-border">
-                                            <th class="px-3 py-3 text-start">التاريخ</th>
-                                            <th class="px-3 py-3 text-start">المستخدم</th>
-                                            <th class="px-3 py-3 text-start">الإجراء</th>
-                                            <th class="px-3 py-3 text-start">النوع</th>
+                                            <SortableTh col="date" :sort-key="auditSortKey" :sort-dir="auditSortDir" @sort="auditToggle">التاريخ</SortableTh>
+                                            <SortableTh col="actor" :sort-key="auditSortKey" :sort-dir="auditSortDir" @sort="auditToggle">المستخدم</SortableTh>
+                                            <SortableTh col="action" :sort-key="auditSortKey" :sort-dir="auditSortDir" @sort="auditToggle">الإجراء</SortableTh>
+                                            <SortableTh col="entity" :sort-key="auditSortKey" :sort-dir="auditSortDir" @sort="auditToggle">النوع</SortableTh>
                                             <th class="px-3 py-3 text-start">التفاصيل</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="a in filteredAudit" :key="a.id" class="border-b border-border hover:bg-muted/40">
+                                        <tr v-for="a in auditSorted" :key="a.id" class="border-b border-border hover:bg-muted/40">
                                             <td class="whitespace-nowrap px-3 py-3 text-xs text-muted-foreground" :title="fmtFullDateTimeAr(a.created_at)">{{ timeAgoAr(a.created_at) }}</td>
                                             <td class="px-3 py-3 text-xs text-muted-foreground" dir="ltr">{{ a.actor_email ?? '—' }}</td>
                                             <td class="px-3 py-3"><span class="rounded bg-primary-soft px-2 py-1 text-xs text-primary">{{ actionLabel(a.action) }}</span></td>

@@ -10,6 +10,8 @@ import Input from '@/Components/ui/Input.vue';
 import Label from '@/Components/ui/Label.vue';
 import Select from '@/Components/ui/Select.vue';
 import KpiCard from '@/Components/KpiCard.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
+import { useClientSort } from '@/lib/useSort';
 import {
     BarChart3, Filter, Download, Inbox, CheckCircle2, Clock, GaugeCircle, Star,
     ListChecks, Smile, Frown, TrendingUp, Users, Lightbulb, Package, ShieldCheck,
@@ -275,6 +277,16 @@ const slaStagesChart = computed(() => {
 function slaTone(pct) {
     return pct >= 80 ? 'text-success' : pct >= 50 ? 'text-warning' : 'text-destructive';
 }
+
+/* ----------------------------- Table sorting ----------------------------- */
+const { sorted: teamSorted, sortKey: teamSortKey, sortDir: teamSortDir, toggle: teamToggle } = useClientSort(
+    () => props.team, null, 'asc',
+    { name: 'name', assigned: 'assigned', closed: 'closed', sla_pct: 'sla_pct', avg_hours: 'avg_hours', csat: (r) => (r.csat ?? -1) },
+);
+const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetailSortDir, toggle: prodDetailToggle } = useClientSort(
+    () => (pr.value.csatPerProduct ?? []), null, 'asc',
+    { name: 'name', avg: 'avg', count: 'count' },
+);
 </script>
 
 <template>
@@ -589,13 +601,13 @@ function slaTone(pct) {
                             <table class="w-full text-sm">
                                 <thead class="bg-muted/50 text-xs text-muted-foreground">
                                     <tr class="border-b border-border">
-                                        <th class="p-3 text-start">المنتج / الخدمة</th>
-                                        <th class="p-3 text-center">متوسط الرضى</th>
-                                        <th class="p-3 text-center">عدد التقييمات</th>
+                                        <SortableTh col="name" :sort-key="prodDetailSortKey" :sort-dir="prodDetailSortDir" @sort="prodDetailToggle">المنتج / الخدمة</SortableTh>
+                                        <SortableTh col="avg" align="center" :sort-key="prodDetailSortKey" :sort-dir="prodDetailSortDir" @sort="prodDetailToggle">متوسط الرضى</SortableTh>
+                                        <SortableTh col="count" align="center" :sort-key="prodDetailSortKey" :sort-dir="prodDetailSortDir" @sort="prodDetailToggle">عدد التقييمات</SortableTh>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(p, i) in pr.csatPerProduct" :key="i" class="border-b border-border">
+                                    <tr v-for="(p, i) in prodDetailSorted" :key="p.name ?? i" class="border-b border-border">
                                         <td class="p-3 font-medium">{{ p.name }}</td>
                                         <td class="p-3 text-center font-bold tabular-nums">{{ p.avg }}★</td>
                                         <td class="p-3 text-center tabular-nums text-muted-foreground">{{ p.count }}</td>
@@ -630,16 +642,16 @@ function slaTone(pct) {
                             <table class="w-full text-sm">
                                 <thead class="bg-muted/50 text-xs text-muted-foreground">
                                     <tr class="border-b border-border">
-                                        <th class="p-3 text-start">الموظف</th>
-                                        <th class="p-3 text-center">مُسند</th>
-                                        <th class="p-3 text-center">مُنجز</th>
-                                        <th class="p-3 text-center">SLA %</th>
-                                        <th class="p-3 text-center">متوسط الحل (س)</th>
-                                        <th class="p-3 text-center">CSAT</th>
+                                        <SortableTh col="name" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">الموظف</SortableTh>
+                                        <SortableTh col="assigned" align="center" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">مُسند</SortableTh>
+                                        <SortableTh col="closed" align="center" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">مُنجز</SortableTh>
+                                        <SortableTh col="sla_pct" align="center" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">SLA %</SortableTh>
+                                        <SortableTh col="avg_hours" align="center" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">متوسط الحل (س)</SortableTh>
+                                        <SortableTh col="csat" align="center" :sort-key="teamSortKey" :sort-dir="teamSortDir" @sort="teamToggle">CSAT</SortableTh>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="r in team" :key="r.id" class="border-b border-border hover:bg-muted/30">
+                                    <tr v-for="r in teamSorted" :key="r.id" class="border-b border-border hover:bg-muted/30">
                                         <td class="p-3 font-medium">{{ r.name }}</td>
                                         <td class="p-3 text-center tabular-nums">{{ r.assigned }}</td>
                                         <td class="p-3 text-center tabular-nums">{{ r.closed }}</td>

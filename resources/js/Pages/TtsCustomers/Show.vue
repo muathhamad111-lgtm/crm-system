@@ -12,14 +12,28 @@ import TableHeader from '@/Components/ui/TableHeader.vue';
 import TableBody from '@/Components/ui/TableBody.vue';
 import TableRow from '@/Components/ui/TableRow.vue';
 import TableHead from '@/Components/ui/TableHead.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
 import { Store, Users, Package } from 'lucide-vue-next';
+import { useClientSort } from '@/lib/useSort';
 
 const props = defineProps({
   customer: { type: Object, default: () => ({}) },
   contacts: { type: Array, default: () => [] },
   subscriptions: { type: Array, default: () => [] },
   stats: { type: Object, default: () => ({}) },
+});
+
+// --- Client-side sorting for the contacts + subscriptions tables ---
+const {
+  sorted: sortedContacts, sortKey: contactsSortKey, sortDir: contactsSortDir, toggle: toggleContacts,
+} = useClientSort(() => props.contacts, null, 'asc', {
+  name: 'full_name', mobile: 'mobile', title: 'job_title',
+});
+const {
+  sorted: sortedSubs, sortKey: subsSortKey, sortDir: subsSortDir, toggle: toggleSubs,
+} = useClientSort(() => props.subscriptions, null, 'asc', {
+  product: (r) => r.product_name || r.product_code, plan: 'package_name', status: 'status',
 });
 </script>
 <template>
@@ -36,9 +50,13 @@ const props = defineProps({
         <CardHeader><CardTitle>جهات التواصل</CardTitle></CardHeader>
         <CardContent>
           <Table>
-            <TableHeader><TableRow><TableHead>الاسم</TableHead><TableHead>الجوال</TableHead><TableHead>المسمى</TableHead></TableRow></TableHeader>
+            <TableHeader><TableRow>
+              <SortableTh col="name" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">الاسم</SortableTh>
+              <SortableTh col="mobile" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">الجوال</SortableTh>
+              <SortableTh col="title" :sort-key="contactsSortKey" :sort-dir="contactsSortDir" @sort="toggleContacts">المسمى</SortableTh>
+            </TableRow></TableHeader>
             <TableBody>
-              <TableRow v-for="c in contacts" :key="c.id"><TableCell>{{ c.full_name }}</TableCell><TableCell dir="ltr">{{ c.mobile ?? '—' }}</TableCell><TableCell>{{ c.job_title ?? '—' }}</TableCell></TableRow>
+              <TableRow v-for="c in sortedContacts" :key="c.id"><TableCell>{{ c.full_name }}</TableCell><TableCell dir="ltr">{{ c.mobile ?? '—' }}</TableCell><TableCell>{{ c.job_title ?? '—' }}</TableCell></TableRow>
               <TableRow v-if="!contacts.length"><TableCell colspan="3" class="py-6 text-center text-muted-foreground">لا توجد جهات تواصل.</TableCell></TableRow>
             </TableBody>
           </Table>
@@ -48,9 +66,13 @@ const props = defineProps({
         <CardHeader><CardTitle>الاشتراكات</CardTitle></CardHeader>
         <CardContent>
           <Table>
-            <TableHeader><TableRow><TableHead>المنتج</TableHead><TableHead>الباقة</TableHead><TableHead>الحالة</TableHead></TableRow></TableHeader>
+            <TableHeader><TableRow>
+              <SortableTh col="product" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">المنتج</SortableTh>
+              <SortableTh col="plan" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">الباقة</SortableTh>
+              <SortableTh col="status" :sort-key="subsSortKey" :sort-dir="subsSortDir" @sort="toggleSubs">الحالة</SortableTh>
+            </TableRow></TableHeader>
             <TableBody>
-              <TableRow v-for="s in subscriptions" :key="s.id"><TableCell>{{ s.product_name ?? s.product_code }}</TableCell><TableCell>{{ s.package_name ?? '—' }}</TableCell><TableCell>{{ s.status }}</TableCell></TableRow>
+              <TableRow v-for="s in sortedSubs" :key="s.id"><TableCell>{{ s.product_name ?? s.product_code }}</TableCell><TableCell>{{ s.package_name ?? '—' }}</TableCell><TableCell>{{ s.status }}</TableCell></TableRow>
               <TableRow v-if="!subscriptions.length"><TableCell colspan="3" class="py-6 text-center text-muted-foreground">لا توجد اشتراكات.</TableCell></TableRow>
             </TableBody>
           </Table>

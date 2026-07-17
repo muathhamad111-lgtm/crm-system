@@ -15,6 +15,21 @@ class TtsCustomerController extends Controller
     {
         $search = trim((string) $request->query('q', ''));
         $entity = (string) $request->query('entity', 'all');
+        $sort = (string) $request->query('sort', 'synced');
+        $dir = strtolower((string) $request->query('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+
+        // Whitelisted sortable columns (real columns + derived count aliases).
+        $sortMap = [
+            'name' => 'full_name',
+            'entity' => 'entity_type',
+            'contact' => 'email',
+            'active' => 'active_subscriptions_count',
+            'contacts' => 'contacts_count',
+            'synced' => 'last_synced_at',
+        ];
+        if (! array_key_exists($sort, $sortMap)) {
+            $sort = 'synced';
+        }
 
         $query = TtsCustomer::query()
             ->whereNull('deleted_at')
@@ -47,7 +62,7 @@ class TtsCustomerController extends Controller
                     ->where('status', 'active'),
                 'active_subscriptions_count'
             )
-            ->orderByDesc('last_synced_at');
+            ->orderBy($sortMap[$sort], $dir);
 
         $customers = $query->paginate(25)->withQueryString();
 
@@ -63,7 +78,7 @@ class TtsCustomerController extends Controller
 
         return Inertia::render('TtsCustomers/Index', [
             'customers' => $customers,
-            'filters' => ['q' => $search, 'entity' => $entity],
+            'filters' => ['q' => $search, 'entity' => $entity, 'sort' => $sort, 'dir' => $dir],
             'kpis' => $kpis,
         ]);
     }

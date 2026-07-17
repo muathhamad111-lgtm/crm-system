@@ -7,6 +7,7 @@ import CardContent from '@/Components/ui/CardContent.vue';
 import Input from '@/Components/ui/Input.vue';
 import Select from '@/Components/ui/Select.vue';
 import Avatar from '@/Components/ui/Avatar.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
 import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
 import {
@@ -24,11 +25,19 @@ const q = ref(props.filters.q ?? '');
 
 function apply(patch = {}) {
     router.get(route('customers.index'),
-        { q: q.value, field: props.filters.field, sort: props.filters.sort, ...patch },
+        { q: q.value, field: props.filters.field, sort: props.filters.sort, dir: props.filters.dir, ...patch },
         { preserveState: true, replace: true, preserveScroll: true });
 }
 let timer = null;
 watch(q, () => { clearTimeout(timer); timer = setTimeout(() => apply(), 350); });
+
+// --- Server-side sorting ---
+const sortKey = computed(() => props.filters.sort ?? 'requests');
+const sortDir = computed(() => props.filters.dir ?? 'desc');
+function setSort(col) {
+    const dir = sortKey.value === col && sortDir.value === 'desc' ? 'asc' : 'desc';
+    apply({ sort: col, dir });
+}
 
 const kpiRibbon = computed(() => [
     { key: 'total_customers', label: 'عدد العملاء', value: num(props.kpis.total_customers ?? 0), icon: Users, tone: 'bg-primary/10 text-primary', num: 'text-primary' },
@@ -84,7 +93,7 @@ const kpiRibbon = computed(() => [
                         <option value="all">كل المجالات</option>
                         <option v-for="f in fields" :key="f" :value="f">{{ f }}</option>
                     </Select>
-                    <Select :model-value="filters.sort ?? 'requests'" class="w-[180px]" @update:model-value="v => apply({ sort: v })">
+                    <Select :model-value="filters.sort ?? 'requests'" class="w-[180px]" @update:model-value="v => apply({ sort: v, dir: 'desc' })">
                         <option value="requests">الأكثر طلبات</option>
                         <option value="csat">الأعلى رضا</option>
                         <option value="recent">الأحدث نشاطاً</option>
@@ -98,14 +107,14 @@ const kpiRibbon = computed(() => [
                     <table class="w-full text-sm">
                         <thead class="bg-muted/50 text-xs text-muted-foreground">
                             <tr class="border-b border-border">
-                                <th class="px-3 py-3 text-start font-semibold">العميل</th>
-                                <th class="px-3 py-3 text-start font-semibold">المجال</th>
-                                <th class="px-3 py-3 text-start font-semibold">المنطقة</th>
-                                <th class="px-3 py-3 text-center font-semibold">الطلبات</th>
-                                <th class="px-3 py-3 text-center font-semibold">مفتوحة</th>
-                                <th class="px-3 py-3 text-center font-semibold">متأخرة</th>
-                                <th class="px-3 py-3 text-center font-semibold">الرضا</th>
-                                <th class="px-3 py-3 text-center font-semibold">آخر نشاط</th>
+                                <SortableTh col="name" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">العميل</SortableTh>
+                                <SortableTh col="field" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">المجال</SortableTh>
+                                <SortableTh col="region" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">المنطقة</SortableTh>
+                                <SortableTh col="requests" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">الطلبات</SortableTh>
+                                <SortableTh col="open" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">مفتوحة</SortableTh>
+                                <SortableTh col="overdue" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">متأخرة</SortableTh>
+                                <SortableTh col="csat" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">الرضا</SortableTh>
+                                <SortableTh col="recent" align="center" :sort-key="sortKey" :sort-dir="sortDir" @sort="setSort">آخر نشاط</SortableTh>
                                 <th class="px-2 py-3"></th>
                             </tr>
                         </thead>
