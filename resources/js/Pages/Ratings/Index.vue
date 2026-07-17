@@ -94,8 +94,8 @@ function openRequest(r) {
             <Card class="p-3">
                 <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                     <div class="relative sm:col-span-2 lg:col-span-2">
-                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input v-model="q" placeholder="بحث باسم العميل، البريد، رقم الطلب، أو نوع المشكلة…" class="pr-9" />
+                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="q" label="بحث باسم العميل، البريد، رقم الطلب، أو نوع المشكلة…" />
                     </div>
                     <Select label="عدد النجوم" v-model="starsFilter">
                         <option value="all">جميع التقييمات</option>

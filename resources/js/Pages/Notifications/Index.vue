@@ -108,8 +108,8 @@ const periodChips = [['all', 'الكل'], ['today', 'اليوم'], ['7d', '7 أ�
             <!-- Filter panel -->
             <Card class="space-y-2.5 p-3">
                 <div class="relative">
-                    <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input v-model="q" placeholder="ابحث في العنوان أو النص…" class="pr-9" />
+                    <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input v-model="q" label="ابحث في العنوان أو النص…" />
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
                     <span class="inline-flex items-center gap-1 text-[11px] font-bold text-muted-foreground"><Filter class="size-3" /> الحالة:</span>

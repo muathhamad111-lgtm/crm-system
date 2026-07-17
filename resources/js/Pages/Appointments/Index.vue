@@ -226,8 +226,8 @@ function submitCancel() {
             <!-- Toolbar -->
             <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
                 <div class="relative min-w-0 flex-1">
-                    <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input v-model="search" placeholder="ابحث برقم الموعد أو نوعه أو رقم الطلب…" class="pr-9" />
+                    <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input v-model="search" label="ابحث برقم الموعد أو نوعه أو رقم الطلب…" />
                 </div>
                 <div class="flex flex-wrap gap-1 rounded-lg border border-border bg-card p-0.5">
                     <button v-for="t in TABS" :key="t.v" @click="tab = t.v"

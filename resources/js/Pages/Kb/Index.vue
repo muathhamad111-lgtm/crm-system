@@ -114,8 +114,8 @@ function pickCategory(id) {
                         <CardContent class="p-4">
                             <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
                                 <div class="relative md:col-span-2">
-                                    <Search class="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                                    <Input v-model="q" placeholder="ابحث بالعنوان أو الملخص أو المحتوى..." class="pr-9" />
+                                    <Search class="pointer-events-none absolute top-1/2 left-3 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Input v-model="q" label="ابحث بالعنوان أو الملخص أو المحتوى..." />
                                 </div>
                                 <Select v-model="type">
                                     <option value="all">كل الأنواع</option>

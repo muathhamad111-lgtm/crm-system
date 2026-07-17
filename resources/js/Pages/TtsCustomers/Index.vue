@@ -94,8 +94,8 @@ function entityLabel(e) {
             <Card>
                 <CardContent class="flex flex-wrap items-center gap-2 p-3">
                     <div class="relative min-w-[220px] flex-1">
-                        <Search class="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input v-model="q" placeholder="ابحث بالاسم، البريد، السجل التجاري، الرقم الضريبي..." class="pr-9" />
+                        <Search class="absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="q" label="ابحث بالاسم، البريد، السجل التجاري، الرقم الضريبي..." />
                     </div>
                     <Select v-model="entity" class="w-[190px]">
                         <option value="all">جميع الأَنواع</option>

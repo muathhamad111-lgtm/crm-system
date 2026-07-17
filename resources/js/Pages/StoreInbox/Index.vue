@@ -122,8 +122,8 @@ function submit(status) {
             <Card class="p-4">
                 <div class="mb-3 flex flex-col gap-3 md:flex-row md:items-center">
                     <div class="relative flex-1">
-                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input v-model="q" placeholder="ابحث بالاسم، البريد، الجوال، أو الوصف…" class="pr-9" />
+                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="q" label="ابحث بالاسم، البريد، الجوال، أو الوصف…" />
                     </div>
                     <div class="flex flex-wrap gap-1.5">
                         <button v-for="[k, l] in statusChips" :key="k" type="button" @click="go({ status: k })"

@@ -86,8 +86,8 @@ const kpiRibbon = computed(() => [
             <Card>
                 <CardContent class="flex flex-wrap items-center gap-2 p-3">
                     <div class="relative min-w-[220px] flex-1">
-                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input v-model="q" placeholder="ابحث بالاسم، البريد، الجوال، المدينة..." class="pr-9" />
+                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input v-model="q" label="ابحث بالاسم، البريد، الجوال، المدينة..." />
                     </div>
                     <Select :model-value="filters.field ?? 'all'" class="w-[180px]" @update:model-value="v => apply({ field: v })">
                         <option value="all">كل المجالات</option>

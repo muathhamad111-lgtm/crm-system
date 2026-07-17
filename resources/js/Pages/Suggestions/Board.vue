@@ -109,8 +109,8 @@ function stars(v) {
             <!-- Toolbar -->
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div class="relative flex-1">
-                    <Search class="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input v-model="search" placeholder="ابحث في المقترحات بالعنوان أو الوصف أو الرقم..." class="pr-9" />
+                    <Search class="absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input v-model="search" label="ابحث في المقترحات بالعنوان أو الوصف أو الرقم..." />
                 </div>
                 <Select v-model="sort" class="sm:w-56">
                     <option value="latest">الأحدث نشراً</option>

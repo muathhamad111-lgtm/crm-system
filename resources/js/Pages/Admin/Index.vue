@@ -636,8 +636,8 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                 <div class="mb-2 flex items-center justify-between gap-2">
                                     <h3 class="text-sm font-semibold">مصفوفة الصلاحيات</h3>
                                     <div class="relative w-56">
-                                        <Search class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                                        <Input v-model="capSearch" placeholder="ابحث في الصلاحيات…" class="h-9 pr-9 text-sm" />
+                                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input v-model="capSearch" label="ابحث في الصلاحيات…" class="h-9 text-sm" />
                                     </div>
                                 </div>
                                 <div class="overflow-x-auto rounded-lg border border-border">
