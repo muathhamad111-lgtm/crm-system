@@ -115,13 +115,13 @@ function submit(status) {
                     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                         <div>
                             <Select label="المنتج" v-model="form.product_id" :disabled="form.is_general">
-                                <option value="">— بدون منتج —</option>
+                                <option value=""></option>
                                 <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }}</option>
                             </Select>
                             <p v-if="form.is_general" class="mt-1 text-xs text-muted-foreground">(معطّل - مقال عام)</p>
                         </div>
                         <Select label="التصنيف الرئيسي" v-model="form.category_id">
-                            <option value="">— بدون تصنيف —</option>
+                            <option value=""></option>
                             <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name_ar }}</option>
                         </Select>
                     </div>

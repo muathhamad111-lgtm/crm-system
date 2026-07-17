@@ -54,12 +54,12 @@ function save(){ form.post('/leaves', { onSuccess:()=>{ open.value=false; form.r
       </Card>
       <Dialog v-model:open="open" title="تسجيل إجازة">
         <div class="space-y-3">
-          <Select label="نوع الإجازة" v-model="form.leave_type_id"><option value="">اختر…</option><option v-for="t in leaveTypes" :key="t.id" :value="t.id">{{ t.label_ar }}</option></Select>
+          <Select label="نوع الإجازة" v-model="form.leave_type_id"><option value=""></option><option v-for="t in leaveTypes" :key="t.id" :value="t.id">{{ t.label_ar }}</option></Select>
           <div class="grid grid-cols-2 gap-2">
             <Input label="من" type="date" v-model="form.start_date" />
             <Input label="إلى" type="date" v-model="form.end_date" />
           </div>
-          <Select v-if="substitutes.length" label="البديل" v-model="form.substitute_id"><option value="">—</option><option v-for="s in substitutes" :key="s.id" :value="s.id">{{ s.full_name }}</option></Select>
+          <Select v-if="substitutes.length" label="البديل" v-model="form.substitute_id"><option value=""></option><option v-for="s in substitutes" :key="s.id" :value="s.id">{{ s.full_name }}</option></Select>
           <Textarea label="السبب" v-model="form.reason" class="min-h-16" />
           <div class="flex justify-end"><Button variant="accent" :disabled="form.processing" @click="save">حفظ</Button></div>
         </div>

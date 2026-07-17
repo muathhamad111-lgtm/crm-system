@@ -50,7 +50,7 @@ function submit() {
                 <CardContent class="space-y-5">
                     <div v-if="isStaff">
                         <Select label="العميل" v-model="form.customer_id">
-                            <option value="">اختر العميل…</option>
+                            <option value=""></option>
                             <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.full_name }} — {{ c.email }}</option>
                         </Select>
                         <p v-if="form.errors.customer_id" class="mt-1 text-xs text-destructive">{{ form.errors.customer_id }}</p>
@@ -58,7 +58,7 @@ function submit() {
 
                     <div>
                         <Select label="التصنيف" v-model="form.category_id">
-                            <option value="">اختر التصنيف…</option>
+                            <option value=""></option>
                             <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name_ar }}</option>
                         </Select>
                         <p v-if="form.errors.category_id" class="mt-1 text-xs text-destructive">{{ form.errors.category_id }}</p>
@@ -66,14 +66,14 @@ function submit() {
 
                     <div v-if="currentCategory?.sub_categories?.length">
                         <Select label="التصنيف الفرعي" v-model="form.sub_category_id">
-                            <option value="">—</option>
+                            <option value=""></option>
                             <option v-for="s in currentCategory.sub_categories" :key="s.id" :value="s.id">{{ s.name_ar }}</option>
                         </Select>
                     </div>
 
                     <div v-if="products.length">
                         <Select label="المنتج / الخدمة" v-model="form.product_id">
-                            <option value="">—</option>
+                            <option value=""></option>
                             <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }}</option>
                         </Select>
                     </div>
@@ -95,7 +95,7 @@ function submit() {
                             <p v-if="f.help_text" class="mb-1 text-xs text-muted-foreground">{{ f.help_text }}</p>
                             <Textarea v-if="f.field_type === 'textarea'" :label="f.label + (f.required ? ' *' : '')" v-model="form.fields[f.id]" />
                             <Select v-else-if="f.field_type === 'select'" :label="f.label + (f.required ? ' *' : '')" v-model="form.fields[f.id]">
-                                <option value="">—</option>
+                                <option value=""></option>
                                 <option v-for="opt in (f.options || [])" :key="opt.value ?? opt" :value="opt.value ?? opt">{{ opt.label ?? opt }}</option>
                             </Select>
                             <label v-else-if="f.field_type === 'checkbox'" class="mt-1 flex items-center gap-2 text-sm">

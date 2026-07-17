@@ -928,7 +928,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <div>
                         <Select label="نوع المستلم" v-model="tplForm.recipient_type">
-                            <option value="">— بدون تحديد —</option>
+                            <option value=""></option>
                             <option v-for="r in RECIPIENT_OPTIONS" :key="r" :value="r">{{ r }}</option>
                             <option v-if="tplForm.recipient_type && !RECIPIENT_OPTIONS.includes(tplForm.recipient_type)" :value="tplForm.recipient_type">{{ tplForm.recipient_type }}</option>
                         </Select>

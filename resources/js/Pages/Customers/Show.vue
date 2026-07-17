@@ -848,17 +848,17 @@ function deleteAttachment(at) {
                     <Input label="المدينة" v-model="accountForm.city" />
                     <Input label="المنطقة" v-model="accountForm.region" />
                     <Select label="التصنيف" v-model="accountForm.tier">
-                        <option value="">—</option>
+                        <option value=""></option>
                         <option v-for="(lbl, key) in TIER" :key="key" :value="key">{{ lbl }}</option>
                     </Select>
                     <Select label="حالة الحساب" v-model="accountForm.account_status">
-                        <option value="">—</option>
+                        <option value=""></option>
                         <option value="active">نشط</option>
                         <option value="suspended">معلّق</option>
                         <option value="archived">مؤرشف</option>
                     </Select>
                     <Select label="مرحلة الرحلة" v-model="accountForm.journey_stage">
-                        <option value="">—</option>
+                        <option value=""></option>
                         <option v-for="(lbl, key) in JOURNEY_STAGE" :key="key" :value="key">{{ lbl }}</option>
                     </Select>
                 </div>

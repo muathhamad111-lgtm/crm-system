@@ -134,7 +134,7 @@ function submit() {
                             </div>
                             <div class="space-y-1.5">
                                 <Select label="المنتج / الخدمة" v-model="form.product_id">
-                                    <option value="">— لا ينطبق —</option>
+                                    <option value=""></option>
                                     <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }} ({{ p.type === 'service' ? 'خدمة' : 'منتج' }})</option>
                                 </Select>
                             </div>
