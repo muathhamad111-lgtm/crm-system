@@ -97,9 +97,24 @@ function bulkAssign() {
 }
 watch(() => props.requests.data, clearSelection);
 
-// --- Row actions menu ---
+// --- Row actions menu (teleported, fixed position so the scroll container never clips it) ---
 const openMenu = ref(null);
-function toggleMenu(id) { openMenu.value = openMenu.value === id ? null : id; }
+const menuPos = ref({ top: 0, left: 0 });
+const MENU_W = 208; // w-52
+const MENU_H = 300;
+function toggleMenu(id, ev) {
+    if (openMenu.value === id) { openMenu.value = null; return; }
+    const r = ev.currentTarget.getBoundingClientRect();
+    // Open inward (RTL: the actions column sits on the left, so extend rightward).
+    let left = r.left;
+    if (left + MENU_W > window.innerWidth - 8) left = window.innerWidth - MENU_W - 8;
+    if (left < 8) left = 8;
+    let top = r.bottom + 4;
+    if (top + MENU_H > window.innerHeight - 8) top = r.top - MENU_H; // flip up near the bottom
+    menuPos.value = { top: Math.max(8, top), left };
+    openMenu.value = id;
+}
+const openRequest = computed(() => props.requests.data.find((r) => r.id === openMenu.value) ?? null);
 function open(id) { router.visit(`/requests/${id}`); }
 function assignMe(id) { openMenu.value = null; router.post(`/requests/${id}/assign-self`, {}, { preserveScroll: true }); }
 function copyNumber(n) { openMenu.value = null; navigator.clipboard?.writeText(n); }
@@ -297,27 +312,12 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
                                 <td class="px-3 py-3 whitespace-nowrap text-xs text-muted-foreground">{{ timeAgoAr(r.updated_at) }}</td>
 
                                 <!-- Row actions -->
-                                <td class="relative px-2 py-3 text-center" @click.stop>
+                                <td class="px-2 py-3 text-center" @click.stop>
                                     <div class="flex items-center gap-0.5">
-                                        <button class="rounded-md p-1.5 text-muted-foreground opacity-60 transition hover:bg-muted hover:text-foreground group-hover:opacity-100" title="إجراءات" @click="toggleMenu(r.id)">
+                                        <button class="rounded-md p-1.5 text-muted-foreground opacity-60 transition hover:bg-muted hover:text-foreground group-hover:opacity-100" title="إجراءات" @click="toggleMenu(r.id, $event)">
                                             <MoreHorizontal class="size-4" />
                                         </button>
                                         <ChevronLeft class="hidden size-4 text-muted-foreground/40 transition group-hover:text-primary md:block" />
-                                    </div>
-                                    <div v-if="openMenu === r.id" class="absolute left-2 top-11 z-20 w-52 rounded-lg border border-border bg-popover p-1.5 text-start shadow-elevated">
-                                        <p class="px-2 py-1 text-[11px] font-bold text-muted-foreground">إجراءات الطلب</p>
-                                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(r.id)"><Eye class="size-4" /> فتح الطلب</button>
-                                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(r.id)"><MessageSquare class="size-4" /> إضافة تعليق</button>
-                                        <template v-if="isStaff && !isClosed(r)">
-                                            <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(r.id)"><Pencil class="size-4" /> تعديل الحالة</button>
-                                            <button v-if="!r.assignee" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="assignMe(r.id)"><UserCheck class="size-4" /> إسناد إليّ</button>
-                                        </template>
-                                        <div class="my-1 h-px bg-border"></div>
-                                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="copyNumber(r.request_number)"><Copy class="size-4" /> نسخ رقم الطلب</button>
-                                        <template v-if="isAdmin">
-                                            <div class="my-1 h-px bg-border"></div>
-                                            <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-destructive hover:bg-muted" @click="askDelete(r)"><Trash2 class="size-4" /> حذف الطلب نهائيًا</button>
-                                        </template>
                                     </div>
                                 </td>
                             </tr>
@@ -334,6 +334,28 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
                     :class="['rounded-md px-3 py-1.5 text-sm', link.active ? 'bg-primary text-primary-foreground' : 'hover:bg-muted', !link.url && 'pointer-events-none opacity-40']" />
             </div>
         </div>
+
+        <!-- Row actions menu (teleported, never clipped, opens inward) -->
+        <Teleport to="body">
+            <div v-if="openRequest" class="fixed inset-0 z-40" @click="openMenu = null">
+                <div dir="rtl" class="fixed w-52 rounded-lg border border-border bg-popover p-1.5 text-start shadow-elevated"
+                    :style="{ top: menuPos.top + 'px', left: menuPos.left + 'px' }" @click.stop>
+                    <p class="px-2 py-1 text-[11px] font-bold text-muted-foreground">إجراءات الطلب</p>
+                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><Eye class="size-4" /> فتح الطلب</button>
+                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><MessageSquare class="size-4" /> إضافة تعليق</button>
+                    <template v-if="isStaff && !isClosed(openRequest)">
+                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><Pencil class="size-4" /> تعديل الحالة</button>
+                        <button v-if="!openRequest.assignee" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="assignMe(openRequest.id)"><UserCheck class="size-4" /> إسناد إليّ</button>
+                    </template>
+                    <div class="my-1 h-px bg-border"></div>
+                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="copyNumber(openRequest.request_number)"><Copy class="size-4" /> نسخ رقم الطلب</button>
+                    <template v-if="isAdmin">
+                        <div class="my-1 h-px bg-border"></div>
+                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-destructive hover:bg-muted" @click="askDelete(openRequest)"><Trash2 class="size-4" /> حذف الطلب نهائيًا</button>
+                    </template>
+                </div>
+            </div>
+        </Teleport>
 
         <!-- Delete confirmation (admin) -->
         <Dialog :open="!!delTarget" title="حذف الطلب نهائيًا"
