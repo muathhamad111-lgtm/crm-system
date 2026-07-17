@@ -20,8 +20,7 @@ const submit = () => form.post(route('password.email'));
         <div v-if="status" class="mb-4 rounded-lg bg-success/10 p-3 text-sm font-medium text-success">{{ status }}</div>
         <form @submit.prevent="submit" class="space-y-4">
             <div>
-                <Label for="email">البريد الإلكتروني</Label>
-                <Input id="email" type="email" class="mt-1.5" v-model="form.email" required autofocus />
+                <Input label="البريد الإلكتروني" type="email" v-model="form.email" required autofocus />
                 <p v-if="form.errors.email" class="mt-1 text-xs text-destructive">{{ form.errors.email }}</p>
             </div>
             <Button type="submit" class="w-full" variant="accent" :disabled="form.processing">إرسال رابط الاستعادة</Button>

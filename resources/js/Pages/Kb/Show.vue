@@ -175,7 +175,7 @@ function feedback(helpful) {
                                         {{ myRating ? 'قيّمت هذا المقال' : 'قيّم هذا المقال' }}
                                     </span>
                                 </div>
-                                <Textarea v-model="ratingComment" :rows="2" placeholder="ملاحظة اختيارية..." class="text-sm" />
+                                <Textarea label="ملاحظة اختيارية" v-model="ratingComment" :rows="2" class="text-sm" />
                                 <Button size="sm" class="mt-2" :disabled="saving || ratingValue === 0" @click="rate">
                                     حفظ التقييم
                                 </Button>

@@ -23,7 +23,6 @@ import Dialog from '@/Components/ui/Dialog.vue';
 import Button from '@/Components/ui/Button.vue';
 import Input from '@/Components/ui/Input.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
-import Label from '@/Components/ui/Label.vue';
 import Select from '@/Components/ui/Select.vue';
 import CustomerJourneyCard from '@/Components/customer/CustomerJourneyCard.vue';
 import CustomerHealthCard from '@/Components/customer/CustomerHealthCard.vue';
@@ -769,14 +768,8 @@ function deleteAttachment(at) {
                         <CardContent class="space-y-3">
                             <div class="rounded-lg border border-dashed border-border p-3">
                                 <div class="grid gap-2 sm:grid-cols-2">
-                                    <div class="space-y-1">
-                                        <Label>التصنيف</Label>
-                                        <Input v-model="attForm.category" placeholder="عام / عقد / فاتورة..." />
-                                    </div>
-                                    <div class="space-y-1">
-                                        <Label>وصف مختصر</Label>
-                                        <Input v-model="attForm.description" placeholder="وصف اختياري" />
-                                    </div>
+                                    <Input label="التصنيف" v-model="attForm.category" />
+                                    <Input label="وصف مختصر" v-model="attForm.description" />
                                 </div>
                                 <div class="mt-2 flex flex-wrap items-center gap-2">
                                     <input ref="fileRef" type="file" class="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm" @change="onFile" />
@@ -846,58 +839,30 @@ function deleteAttachment(at) {
             <form class="space-y-3" @submit.prevent="submitAccount">
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
-                        <Label>الاسم الكامل</Label>
-                        <Input v-model="accountForm.full_name" />
+                        <Input label="الاسم الكامل" v-model="accountForm.full_name" />
                         <div v-if="accountForm.errors.full_name" class="text-xs text-destructive">{{ accountForm.errors.full_name }}</div>
                     </div>
-                    <div class="space-y-1">
-                        <Label>الهاتف</Label>
-                        <Input v-model="accountForm.phone" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>القطاع</Label>
-                        <Input v-model="accountForm.business_field" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الموقع الإلكتروني</Label>
-                        <Input v-model="accountForm.website" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>المدينة</Label>
-                        <Input v-model="accountForm.city" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>المنطقة</Label>
-                        <Input v-model="accountForm.region" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>التصنيف</Label>
-                        <Select v-model="accountForm.tier">
-                            <option value="">—</option>
-                            <option v-for="(lbl, key) in TIER" :key="key" :value="key">{{ lbl }}</option>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label>حالة الحساب</Label>
-                        <Select v-model="accountForm.account_status">
-                            <option value="">—</option>
-                            <option value="active">نشط</option>
-                            <option value="suspended">معلّق</option>
-                            <option value="archived">مؤرشف</option>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label>مرحلة الرحلة</Label>
-                        <Select v-model="accountForm.journey_stage">
-                            <option value="">—</option>
-                            <option v-for="(lbl, key) in JOURNEY_STAGE" :key="key" :value="key">{{ lbl }}</option>
-                        </Select>
-                    </div>
+                    <Input label="الهاتف" v-model="accountForm.phone" dir="ltr" />
+                    <Input label="القطاع" v-model="accountForm.business_field" />
+                    <Input label="الموقع الإلكتروني" v-model="accountForm.website" dir="ltr" />
+                    <Input label="المدينة" v-model="accountForm.city" />
+                    <Input label="المنطقة" v-model="accountForm.region" />
+                    <Select label="التصنيف" v-model="accountForm.tier">
+                        <option value="">—</option>
+                        <option v-for="(lbl, key) in TIER" :key="key" :value="key">{{ lbl }}</option>
+                    </Select>
+                    <Select label="حالة الحساب" v-model="accountForm.account_status">
+                        <option value="">—</option>
+                        <option value="active">نشط</option>
+                        <option value="suspended">معلّق</option>
+                        <option value="archived">مؤرشف</option>
+                    </Select>
+                    <Select label="مرحلة الرحلة" v-model="accountForm.journey_stage">
+                        <option value="">—</option>
+                        <option v-for="(lbl, key) in JOURNEY_STAGE" :key="key" :value="key">{{ lbl }}</option>
+                    </Select>
                 </div>
-                <div class="space-y-1">
-                    <Label>ملاحظات داخلية (للموظفين فقط)</Label>
-                    <Textarea v-model="accountForm.internal_notes" class="min-h-[90px]" />
-                </div>
+                <Textarea label="ملاحظات داخلية (للموظفين فقط)" v-model="accountForm.internal_notes" class="min-h-[90px]" />
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="accountOpen = false">إلغاء</Button>
                     <Button type="submit" :disabled="accountForm.processing"><Save class="size-4" /> حفظ</Button>
@@ -910,39 +875,19 @@ function deleteAttachment(at) {
             <form class="space-y-3" @submit.prevent="submitContact">
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
-                        <Label>الاسم الكامل</Label>
-                        <Input v-model="contactForm.full_name" />
+                        <Input label="الاسم الكامل" v-model="contactForm.full_name" />
                         <div v-if="contactForm.errors.full_name" class="text-xs text-destructive">{{ contactForm.errors.full_name }}</div>
                     </div>
+                    <Input label="المسمى الوظيفي" v-model="contactForm.job_title" />
+                    <Input label="القسم" v-model="contactForm.department" />
                     <div class="space-y-1">
-                        <Label>المسمى الوظيفي</Label>
-                        <Input v-model="contactForm.job_title" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>القسم</Label>
-                        <Input v-model="contactForm.department" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>البريد الإلكتروني</Label>
-                        <Input v-model="contactForm.email" type="email" dir="ltr" />
+                        <Input label="البريد الإلكتروني" v-model="contactForm.email" type="email" dir="ltr" />
                         <div v-if="contactForm.errors.email" class="text-xs text-destructive">{{ contactForm.errors.email }}</div>
                     </div>
-                    <div class="space-y-1">
-                        <Label>الهاتف</Label>
-                        <Input v-model="contactForm.phone" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الجوال</Label>
-                        <Input v-model="contactForm.mobile" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>نوع الدور</Label>
-                        <Input v-model="contactForm.role_type" placeholder="مثال: مسؤول تقني" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الحالة</Label>
-                        <Input v-model="contactForm.status" placeholder="نشط / غير نشط" />
-                    </div>
+                    <Input label="الهاتف" v-model="contactForm.phone" dir="ltr" />
+                    <Input label="الجوال" v-model="contactForm.mobile" dir="ltr" />
+                    <Input label="نوع الدور" v-model="contactForm.role_type" />
+                    <Input label="الحالة" v-model="contactForm.status" />
                 </div>
                 <div class="flex flex-wrap gap-4 pt-1">
                     <label class="flex items-center gap-2 text-sm"><input type="checkbox" v-model="contactForm.is_primary" class="size-4" /> جهة تواصل أساسية</label>
@@ -960,32 +905,16 @@ function deleteAttachment(at) {
             <form class="space-y-3" @submit.prevent="submitSub">
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
-                        <Label>اسم المنتج</Label>
-                        <Input v-model="subForm.product_name" />
+                        <Input label="اسم المنتج" v-model="subForm.product_name" />
                         <div v-if="subForm.errors.product_name" class="text-xs text-destructive">{{ subForm.errors.product_name }}</div>
                     </div>
-                    <div class="space-y-1">
-                        <Label>الباقة</Label>
-                        <Input v-model="subForm.plan_name" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الحالة</Label>
-                        <Select v-model="subForm.status">
-                            <option v-for="(v, key) in SUB_STATUS" :key="key" :value="key">{{ v.label }}</option>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label>المعرّف الخارجي</Label>
-                        <Input v-model="subForm.external_id" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>تاريخ البداية</Label>
-                        <Input v-model="subForm.start_date" type="date" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>تاريخ النهاية</Label>
-                        <Input v-model="subForm.end_date" type="date" dir="ltr" />
-                    </div>
+                    <Input label="الباقة" v-model="subForm.plan_name" />
+                    <Select label="الحالة" v-model="subForm.status">
+                        <option v-for="(v, key) in SUB_STATUS" :key="key" :value="key">{{ v.label }}</option>
+                    </Select>
+                    <Input label="المعرّف الخارجي" v-model="subForm.external_id" dir="ltr" />
+                    <Input label="تاريخ البداية" v-model="subForm.start_date" type="date" dir="ltr" />
+                    <Input label="تاريخ النهاية" v-model="subForm.end_date" type="date" dir="ltr" />
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="subOpen = false">إلغاء</Button>
@@ -998,29 +927,16 @@ function deleteAttachment(at) {
         <Dialog v-model:open="taskOpen" :title="editingTask ? 'تعديل مهمة تفعيل' : 'إضافة مهمة تفعيل'" class="max-w-xl">
             <form class="space-y-3" @submit.prevent="submitTask">
                 <div class="space-y-1">
-                    <Label>العنوان</Label>
-                    <Input v-model="taskForm.title" />
+                    <Input label="العنوان" v-model="taskForm.title" />
                     <div v-if="taskForm.errors.title" class="text-xs text-destructive">{{ taskForm.errors.title }}</div>
                 </div>
-                <div class="space-y-1">
-                    <Label>الوصف</Label>
-                    <Textarea v-model="taskForm.description" class="min-h-[80px]" />
-                </div>
+                <Textarea label="الوصف" v-model="taskForm.description" class="min-h-[80px]" />
                 <div class="grid gap-3 sm:grid-cols-3">
-                    <div class="space-y-1">
-                        <Label>الحالة</Label>
-                        <Select v-model="taskForm.status">
-                            <option v-for="(lbl, key) in TASK_STATUS" :key="key" :value="key">{{ lbl }}</option>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label>تاريخ الاستحقاق</Label>
-                        <Input v-model="taskForm.due_date" type="date" dir="ltr" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الترتيب</Label>
-                        <Input v-model="taskForm.sort_order" type="number" dir="ltr" />
-                    </div>
+                    <Select label="الحالة" v-model="taskForm.status">
+                        <option v-for="(lbl, key) in TASK_STATUS" :key="key" :value="key">{{ lbl }}</option>
+                    </Select>
+                    <Input label="تاريخ الاستحقاق" v-model="taskForm.due_date" type="date" dir="ltr" />
+                    <Input label="الترتيب" v-model="taskForm.sort_order" type="number" dir="ltr" />
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="taskOpen = false">إلغاء</Button>
@@ -1033,27 +949,20 @@ function deleteAttachment(at) {
         <Dialog v-model:open="activityOpen" title="تسجيل نشاط" class="max-w-xl">
             <form class="space-y-3" @submit.prevent="submitActivity">
                 <div class="grid gap-3 sm:grid-cols-2">
+                    <Select label="نوع النشاط" v-model="activityForm.activity_type">
+                        <option value="call">اتصال</option>
+                        <option value="email">بريد إلكتروني</option>
+                        <option value="meeting">اجتماع</option>
+                        <option value="visit">زيارة</option>
+                        <option value="note">ملاحظة</option>
+                        <option value="other">أخرى</option>
+                    </Select>
                     <div class="space-y-1">
-                        <Label>نوع النشاط</Label>
-                        <Select v-model="activityForm.activity_type">
-                            <option value="call">اتصال</option>
-                            <option value="email">بريد إلكتروني</option>
-                            <option value="meeting">اجتماع</option>
-                            <option value="visit">زيارة</option>
-                            <option value="note">ملاحظة</option>
-                            <option value="other">أخرى</option>
-                        </Select>
-                    </div>
-                    <div class="space-y-1">
-                        <Label>الموضوع</Label>
-                        <Input v-model="activityForm.subject" />
+                        <Input label="الموضوع" v-model="activityForm.subject" />
                         <div v-if="activityForm.errors.subject" class="text-xs text-destructive">{{ activityForm.errors.subject }}</div>
                     </div>
                 </div>
-                <div class="space-y-1">
-                    <Label>التفاصيل</Label>
-                    <Textarea v-model="activityForm.summary" class="min-h-[90px]" />
-                </div>
+                <Textarea label="التفاصيل" v-model="activityForm.summary" class="min-h-[90px]" />
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="activityOpen = false">إلغاء</Button>
                     <Button type="submit" :disabled="activityForm.processing"><Save class="size-4" /> تسجيل</Button>

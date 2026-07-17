@@ -12,13 +12,11 @@ const form = useForm({ name: user.name, email: user.email });
 <template>
     <form @submit.prevent="form.patch(route('profile.update'))" class="space-y-4">
         <div>
-            <Label for="name">الاسم</Label>
-            <Input id="name" class="mt-1.5" v-model="form.name" required autocomplete="name" />
+            <Input label="الاسم" v-model="form.name" required autocomplete="name" />
             <p v-if="form.errors.name" class="mt-1 text-xs text-destructive">{{ form.errors.name }}</p>
         </div>
         <div>
-            <Label for="email">البريد الإلكتروني</Label>
-            <Input id="email" type="email" class="mt-1.5" v-model="form.email" required autocomplete="username" />
+            <Input label="البريد الإلكتروني" type="email" v-model="form.email" required autocomplete="username" />
             <p v-if="form.errors.email" class="mt-1 text-xs text-destructive">{{ form.errors.email }}</p>
         </div>
         <div v-if="mustVerifyEmail && user.email_verified_at === null" class="rounded-lg bg-warning/10 p-3 text-sm">

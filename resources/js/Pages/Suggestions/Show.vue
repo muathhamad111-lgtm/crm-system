@@ -275,12 +275,11 @@ const stars = [1, 2, 3, 4, 5];
                             </div>
                             <div v-else class="space-y-2">
                                 <div class="flex items-center gap-2">
-                                    <Label class="whitespace-nowrap text-xs">نوع التعليق:</Label>
-                                    <Select v-model="commentForm.kind" class="h-8 w-48">
+                                    <Select label="نوع التعليق" v-model="commentForm.kind" class="w-48">
                                         <option v-for="[k, v] in Object.entries(KIND)" :key="k" :value="k">{{ v }}</option>
                                     </Select>
                                 </div>
-                                <Textarea v-model="commentForm.body" placeholder="شارك رأيك..." maxlength="2000" class="min-h-16" />
+                                <Textarea label="شارك رأيك..." v-model="commentForm.body" maxlength="2000" class="min-h-16" />
                                 <div class="flex justify-end">
                                     <Button size="sm" :disabled="commentForm.processing || !commentForm.body.trim()" @click="addComment">إضافة تعليق</Button>
                                 </div>
@@ -299,7 +298,7 @@ const stars = [1, 2, 3, 4, 5];
                                         <Button size="sm" variant="ghost" class="h-7 text-xs" @click="replyTo = replyTo === c.id ? null : c.id">رد</Button>
                                     </div>
                                     <div v-if="replyTo === c.id" class="mt-2 space-y-2">
-                                        <Textarea v-model="replyForm.body" placeholder="اكتب ردك..." maxlength="2000" class="min-h-12" />
+                                        <Textarea label="اكتب ردك..." v-model="replyForm.body" maxlength="2000" class="min-h-12" />
                                         <div class="flex items-center gap-2">
                                             <Button size="sm" :disabled="replyForm.processing || !replyForm.body.trim()" @click="sendReply(c.id)">إرسال الرد</Button>
                                             <Button size="sm" variant="ghost" @click="replyTo = null">إلغاء</Button>
@@ -371,8 +370,7 @@ const stars = [1, 2, 3, 4, 5];
                         <CardHeader class="pb-2"><CardTitle class="flex items-center gap-2 text-sm"><Sparkles class="size-4 text-primary" /> القرار والمرحلة</CardTitle></CardHeader>
                         <CardContent class="space-y-3">
                             <div>
-                                <Label class="text-xs">المرحلة</Label>
-                                <Select v-model="stageForm.idea_stage" class="mt-1">
+                                <Select label="المرحلة" v-model="stageForm.idea_stage">
                                     <option v-for="[k, v] in Object.entries(IDEA_STAGE)" :key="k" :value="k">{{ v.label }}</option>
                                 </Select>
                             </div>
@@ -383,7 +381,7 @@ const stars = [1, 2, 3, 4, 5];
                                     {{ t.length > 32 ? t.slice(0, 32) + '…' : t }}
                                 </button>
                             </div>
-                            <Textarea v-model="stageForm.reason" placeholder="سبب القرار / ملاحظات للفريق" maxlength="2000" class="min-h-16" />
+                            <Textarea label="سبب القرار / ملاحظات للفريق" v-model="stageForm.reason" maxlength="2000" class="min-h-16" />
                             <Button size="sm" class="w-full" :disabled="stageForm.processing" @click="saveStage">حفظ المرحلة</Button>
                             <Separator />
                             <div class="grid grid-cols-2 gap-2">
@@ -400,21 +398,19 @@ const stars = [1, 2, 3, 4, 5];
                         <CardHeader class="pb-2"><CardTitle class="flex items-center gap-2 text-sm"><Calculator class="size-4" /> تسجيل RICE</CardTitle></CardHeader>
                         <CardContent class="space-y-3">
                             <div class="grid grid-cols-2 gap-2">
-                                <div><Label class="text-xs">الوصول (Reach)</Label><Input type="number" min="0" v-model="riceForm.reach" class="mt-1" /></div>
+                                <div><Input label="الوصول (Reach)" type="number" min="0" v-model="riceForm.reach" /></div>
                                 <div>
-                                    <Label class="text-xs">الأثر (Impact)</Label>
-                                    <Select v-model.number="riceForm.value_score" class="mt-1">
+                                    <Select label="الأثر (Impact)" v-model.number="riceForm.value_score">
                                         <option :value="0.25">ضئيل (0.25)</option><option :value="0.5">منخفض (0.5)</option>
                                         <option :value="1">متوسط (1)</option><option :value="2">مرتفع (2)</option><option :value="3">هائل (3)</option>
                                     </Select>
                                 </div>
                                 <div>
-                                    <Label class="text-xs">الثقة (Confidence)</Label>
-                                    <Select v-model.number="riceForm.confidence" class="mt-1">
+                                    <Select label="الثقة (Confidence)" v-model.number="riceForm.confidence">
                                         <option :value="0.5">50%</option><option :value="0.8">80%</option><option :value="1">100%</option>
                                     </Select>
                                 </div>
-                                <div><Label class="text-xs">الجهد (Effort)</Label><Input type="number" min="0.1" step="0.5" v-model="riceForm.effort" class="mt-1" /></div>
+                                <div><Input label="الجهد (Effort)" type="number" min="0.1" step="0.5" v-model="riceForm.effort" /></div>
                             </div>
                             <div class="rounded-lg bg-primary-soft p-3 text-center">
                                 <p class="text-xs text-primary/70">درجة RICE المحتسبة</p>

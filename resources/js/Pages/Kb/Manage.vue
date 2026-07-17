@@ -146,10 +146,9 @@ function closeGap(id, status) {
                     </CardHeader>
                     <CardContent class="space-y-2">
                         <div v-if="can.manage" class="space-y-2 border-b border-border pb-3">
-                            <Input v-model="gapForm.topic" placeholder="موضوع الفجوة (مثال: مشكلة X لا يوجد لها حل موثق)"
-                                class="h-8 text-xs" />
-                            <Input v-model="gapForm.keywords" placeholder="كلمات مفتاحية (مفصولة بفاصلة)" class="h-8 text-xs" />
-                            <Textarea v-model="gapForm.notes" :rows="2" placeholder="ملاحظات..." class="text-xs" />
+                            <Input label="موضوع الفجوة" v-model="gapForm.topic" class="text-xs" />
+                            <Input label="كلمات مفتاحية (مفصولة بفاصلة)" v-model="gapForm.keywords" class="text-xs" />
+                            <Textarea label="ملاحظات" v-model="gapForm.notes" :rows="2" class="text-xs" />
                             <Button size="sm" class="w-full" :disabled="gapForm.processing || !gapForm.topic.trim()" @click="addGap">
                                 <Plus class="size-3.5" /> تسجيل فجوة
                             </Button>

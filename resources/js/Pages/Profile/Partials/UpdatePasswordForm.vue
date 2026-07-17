@@ -24,18 +24,15 @@ const updatePassword = () => {
 <template>
     <form @submit.prevent="updatePassword" class="space-y-4">
         <div>
-            <Label for="current_password">كلمة المرور الحالية</Label>
-            <Input id="current_password" ref="currentPasswordInput" v-model="form.current_password" type="password" class="mt-1.5" autocomplete="current-password" />
+            <Input label="كلمة المرور الحالية" ref="currentPasswordInput" v-model="form.current_password" type="password" autocomplete="current-password" />
             <p v-if="form.errors.current_password" class="mt-1 text-xs text-destructive">{{ form.errors.current_password }}</p>
         </div>
         <div>
-            <Label for="password">كلمة المرور الجديدة</Label>
-            <Input id="password" ref="passwordInput" v-model="form.password" type="password" class="mt-1.5" autocomplete="new-password" />
+            <Input label="كلمة المرور الجديدة" ref="passwordInput" v-model="form.password" type="password" autocomplete="new-password" />
             <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
         </div>
         <div>
-            <Label for="password_confirmation">تأكيد كلمة المرور</Label>
-            <Input id="password_confirmation" v-model="form.password_confirmation" type="password" class="mt-1.5" autocomplete="new-password" />
+            <Input label="تأكيد كلمة المرور" v-model="form.password_confirmation" type="password" autocomplete="new-password" />
             <p v-if="form.errors.password_confirmation" class="mt-1 text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
         </div>
         <div class="flex items-center gap-3">

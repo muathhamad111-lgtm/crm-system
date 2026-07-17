@@ -284,7 +284,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                             <p v-if="!tasks.length" class="text-sm text-muted-foreground">لا توجد مهام.</p>
                             <Separator />
                             <div class="flex gap-2">
-                                <Input v-model="taskForm.title" placeholder="مهمة جديدة…" class="flex-1" />
+                                <Input label="مهمة جديدة…" v-model="taskForm.title" class="flex-1" />
                                 <Button size="sm" :disabled="taskForm.processing || !taskForm.title" @click="addTask"><Plus class="size-4" /> إضافة</Button>
                             </div>
                         </CardContent>
@@ -295,7 +295,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                         <CardHeader><CardTitle class="flex items-center gap-2"><MessageSquare class="size-5" /> المحادثة والنشاط</CardTitle></CardHeader>
                         <CardContent class="space-y-4">
                             <div>
-                                <Textarea v-model="commentForm.body" placeholder="اكتب ردًا…" class="min-h-20" />
+                                <Textarea label="اكتب ردًا…" v-model="commentForm.body" class="min-h-20" />
                                 <div class="mt-2 flex items-center justify-between">
                                     <label v-if="can.comment_internal" class="flex items-center gap-2 text-sm text-muted-foreground">
                                         <input type="checkbox" v-model="commentForm.is_internal" class="size-4 rounded border-input" /> ملاحظة داخلية
@@ -368,12 +368,10 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                         <CardHeader><CardTitle>الإجراءات</CardTitle></CardHeader>
                         <CardContent class="space-y-3">
                             <div v-if="can.update_status">
-                                <Label>الحالة</Label>
-                                <Select v-model="statusForm.status" class="mt-1"><option v-for="o in statusOptions" :key="o.k" :value="o.k">{{ o.label }}</option></Select>
+                                <Select label="الحالة" v-model="statusForm.status"><option v-for="o in statusOptions" :key="o.k" :value="o.k">{{ o.label }}</option></Select>
                             </div>
                             <div v-if="can.change_priority">
-                                <Label>الأولوية</Label>
-                                <Select v-model="statusForm.priority" class="mt-1"><option v-for="o in priorityOptions" :key="o.k" :value="o.k">{{ o.label }}</option></Select>
+                                <Select label="الأولوية" v-model="statusForm.priority"><option v-for="o in priorityOptions" :key="o.k" :value="o.k">{{ o.label }}</option></Select>
                             </div>
                             <Button v-if="can.update_status || can.change_priority" size="sm" class="w-full" :disabled="statusForm.processing" @click="saveStatus">حفظ التغييرات</Button>
                             <Separator />
@@ -399,7 +397,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
 
                             <!-- Supervisor decides a pending approval -->
                             <template v-if="can.approve">
-                                <Textarea v-model="decideForm.note" placeholder="ملاحظة القرار (اختياري)" class="min-h-16" />
+                                <Textarea label="ملاحظة القرار (اختياري)" v-model="decideForm.note" class="min-h-16" />
                                 <div class="flex gap-2">
                                     <Button size="sm" variant="success" class="flex-1" :disabled="decideForm.processing" @click="decide('approved')">اعتماد</Button>
                                     <Button size="sm" variant="destructive" class="flex-1" :disabled="decideForm.processing" @click="decide('rejected')">رفض</Button>
@@ -408,7 +406,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
 
                             <!-- Assignee requests approval -->
                             <template v-else-if="can.request_approval">
-                                <Textarea v-model="approvalForm.note" placeholder="سبب طلب الموافقة (اختياري)" class="min-h-16" />
+                                <Textarea label="سبب طلب الموافقة (اختياري)" v-model="approvalForm.note" class="min-h-16" />
                                 <Button size="sm" variant="accent" class="w-full gap-1" :disabled="approvalForm.processing" @click="requestApproval">
                                     <ClipboardCheck class="size-4" /> رفع للموافقة الإشرافية
                                 </Button>
@@ -445,7 +443,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                         <CardHeader><CardTitle class="flex items-center gap-2"><ShieldCheck class="size-5" /> هل تم حلّ طلبك؟</CardTitle></CardHeader>
                         <CardContent class="space-y-3">
                             <p class="text-sm text-muted-foreground">ساعدنا بتأكيد ما إذا تمت معالجة طلبك.</p>
-                            <Textarea v-model="verifyForm.note" placeholder="ملاحظاتك (اختياري)" class="min-h-16" />
+                            <Textarea label="ملاحظاتك (اختياري)" v-model="verifyForm.note" class="min-h-16" />
                             <div class="flex gap-2">
                                 <Button size="sm" variant="success" class="flex-1" :disabled="verifyForm.processing" @click="verify(true)">نعم، تم الحل</Button>
                                 <Button size="sm" variant="outline" class="flex-1" :disabled="verifyForm.processing" @click="verify(false)">لا، ما زالت قائمة</Button>
@@ -462,7 +460,7 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
                                     <Star :class="['size-7 transition', n <= rateForm.stars ? 'fill-warning text-warning' : 'text-muted-foreground']" />
                                 </button>
                             </div>
-                            <Textarea v-model="rateForm.notes" placeholder="ملاحظاتك (اختياري)" class="min-h-16" />
+                            <Textarea label="ملاحظاتك (اختياري)" v-model="rateForm.notes" class="min-h-16" />
                             <Button size="sm" class="w-full" variant="accent" :disabled="rateForm.processing" @click="submitRating">إرسال التقييم</Button>
                         </CardContent>
                     </Card>
@@ -496,40 +494,40 @@ const taskStatusMeta = { todo: { label: 'قيد الانتظار', tone: 'muted'
         <!-- Dialogs -->
         <Dialog v-model:open="escalateOpen" title="تصعيد الطلب" description="سيُرفع الطلب لمستوى أعلى وتُبلّغ الإدارة.">
             <div class="space-y-3">
-                <Textarea v-model="escalateForm.reason" placeholder="سبب التصعيد" class="min-h-20" />
+                <Textarea label="سبب التصعيد" v-model="escalateForm.reason" class="min-h-20" />
                 <div class="flex justify-end gap-2"><Button variant="outline" @click="escalateOpen = false">إلغاء</Button><Button variant="destructive" :disabled="escalateForm.processing" @click="doEscalate">تصعيد</Button></div>
             </div>
         </Dialog>
         <Dialog v-model:open="returnOpen" title="إعادة الطلب للعميل" description="سيُنتظر ردّ العميل، مع مهلة إغلاق تلقائي.">
             <div class="space-y-3">
-                <Textarea v-model="returnForm.reason" placeholder="ما المطلوب من العميل؟" class="min-h-20" />
+                <Textarea label="ما المطلوب من العميل؟" v-model="returnForm.reason" class="min-h-20" />
                 <div class="flex justify-end gap-2"><Button variant="outline" @click="returnOpen = false">إلغاء</Button><Button variant="warning" :disabled="returnForm.processing || !returnForm.reason" @click="doReturn">إرسال للعميل</Button></div>
             </div>
         </Dialog>
         <Dialog v-model:open="bypassOpen" title="تجاوز التصعيد التقني" description="تخطّي خطوة التصعيد التقني بمبرّر موثّق.">
             <div class="space-y-3">
-                <div><Label>سبب التجاوز</Label>
-                    <Select v-model="bypassForm.reason_code" class="mt-1">
+                <div>
+                    <Select label="سبب التجاوز" v-model="bypassForm.reason_code">
                         <option value="low_complexity">تعقيد منخفض</option>
                         <option value="known_issue">مشكلة معروفة/حل جاهز</option>
                         <option value="customer_urgency">إلحاح العميل</option>
                         <option value="already_diagnosed">تم التشخيص مسبقًا</option>
                         <option value="other">أخرى</option>
                     </Select></div>
-                <Textarea v-model="bypassForm.description" placeholder="مبرّر التجاوز" class="min-h-20" />
+                <Textarea label="مبرّر التجاوز" v-model="bypassForm.description" class="min-h-20" />
                 <p v-if="bypassForm.errors.description" class="text-xs text-destructive">{{ bypassForm.errors.description }}</p>
                 <div class="flex justify-end gap-2"><Button variant="outline" @click="bypassOpen = false">إلغاء</Button><Button :disabled="bypassForm.processing || !bypassForm.description" @click="doBypass">تنفيذ</Button></div>
             </div>
         </Dialog>
         <Dialog v-model:open="closeOpen" title="إغلاق الطلب">
             <div class="space-y-3">
-                <div><Label>سبب الإغلاق</Label>
-                    <Select v-model="closeForm.closure_reason_code" class="mt-1">
+                <div>
+                    <Select label="سبب الإغلاق" v-model="closeForm.closure_reason_code">
                         <option value="resolved">تم الحل</option><option value="duplicate">مكرر</option>
                         <option value="not_reproducible">تعذّر إعادة الإنتاج</option><option value="wont_fix">لن يُعالج</option>
                         <option value="other">أخرى</option>
                     </Select></div>
-                <Textarea v-model="closeForm.closure_reason_public" placeholder="ملخّص يظهر للعميل" class="min-h-20" />
+                <Textarea label="ملخّص يظهر للعميل" v-model="closeForm.closure_reason_public" class="min-h-20" />
                 <div class="flex justify-end gap-2"><Button variant="outline" @click="closeOpen = false">إلغاء</Button><Button variant="success" :disabled="closeForm.processing" @click="doClose">إغلاق</Button></div>
             </div>
         </Dialog>

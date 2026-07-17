@@ -125,8 +125,7 @@ function submit() {
                     <CardContent class="space-y-5 pt-5">
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div class="space-y-1.5 md:col-span-2">
-                                <Label>عنوان المقترح <span class="text-accent">*</span></Label>
-                                <Input v-model="form.title" maxlength="200" placeholder="ملخص موجز وواضح للفكرة" />
+                                <Input label="عنوان المقترح *" v-model="form.title" maxlength="200" />
                                 <div class="flex justify-between text-xs text-muted-foreground">
                                     <span>اكتب عنواناً وصفياً بين 10-200 حرف</span>
                                     <span class="font-mono tabular-nums">{{ form.title.length }}/200</span>
@@ -134,8 +133,7 @@ function submit() {
                                 <InputError :message="form.errors.title" />
                             </div>
                             <div class="space-y-1.5">
-                                <Label>المنتج / الخدمة</Label>
-                                <Select v-model="form.product_id">
+                                <Select label="المنتج / الخدمة" v-model="form.product_id">
                                     <option value="">— لا ينطبق —</option>
                                     <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }} ({{ p.type === 'service' ? 'خدمة' : 'منتج' }})</option>
                                 </Select>
@@ -143,9 +141,7 @@ function submit() {
                         </div>
 
                         <div class="space-y-1.5">
-                            <Label>الوصف التفصيلي <span class="text-accent">*</span></Label>
-                            <Textarea v-model="form.description" class="min-h-[220px] leading-relaxed"
-                                placeholder="اشرح مقترحك بالتفصيل... اذكر المشكلة الحالية، الفكرة المقترحة، الأثر المتوقع، وأي تفاصيل تفيد التقييم" />
+                            <Textarea label="الوصف التفصيلي *" v-model="form.description" class="min-h-[220px] leading-relaxed" />
                             <div class="flex justify-between text-xs text-muted-foreground">
                                 <span>الحد الأدنى 10 أحرف — كلما زادت التفاصيل، أسرعت المراجعة</span>
                                 <span class="font-mono tabular-nums">{{ descLen }} حرف</span>

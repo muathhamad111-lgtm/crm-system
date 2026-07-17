@@ -49,8 +49,7 @@ function submit() {
                 <CardHeader><CardTitle>تفاصيل الطلب</CardTitle></CardHeader>
                 <CardContent class="space-y-5">
                     <div v-if="isStaff">
-                        <Label>العميل</Label>
-                        <Select v-model="form.customer_id" class="mt-1.5">
+                        <Select label="العميل" v-model="form.customer_id">
                             <option value="">اختر العميل…</option>
                             <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.full_name }} — {{ c.email }}</option>
                         </Select>
@@ -58,8 +57,7 @@ function submit() {
                     </div>
 
                     <div>
-                        <Label>التصنيف</Label>
-                        <Select v-model="form.category_id" class="mt-1.5">
+                        <Select label="التصنيف" v-model="form.category_id">
                             <option value="">اختر التصنيف…</option>
                             <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name_ar }}</option>
                         </Select>
@@ -67,48 +65,44 @@ function submit() {
                     </div>
 
                     <div v-if="currentCategory?.sub_categories?.length">
-                        <Label>التصنيف الفرعي</Label>
-                        <Select v-model="form.sub_category_id" class="mt-1.5">
+                        <Select label="التصنيف الفرعي" v-model="form.sub_category_id">
                             <option value="">—</option>
                             <option v-for="s in currentCategory.sub_categories" :key="s.id" :value="s.id">{{ s.name_ar }}</option>
                         </Select>
                     </div>
 
                     <div v-if="products.length">
-                        <Label>المنتج / الخدمة</Label>
-                        <Select v-model="form.product_id" class="mt-1.5">
+                        <Select label="المنتج / الخدمة" v-model="form.product_id">
                             <option value="">—</option>
                             <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }}</option>
                         </Select>
                     </div>
 
                     <div>
-                        <Label>عنوان الطلب</Label>
-                        <Input v-model="form.title" class="mt-1.5" placeholder="عنوان مختصر يوضّح طلبك" />
+                        <Input label="عنوان الطلب" v-model="form.title" />
                         <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
                     </div>
 
                     <div>
-                        <Label>وصف الطلب</Label>
-                        <Textarea v-model="form.description" class="mt-1.5 min-h-32" placeholder="اشرح طلبك بالتفصيل…" />
+                        <Textarea label="وصف الطلب" v-model="form.description" class="min-h-32" />
                         <p v-if="form.errors.description" class="mt-1 text-xs text-destructive">{{ form.errors.description }}</p>
                     </div>
 
                     <!-- Dynamic per-category fields -->
                     <template v-if="currentCategory?.fields?.length">
                         <div v-for="f in currentCategory.fields" :key="f.id">
-                            <Label>{{ f.label }}<span v-if="f.required" class="text-destructive"> *</span></Label>
+                            <Label v-if="f.field_type === 'checkbox'">{{ f.label }}<span v-if="f.required" class="text-destructive"> *</span></Label>
                             <p v-if="f.help_text" class="mb-1 text-xs text-muted-foreground">{{ f.help_text }}</p>
-                            <Textarea v-if="f.field_type === 'textarea'" v-model="form.fields[f.id]" class="mt-1" />
-                            <Select v-else-if="f.field_type === 'select'" v-model="form.fields[f.id]" class="mt-1">
+                            <Textarea v-if="f.field_type === 'textarea'" :label="f.label + (f.required ? ' *' : '')" v-model="form.fields[f.id]" />
+                            <Select v-else-if="f.field_type === 'select'" :label="f.label + (f.required ? ' *' : '')" v-model="form.fields[f.id]">
                                 <option value="">—</option>
                                 <option v-for="opt in (f.options || [])" :key="opt.value ?? opt" :value="opt.value ?? opt">{{ opt.label ?? opt }}</option>
                             </Select>
                             <label v-else-if="f.field_type === 'checkbox'" class="mt-1 flex items-center gap-2 text-sm">
                                 <input type="checkbox" v-model="form.fields[f.id]" class="size-4 rounded border-input" /> نعم
                             </label>
-                            <Input v-else :type="f.field_type === 'number' ? 'number' : (f.field_type === 'date' ? 'date' : 'text')"
-                                v-model="form.fields[f.id]" class="mt-1" />
+                            <Input v-else :label="f.label + (f.required ? ' *' : '')" :type="f.field_type === 'number' ? 'number' : (f.field_type === 'date' ? 'date' : 'text')"
+                                v-model="form.fields[f.id]" />
                         </div>
                     </template>
 

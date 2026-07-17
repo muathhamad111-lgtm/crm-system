@@ -11,7 +11,6 @@ import Button from '@/Components/ui/Button.vue';
 import Input from '@/Components/ui/Input.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
-import Label from '@/Components/ui/Label.vue';
 import { BookOpen, ArrowRight, X, Save, Send } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -94,27 +93,17 @@ function submit(status) {
                 <CardHeader><CardTitle class="text-base">المعلومات الأساسية</CardTitle></CardHeader>
                 <CardContent class="space-y-4">
                     <div>
-                        <Label>العنوان *</Label>
-                        <Input v-model="form.title" class="mt-1" placeholder="مثال: كيفية تفعيل بوابة الدفع" />
+                        <Input label="العنوان *" v-model="form.title" />
                         <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
                     </div>
-                    <div>
-                        <Label>ملخص مختصر</Label>
-                        <Textarea v-model="form.summary" :rows="2" class="mt-1" placeholder="جملة أو اثنتان توضح المحتوى" />
-                    </div>
+                    <Textarea label="ملخص مختصر" v-model="form.summary" :rows="2" />
                     <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-                        <div>
-                            <Label>نوع المعرفة</Label>
-                            <Select v-model="form.type" class="mt-1">
-                                <option v-for="t in TYPE_OPTIONS" :key="t[0]" :value="t[0]">{{ t[1] }}</option>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label>مستوى التعقيد</Label>
-                            <Select v-model="form.complexity" class="mt-1">
-                                <option v-for="c in COMPLEXITY_OPTIONS" :key="c[0]" :value="c[0]">{{ c[1] }}</option>
-                            </Select>
-                        </div>
+                        <Select label="نوع المعرفة" v-model="form.type">
+                            <option v-for="t in TYPE_OPTIONS" :key="t[0]" :value="t[0]">{{ t[1] }}</option>
+                        </Select>
+                        <Select label="مستوى التعقيد" v-model="form.complexity">
+                            <option v-for="c in COMPLEXITY_OPTIONS" :key="c[0]" :value="c[0]">{{ c[1] }}</option>
+                        </Select>
                         <div class="flex items-end pb-1">
                             <label class="flex cursor-pointer items-center gap-2 text-sm">
                                 <input type="checkbox" v-model="form.is_general"
@@ -125,26 +114,20 @@ function submit(status) {
                     </div>
                     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                         <div>
-                            <Label>المنتج
-                                <span v-if="form.is_general" class="text-xs text-muted-foreground">(معطّل - مقال عام)</span>
-                            </Label>
-                            <Select v-model="form.product_id" class="mt-1" :disabled="form.is_general">
+                            <Select label="المنتج" v-model="form.product_id" :disabled="form.is_general">
                                 <option value="">— بدون منتج —</option>
                                 <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name_ar }}</option>
                             </Select>
+                            <p v-if="form.is_general" class="mt-1 text-xs text-muted-foreground">(معطّل - مقال عام)</p>
                         </div>
-                        <div>
-                            <Label>التصنيف الرئيسي</Label>
-                            <Select v-model="form.category_id" class="mt-1">
-                                <option value="">— بدون تصنيف —</option>
-                                <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name_ar }}</option>
-                            </Select>
-                        </div>
+                        <Select label="التصنيف الرئيسي" v-model="form.category_id">
+                            <option value="">— بدون تصنيف —</option>
+                            <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name_ar }}</option>
+                        </Select>
                     </div>
                     <div>
-                        <Label>الكلمات المفتاحية</Label>
-                        <div class="mt-1 flex gap-2">
-                            <Input v-model="kwInput" placeholder="أدخل كلمة واضغط Enter"
+                        <div class="flex gap-2">
+                            <Input label="الكلمات المفتاحية" v-model="kwInput"
                                 @keydown.enter.prevent="addKw" />
                             <Button type="button" variant="outline" @click="addKw">إضافة</Button>
                         </div>
@@ -165,18 +148,10 @@ function submit(status) {
             <Card>
                 <CardHeader><CardTitle class="text-base">المحتوى</CardTitle></CardHeader>
                 <CardContent class="space-y-4">
+                    <Textarea label="المتطلبات المسبقة" v-model="form.prerequisites" :rows="2" />
+                    <Textarea label="التحذيرات والتنبيهات" v-model="form.warnings" :rows="2" />
                     <div>
-                        <Label>المتطلبات المسبقة</Label>
-                        <Textarea v-model="form.prerequisites" :rows="2" class="mt-1" />
-                    </div>
-                    <div>
-                        <Label>التحذيرات والتنبيهات</Label>
-                        <Textarea v-model="form.warnings" :rows="2" class="mt-1" />
-                    </div>
-                    <div>
-                        <Label>المحتوى الكامل *</Label>
-                        <Textarea v-model="form.body" :rows="14" class="mt-1 font-mono text-sm"
-                            placeholder="اكتب الشرح الكامل والخطوات هنا..." />
+                        <Textarea label="المحتوى الكامل *" v-model="form.body" :rows="14" class="font-mono text-sm" />
                         <p v-if="form.errors.body" class="mt-1 text-xs text-destructive">{{ form.errors.body }}</p>
                     </div>
                 </CardContent>

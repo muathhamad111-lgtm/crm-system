@@ -799,18 +799,15 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <template v-else>
                         <div>
-                            <Label>الاسم الكامل</Label>
-                            <Input v-model="staffForm.name" class="mt-1.5" />
+                            <Input label="الاسم الكامل" v-model="staffForm.name" />
                             <p v-if="staffForm.errors.name" class="mt-1 text-xs text-destructive">{{ staffForm.errors.name }}</p>
                         </div>
                         <div>
-                            <Label>البريد الإلكتروني</Label>
-                            <Input v-model="staffForm.email" type="email" class="mt-1.5" dir="ltr" placeholder="employee@altqniah.sa" />
+                            <Input label="البريد الإلكتروني" v-model="staffForm.email" type="email" dir="ltr" />
                             <p v-if="staffForm.errors.email" class="mt-1 text-xs text-destructive">{{ staffForm.errors.email }}</p>
                         </div>
                         <div>
-                            <Label>الدور</Label>
-                            <Select v-model="staffForm.role" class="mt-1.5">
+                            <Select label="الدور" v-model="staffForm.role">
                                 <option v-for="r in staffRoles" :key="r" :value="r">{{ roleLabel(r) }}</option>
                             </Select>
                             <p v-if="staffForm.errors.role" class="mt-1 text-xs text-destructive">{{ staffForm.errors.role }}</p>
@@ -827,26 +824,22 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
             <Dialog v-model:open="catOpen" title="تعديل التصنيف" description="عدّل الاسم، الفريق المستهدف، الأولوية الافتراضية، ومستهدف SLA.">
                 <div class="space-y-3">
                     <div>
-                        <Label>اسم التصنيف</Label>
-                        <Input v-model="catForm.name_ar" class="mt-1.5" />
+                        <Input label="اسم التصنيف" v-model="catForm.name_ar" />
                         <p v-if="catForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ catForm.errors.name_ar }}</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <Label>الأولوية الافتراضية</Label>
-                            <Select v-model="catForm.default_priority" class="mt-1.5">
+                            <Select label="الأولوية الافتراضية" v-model="catForm.default_priority">
                                 <option v-for="pr in (options.priorities ?? ['urgent','high','medium','low'])" :key="pr" :value="pr">{{ statusLabel(REQUEST_PRIORITY, pr).label }}</option>
                             </Select>
                         </div>
                         <div>
-                            <Label>SLA (ساعة)</Label>
-                            <Input v-model="catForm.sla_hours" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <Input label="SLA (ساعة)" v-model="catForm.sla_hours" type="number" min="0" dir="ltr" />
                             <p v-if="catForm.errors.sla_hours" class="mt-1 text-xs text-destructive">{{ catForm.errors.sla_hours }}</p>
                         </div>
                     </div>
                     <div>
-                        <Label>الفريق المستهدف</Label>
-                        <Select v-model="catForm.target_team" class="mt-1.5">
+                        <Select label="الفريق المستهدف" v-model="catForm.target_team">
                             <option value="" disabled>اختر فريقاً</option>
                             <option v-for="tm in (options.teams ?? [])" :key="tm" :value="tm">{{ tm }}</option>
                             <option v-if="catForm.target_team && !(options.teams ?? []).includes(catForm.target_team)" :value="catForm.target_team">{{ catForm.target_team }}</option>
@@ -871,44 +864,37 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
             <Dialog v-model:open="prodOpen" :title="prodForm.id ? 'تعديل المنتج' : 'إضافة منتج'" description="عرّف المنتج أو الخدمة ومستهدفات الخدمة والتصعيد.">
                 <div class="space-y-3">
                     <div>
-                        <Label>الاسم</Label>
-                        <Input v-model="prodForm.name_ar" class="mt-1.5" />
+                        <Input label="الاسم" v-model="prodForm.name_ar" />
                         <p v-if="prodForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.name_ar }}</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <Label>النوع</Label>
-                            <Select v-model="prodForm.type" class="mt-1.5">
+                            <Select label="النوع" v-model="prodForm.type">
                                 <option value="product">منتج</option>
                                 <option value="service">خدمة</option>
                             </Select>
                             <p v-if="prodForm.errors.type" class="mt-1 text-xs text-destructive">{{ prodForm.errors.type }}</p>
                         </div>
                         <div>
-                            <Label>اللون</Label>
-                            <Input v-model="prodForm.color" class="mt-1.5" dir="ltr" placeholder="#2563eb" />
+                            <Input label="اللون" v-model="prodForm.color" dir="ltr" />
                             <p v-if="prodForm.errors.color" class="mt-1 text-xs text-destructive">{{ prodForm.errors.color }}</p>
                         </div>
                     </div>
                     <div>
-                        <Label>الوصف</Label>
-                        <Textarea v-model="prodForm.description_ar" rows="3" class="mt-1.5" />
+                        <Textarea label="الوصف" v-model="prodForm.description_ar" rows="3" />
                         <p v-if="prodForm.errors.description_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.description_ar }}</p>
                     </div>
                     <div class="grid grid-cols-3 gap-3">
                         <div>
-                            <Label>SLA (ساعة)</Label>
-                            <Input v-model="prodForm.sla_hours" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <Input label="SLA (ساعة)" v-model="prodForm.sla_hours" type="number" min="0" dir="ltr" />
                             <p v-if="prodForm.errors.sla_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sla_hours }}</p>
                         </div>
                         <div>
-                            <Label>التصعيد (ساعة)</Label>
-                            <Input v-model="prodForm.escalation_hours" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <Input label="التصعيد (ساعة)" v-model="prodForm.escalation_hours" type="number" min="0" dir="ltr" />
                             <p v-if="prodForm.errors.escalation_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.escalation_hours }}</p>
                         </div>
                         <div>
-                            <Label>الترتيب</Label>
-                            <Input v-model="prodForm.sort_order" type="number" min="0" class="mt-1.5" dir="ltr" />
+                            <Input label="الترتيب" v-model="prodForm.sort_order" type="number" min="0" dir="ltr" />
                             <p v-if="prodForm.errors.sort_order" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sort_order }}</p>
                         </div>
                     </div>
@@ -937,13 +923,11 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
             <Dialog v-model:open="tplOpen" title="تعديل القالب" description="عدّل نص العنوان والمحتوى، القنوات، ونوع المستلم.">
                 <div class="space-y-3">
                     <div>
-                        <Label>اسم القالب</Label>
-                        <Input v-model="tplForm.name_ar" class="mt-1.5" />
+                        <Input label="اسم القالب" v-model="tplForm.name_ar" />
                         <p v-if="tplForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ tplForm.errors.name_ar }}</p>
                     </div>
                     <div>
-                        <Label>نوع المستلم</Label>
-                        <Select v-model="tplForm.recipient_type" class="mt-1.5">
+                        <Select label="نوع المستلم" v-model="tplForm.recipient_type">
                             <option value="">— بدون تحديد —</option>
                             <option v-for="r in RECIPIENT_OPTIONS" :key="r" :value="r">{{ r }}</option>
                             <option v-if="tplForm.recipient_type && !RECIPIENT_OPTIONS.includes(tplForm.recipient_type)" :value="tplForm.recipient_type">{{ tplForm.recipient_type }}</option>
@@ -961,13 +945,11 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                         </div>
                     </div>
                     <div>
-                        <Label>نص العنوان</Label>
-                        <Input v-model="tplForm.title_template" class="mt-1.5" />
+                        <Input label="نص العنوان" v-model="tplForm.title_template" />
                         <p v-if="tplForm.errors.title_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.title_template }}</p>
                     </div>
                     <div>
-                        <Label>نص المحتوى</Label>
-                        <Textarea v-model="tplForm.body_template" rows="4" class="mt-1.5" />
+                        <Textarea label="نص المحتوى" v-model="tplForm.body_template" rows="4" />
                         <p v-if="tplForm.errors.body_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.body_template }}</p>
                     </div>
                     <div class="rounded-lg border border-border bg-muted/30 px-3 py-2">

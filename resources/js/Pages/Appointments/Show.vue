@@ -247,8 +247,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
         <Dialog :open="reschedOpen" title="إعادة جدولة الموعد" description="اختر وقتاً جديداً من الأوقات المتاحة." class="max-w-lg" @update:open="v => reschedOpen = v">
             <div class="space-y-4">
                 <div>
-                    <Label class="mb-1.5 block text-xs">سبب إعادة الجدولة (اختياري)</Label>
-                    <Textarea v-model="reschedReason" rows="2" placeholder="اذكر سبب إعادة الجدولة…" />
+                    <Textarea label="سبب إعادة الجدولة (اختياري)" v-model="reschedReason" rows="2" />
                 </div>
                 <div>
                     <Label class="mb-1.5 block text-xs">الأوقات المتاحة</Label>
@@ -276,7 +275,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
         <!-- Cancel dialog -->
         <Dialog :open="cancelOpen" title="إلغاء الموعد" description="هذا الإجراء نهائي ولا يمكن التراجع عنه." class="max-w-md" @update:open="v => cancelOpen = v">
             <div class="space-y-3">
-                <Textarea v-model="cancelReason" rows="2" placeholder="سبب الإلغاء (اختياري)" />
+                <Textarea label="سبب الإلغاء (اختياري)" v-model="cancelReason" rows="2" />
                 <div class="flex justify-end gap-2">
                     <Button variant="ghost" @click="cancelOpen = false">تراجع</Button>
                     <Button variant="destructive" :disabled="processing" @click="submitCancel">تأكيد الإلغاء</Button>

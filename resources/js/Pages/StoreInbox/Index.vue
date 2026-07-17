@@ -88,9 +88,8 @@ function save(){ form.post(`/store-contact-inbox/${current.value.id}/status`, { 
           <p><span class="text-muted-foreground">الجوال:</span> <span dir="ltr">{{ current.mobile }}</span></p>
           <p v-if="current.company_name"><span class="text-muted-foreground">المنشأة:</span> {{ current.company_name }}</p>
           <p class="whitespace-pre-wrap rounded-lg bg-muted p-3">{{ current.description }}</p>
-          <div><label class="text-muted-foreground">الحالة</label>
-            <Select v-model="form.status" class="mt-1"><option v-for="s in statuses" :key="s[0]" :value="s[0]">{{ s[1] }}</option></Select></div>
-          <Textarea v-model="form.internal_note" placeholder="ملاحظة داخلية" class="min-h-16" />
+          <Select label="الحالة" v-model="form.status"><option v-for="s in statuses" :key="s[0]" :value="s[0]">{{ s[1] }}</option></Select>
+          <Textarea label="ملاحظة داخلية" v-model="form.internal_note" class="min-h-16" />
           <div class="flex justify-end"><Button variant="accent" :disabled="form.processing" @click="save">حفظ</Button></div>
         </div>
       </Dialog>

@@ -175,7 +175,7 @@ function submit() {
                                 </button>
                             </div>
                             <div v-if="form.reason_code === 'other'">
-                                <Textarea v-model="form.reason_other" rows="2" placeholder="اكتب سبب الموعد بإيجاز…" />
+                                <Textarea label="اكتب سبب الموعد بإيجاز…" v-model="form.reason_other" rows="2" />
                             </div>
 
                             <div v-if="selectedType" class="space-y-3 border-t border-border pt-4">
@@ -230,8 +230,7 @@ function submit() {
                             </div>
 
                             <div class="border-t border-border pt-4">
-                                <Label class="mb-1.5 block text-sm font-semibold">ملاحظات للفريق (اختياري)</Label>
-                                <Textarea v-model="form.customer_notes" rows="3" placeholder="أي معلومات تساعد الفريق في تحضير الموعد…" />
+                                <Textarea label="ملاحظات للفريق (اختياري)" v-model="form.customer_notes" rows="3" />
                             </div>
                         </div>
 

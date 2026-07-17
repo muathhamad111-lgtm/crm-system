@@ -28,8 +28,7 @@ const deleteUser = () => {
             description="سيتم حذف حسابك وجميع بياناته نهائيًا. أدخل كلمة المرور للتأكيد.">
             <form @submit.prevent="deleteUser" class="space-y-3">
                 <div>
-                    <Label for="del_password">كلمة المرور</Label>
-                    <Input id="del_password" ref="passwordInput" v-model="form.password" type="password" class="mt-1.5" placeholder="••••••••" />
+                    <Input label="كلمة المرور" ref="passwordInput" v-model="form.password" type="password" />
                     <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
                 </div>
                 <div class="flex justify-end gap-2">

@@ -354,8 +354,7 @@ function submitCancel() {
                     </div>
                 </div>
                 <div>
-                    <Label class="mb-1.5 block text-xs">سبب إعادة الجدولة (اختياري)</Label>
-                    <Textarea v-model="reschedReason" rows="2" placeholder="اذكر سبب إعادة الجدولة…" />
+                    <Textarea label="سبب إعادة الجدولة (اختياري)" v-model="reschedReason" rows="2" />
                 </div>
                 <div>
                     <Label class="mb-1.5 block text-xs">الأوقات المتاحة</Label>
@@ -393,8 +392,7 @@ function submitCancel() {
                     سيتم إلغاء الموعد <span class="font-bold tabular-nums">{{ cancelTarget.appointment_number }}</span>. يُبلَّغ الفريق بذلك فوراً.
                 </p>
                 <div>
-                    <Label class="mb-1.5 block text-xs">سبب الإلغاء (اختياري)</Label>
-                    <Textarea v-model="cancelReason" rows="2" placeholder="اذكر سبب الإلغاء…" />
+                    <Textarea label="سبب الإلغاء (اختياري)" v-model="cancelReason" rows="2" />
                 </div>
                 <div class="flex justify-end gap-2">
                     <Button variant="ghost" @click="cancelTarget = null">تراجع</Button>

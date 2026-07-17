@@ -10,7 +10,6 @@ import Dialog from '@/Components/ui/Dialog.vue';
 import Input from '@/Components/ui/Input.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
-import Label from '@/Components/ui/Label.vue';
 import Table from '@/Components/ui/Table.vue';
 import TableHeader from '@/Components/ui/TableHeader.vue';
 import TableBody from '@/Components/ui/TableBody.vue';
@@ -55,13 +54,13 @@ function save(){ form.post('/leaves', { onSuccess:()=>{ open.value=false; form.r
       </Card>
       <Dialog v-model:open="open" title="تسجيل إجازة">
         <div class="space-y-3">
-          <div><Label>نوع الإجازة</Label><Select v-model="form.leave_type_id" class="mt-1"><option value="">اختر…</option><option v-for="t in leaveTypes" :key="t.id" :value="t.id">{{ t.label_ar }}</option></Select></div>
+          <Select label="نوع الإجازة" v-model="form.leave_type_id"><option value="">اختر…</option><option v-for="t in leaveTypes" :key="t.id" :value="t.id">{{ t.label_ar }}</option></Select>
           <div class="grid grid-cols-2 gap-2">
-            <div><Label>من</Label><Input type="date" v-model="form.start_date" class="mt-1" /></div>
-            <div><Label>إلى</Label><Input type="date" v-model="form.end_date" class="mt-1" /></div>
+            <Input label="من" type="date" v-model="form.start_date" />
+            <Input label="إلى" type="date" v-model="form.end_date" />
           </div>
-          <div v-if="substitutes.length"><Label>البديل</Label><Select v-model="form.substitute_id" class="mt-1"><option value="">—</option><option v-for="s in substitutes" :key="s.id" :value="s.id">{{ s.full_name }}</option></Select></div>
-          <Textarea v-model="form.reason" placeholder="السبب" class="min-h-16" />
+          <Select v-if="substitutes.length" label="البديل" v-model="form.substitute_id"><option value="">—</option><option v-for="s in substitutes" :key="s.id" :value="s.id">{{ s.full_name }}</option></Select>
+          <Textarea label="السبب" v-model="form.reason" class="min-h-16" />
           <div class="flex justify-end"><Button variant="accent" :disabled="form.processing" @click="save">حفظ</Button></div>
         </div>
       </Dialog>

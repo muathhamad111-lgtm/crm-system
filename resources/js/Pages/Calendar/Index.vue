@@ -9,7 +9,6 @@ import Badge from '@/Components/ui/Badge.vue';
 import Input from '@/Components/ui/Input.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
-import Label from '@/Components/ui/Label.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import { fmtTimeAr } from '@/lib/date';
 import {
@@ -213,60 +212,32 @@ function remove() {
         <Dialog :open="open" :title="editingId ? 'تعديل حدث' : 'حدث جديد'" class="max-w-lg" @update:open="v => { open = v; if (!v) editingId = null; }">
             <div class="space-y-3">
                 <div>
-                    <Label class="mb-1 block">العنوان <span class="text-destructive">*</span></Label>
-                    <Input v-model="form.title" placeholder="عنوان الحدث" />
+                    <Input label="العنوان *" v-model="form.title" />
                     <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <Label class="mb-1 block">النوع</Label>
-                        <Select v-model="form.event_type"><option v-for="t in EVENT_TYPES" :key="t.v" :value="t.v">{{ t.label }}</option></Select>
-                    </div>
-                    <div>
-                        <Label class="mb-1 block">الحالة</Label>
-                        <Select v-model="form.status">
-                            <option value="scheduled">مجدول</option>
-                            <option value="completed">مكتمل</option>
-                            <option value="cancelled">ملغي</option>
-                            <option value="rescheduled">معاد جدولته</option>
-                        </Select>
-                    </div>
+                    <Select label="النوع" v-model="form.event_type"><option v-for="t in EVENT_TYPES" :key="t.v" :value="t.v">{{ t.label }}</option></Select>
+                    <Select label="الحالة" v-model="form.status">
+                        <option value="scheduled">مجدول</option>
+                        <option value="completed">مكتمل</option>
+                        <option value="cancelled">ملغي</option>
+                        <option value="rescheduled">معاد جدولته</option>
+                    </Select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <Label class="mb-1 flex items-center gap-1"><Clock class="size-3.5" /> من</Label>
-                        <Input type="datetime-local" v-model="form.starts_at" />
-                    </div>
-                    <div>
-                        <Label class="mb-1 flex items-center gap-1"><Clock class="size-3.5" /> إلى</Label>
-                        <Input type="datetime-local" v-model="form.ends_at" />
-                    </div>
+                    <Input label="من" type="datetime-local" v-model="form.starts_at" />
+                    <Input label="إلى" type="datetime-local" v-model="form.ends_at" />
                 </div>
-                <div>
-                    <Label class="mb-1 flex items-center gap-1"><MapPin class="size-3.5" /> الموقع</Label>
-                    <Input v-model="form.location" placeholder="عنوان الزيارة / غرفة الاجتماع" />
-                </div>
-                <div>
-                    <Label class="mb-1 flex items-center gap-1"><LinkIcon class="size-3.5" /> رابط الاجتماع</Label>
-                    <Input v-model="form.meeting_url" dir="ltr" placeholder="https://…" />
-                </div>
+                <Input label="الموقع" v-model="form.location" />
+                <Input label="رابط الاجتماع" v-model="form.meeting_url" dir="ltr" />
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <Label class="mb-1 flex items-center gap-1"><Bell class="size-3.5" /> تذكير قبل (دقيقة)</Label>
-                        <Input type="number" min="0" v-model="form.reminder_minutes_before" />
-                    </div>
-                    <div>
-                        <Label class="mb-1 flex items-center gap-1"><Users class="size-3.5" /> الظهور</Label>
-                        <Select v-model="form.visibility">
-                            <option value="internal">داخلي (للفريق فقط)</option>
-                            <option value="shared">مشترك مع العميل</option>
-                        </Select>
-                    </div>
+                    <Input label="تذكير قبل (دقيقة)" type="number" min="0" v-model="form.reminder_minutes_before" />
+                    <Select label="الظهور" v-model="form.visibility">
+                        <option value="internal">داخلي (للفريق فقط)</option>
+                        <option value="shared">مشترك مع العميل</option>
+                    </Select>
                 </div>
-                <div>
-                    <Label class="mb-1 block">الوصف</Label>
-                    <Textarea v-model="form.description" rows="3" placeholder="تفاصيل الحدث…" />
-                </div>
+                <Textarea label="الوصف" v-model="form.description" rows="3" />
                 <div class="flex items-center justify-between gap-2 pt-1">
                     <Button v-if="editingId" variant="ghost" class="text-destructive" @click="remove"><Trash2 class="size-4" /> حذف</Button>
                     <span v-else></span>
