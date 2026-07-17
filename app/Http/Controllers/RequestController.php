@@ -38,6 +38,8 @@ class RequestController extends Controller
             'assignee' => $httpRequest->query('assignee', 'all'),
             'sla' => $httpRequest->query('sla', 'all'),
             'rating' => $httpRequest->query('rating', 'all'),
+            'sort' => $httpRequest->query('sort', 'updated'),
+            'dir' => $httpRequest->query('dir', 'desc') === 'asc' ? 'asc' : 'desc',
         ];
 
         // Base (scoped) builder — only real tickets (exclude suggestion categories).
@@ -99,8 +101,14 @@ class RequestController extends Controller
             })
             ->when($f['q'] !== '', fn ($b) => $b->where(fn ($w) => $w
                 ->where('title', 'like', "%{$f['q']}%")
-                ->orWhere('request_number', 'like', "%{$f['q']}%")))
-            ->latest('updated_at');
+                ->orWhere('request_number', 'like', "%{$f['q']}%")));
+
+        // Sorting.
+        $sortCol = [
+            'updated' => 'updated_at', 'created' => 'created_at', 'number' => 'request_number',
+            'priority' => 'priority', 'status' => 'status', 'sla' => 'due_at',
+        ][$f['sort']] ?? 'updated_at';
+        $query->orderBy($sortCol, $f['dir']);
 
         $paginator = $query->paginate(20)->withQueryString();
 
@@ -139,6 +147,7 @@ class RequestController extends Controller
             'counts' => $counts,
             'filters' => $f,
             'isStaff' => $isStaff,
+            'isAdmin' => $user->isAdmin(),
             'options' => $isStaff ? [
                 'products' => Product::where('active', true)->orderBy('sort_order')->get(['id', 'name_ar']),
                 'categories' => Category::where('active', true)->where('is_suggestion', false)->orderBy('sort_order')->get(['id', 'name_ar']),
@@ -1121,6 +1130,56 @@ class RequestController extends Controller
         $this->log($request->id, $user->id, 'attachment_removed', $row->file_name, null);
 
         return back()->with('success', 'تم حذف المرفق');
+    }
+
+    /** Bulk-assign the selected requests to the current staff member. */
+    public function bulkAssignSelf(Request $httpRequest)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isStaff() || ! ($user->hasCapability('request.assign') || $user->hasCapability('request.reassign'))) {
+            abort(403);
+        }
+        $data = $httpRequest->validate(['ids' => ['required', 'array', 'max:200'], 'ids.*' => ['string']]);
+        $n = 0;
+        foreach (CrmRequest::whereIn('id', $data['ids'])->get() as $r) {
+            $from = $r->assigned_to;
+            $r->assigned_to = $user->id;
+            $r->save();
+            $this->log($r->id, $user->id, 'assigned_self', $from, $user->id);
+            $n++;
+        }
+
+        return back()->with('success', "تم إسناد {$n} طلبًا إليك");
+    }
+
+    /** Permanently delete a request (system admin only). */
+    public function destroy(Request $httpRequest, CrmRequest $request)
+    {
+        $user = $httpRequest->user();
+        if (! $user->isAdmin()) {
+            abort(403, 'حذف الطلبات يتطلّب صلاحية مدير النظام.');
+        }
+        $data = $httpRequest->validate(['reason' => ['nullable', 'string', 'max:500']]);
+        $number = $request->request_number;
+
+        try {
+            DB::table('admin_audit_log')->insert([
+                'id' => (string) Str::uuid(),
+                'action' => 'request.delete',
+                'entity_type' => 'requests',
+                'entity_id' => $request->id,
+                'actor_id' => $user->id,
+                'actor_email' => $user->email,
+                'details' => json_encode(['request_number' => $number, 'reason' => $data['reason'] ?? null]),
+                'created_at' => now(),
+            ]);
+        } catch (\Throwable $e) {
+            // best-effort audit
+        }
+
+        $request->delete();
+
+        return redirect()->route('requests.index')->with('success', "تم حذف الطلب {$number} نهائيًا");
     }
 
     // ----------------------------------------------------------------------
