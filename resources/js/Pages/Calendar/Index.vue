@@ -11,6 +11,8 @@ import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import { fmtTimeAr } from '@/lib/date';
+import FieldError from '@/Components/ui/FieldError.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import {
     CalendarDays, Plus, MapPin, Video, Clock, Bell, Users, Eye, EyeOff, CheckCircle2,
     ListChecks, Sun, CalendarClock, Link as LinkIcon, Trash2,
@@ -133,17 +135,12 @@ function remove() {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">فريق العمل · التقويم</p>
-                        <h1 class="mt-1 text-2xl font-bold">التقويم — الزيارات والاجتماعات</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">الزيارات، الاجتماعات، التذكيرات، والمهام المجدولة في أجندة واحدة.</p>
-                    </div>
-                    <Button class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm" @click="openCreate"><Plus class="size-4" /> حدث جديد</Button>
-                </div>
-            </div>
+            <PageHeader title="التقويم — الزيارات والاجتماعات"
+                subtitle="الزيارات، الاجتماعات، التذكيرات، والمهام المجدولة في أجندة واحدة.">
+                <template #actions>
+                    <Button @click="openCreate"><Plus class="size-4" /> حدث جديد</Button>
+                </template>
+            </PageHeader>
 
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
@@ -151,7 +148,7 @@ function remove() {
                     <div class="flex items-center gap-3">
                         <div :class="['flex size-9 shrink-0 items-center justify-center rounded-lg', k.tone]"><component :is="k.icon" class="size-4" /></div>
                         <div class="min-w-0">
-                            <div class="truncate text-[10px] uppercase text-muted-foreground">{{ k.label }}</div>
+                            <div class="truncate text-2xs uppercase text-muted-foreground">{{ k.label }}</div>
                             <div class="text-lg font-bold tabular-nums">{{ k.value }}</div>
                         </div>
                     </div>
@@ -176,7 +173,7 @@ function remove() {
                     <div class="mb-2 flex items-center gap-2">
                         <span :class="['inline-flex size-8 items-center justify-center rounded-full text-xs font-bold tabular-nums', k === todayKey ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground']">{{ dayNum(list[0].starts_at) }}</span>
                         <span class="text-sm font-bold">{{ dayFull(list[0].starts_at) }}</span>
-                        <span v-if="k === todayKey" class="text-[10px] font-semibold text-primary">اليوم</span>
+                        <span v-if="k === todayKey" class="text-2xs font-semibold text-primary">اليوم</span>
                         <Badge variant="muted" class="mr-auto">{{ list.length }}</Badge>
                     </div>
                     <div class="space-y-1.5">
@@ -185,7 +182,7 @@ function remove() {
                             <span :class="['mt-1.5 size-2.5 shrink-0 rounded-full', typeMeta(ev.event_type).dot]"></span>
                             <div class="min-w-0 flex-1">
                                 <div :class="['truncate text-sm font-semibold', ev.status === 'completed' && 'text-muted-foreground line-through']">{{ ev.title }}</div>
-                                <div class="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                                <div class="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                     <span class="tabular-nums">{{ fmtTimeAr(ev.starts_at) }}<span v-if="ev.ends_at"> – {{ fmtTimeAr(ev.ends_at) }}</span></span>
                                     <span v-if="ev.location" class="flex items-center gap-1"><MapPin class="size-3" /> {{ ev.location }}</span>
                                     <span v-if="ev.meeting_url" class="flex items-center gap-1 text-info"><Video class="size-3" /> رابط</span>
@@ -213,7 +210,7 @@ function remove() {
             <div class="space-y-3">
                 <div>
                     <Input label="العنوان *" v-model="form.title" />
-                    <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
+                    <FieldError :message="form.errors.title" />
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <Select label="النوع" v-model="form.event_type"><option v-for="t in EVENT_TYPES" :key="t.v" :value="t.v">{{ t.label }}</option></Select>

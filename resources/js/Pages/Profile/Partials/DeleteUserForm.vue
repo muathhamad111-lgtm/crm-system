@@ -6,6 +6,7 @@ import Dialog from '@/Components/ui/Dialog.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+import FieldError from '@/Components/ui/FieldError.vue';
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
 const form = useForm({ password: '' });
@@ -29,11 +30,11 @@ const deleteUser = () => {
             <form @submit.prevent="deleteUser" class="space-y-3">
                 <div>
                     <Input label="كلمة المرور" ref="passwordInput" v-model="form.password" type="password" />
-                    <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
+                    <FieldError :message="form.errors.password" />
                 </div>
                 <div class="flex justify-end gap-2">
                     <Button type="button" variant="outline" @click="confirmingUserDeletion = false">إلغاء</Button>
-                    <Button type="submit" variant="destructive" :disabled="form.processing">حذف نهائيًا</Button>
+                    <Button type="submit" variant="destructive" :loading="form.processing">حذف نهائيًا</Button>
                 </div>
             </form>
         </Dialog>

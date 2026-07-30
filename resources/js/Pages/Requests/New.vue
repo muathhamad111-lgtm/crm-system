@@ -11,6 +11,9 @@ import Input from '@/Components/ui/Input.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Label from '@/Components/ui/Label.vue';
 import Select from '@/Components/ui/Select.vue';
+import FieldError from '@/Components/ui/FieldError.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import Badge from '@/Components/ui/Badge.vue';
 import {
     Tag, Check, ArrowRight, CheckCircle2, ShieldAlert, X,
     MessageSquareWarning, FolderOpen, Heart, Package, Workflow,
@@ -76,34 +79,30 @@ function submit() {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero with live progress chips -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">{{ isStaff ? 'إنشاء داخلي · نيابةً عن عميل' : 'طلب جديد · ابدأ الخدمة' }}</p>
-                        <h1 class="mt-1 text-2xl font-bold">{{ isStaff ? 'إضافة طلب نيابةً عن العميل' : 'طلب جديد' }}</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">{{ isStaff ? 'اختر العميل ثم التصنيف وعبّئ التفاصيل.' : 'اختر التصنيف المناسب وقم بتعبئة التفاصيل.' }}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="hidden items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums md:inline-flex">
-                            <CheckCircle2 class="size-3.5" /> {{ completedSteps }}/{{ steps.length }} خطوات مكتملة
-                        </span>
-                        <Button variant="ghost" class="bg-white/10 text-white hover:bg-white/20" @click="router.visit('/requests')">
-                            <ArrowRight class="size-4" /> رجوع للطلبات
-                        </Button>
-                    </div>
-                </div>
-                <div class="relative mt-5 flex flex-wrap items-center gap-1.5">
-                    <div v-for="(s, i) in steps" :key="i"
-                        :class="['flex items-center gap-2 rounded-lg border px-2.5 py-1.5 backdrop-blur-sm transition-colors', s.done ? 'border-success/40 bg-success/20' : 'border-white/15 bg-white/10']">
-                        <span :class="['flex size-5 items-center justify-center rounded-md', s.done ? 'bg-success text-success-foreground' : 'bg-white/20 text-white']">
+            <PageHeader :title="isStaff ? 'إضافة طلب نيابةً عن العميل' : 'طلب جديد'"
+                :subtitle="isStaff ? 'اختر العميل ثم التصنيف وعبّئ التفاصيل.' : 'اختر التصنيف المناسب وقم بتعبئة التفاصيل.'">
+                <template #badge>
+                    <Badge variant="muted">{{ completedSteps }}/{{ steps.length }} خطوات مكتملة</Badge>
+                </template>
+                <template #actions>
+                    <Button variant="outline" @click="router.visit('/requests')">
+                        <ArrowRight class="size-4" /> رجوع للطلبات
+                    </Button>
+                </template>
+
+                <!-- Which parts of the form are already answered -->
+                <ol class="flex flex-wrap items-center gap-1.5">
+                    <li v-for="(s, i) in steps" :key="i"
+                        :class="['flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-sm', s.done ? 'border-success/40 bg-success/10' : 'border-border bg-card']">
+                        <span :class="['flex size-5 shrink-0 items-center justify-center rounded-md text-2xs font-bold', s.done ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground']">
                             <Check v-if="s.done" class="size-3" :stroke-width="3" />
-                            <span v-else class="text-[10px] font-bold">{{ i + 1 }}</span>
+                            <template v-else>{{ i + 1 }}</template>
                         </span>
-                        <span class="text-[11px]"><span class="font-semibold">{{ s.label }}</span> <span class="text-white/70">·</span> <span class="text-white/80">{{ s.value }}</span></span>
-                    </div>
-                </div>
-            </div>
+                        <span class="font-semibold">{{ s.label }}</span>
+                        <span class="text-muted-foreground">{{ s.value }}</span>
+                    </li>
+                </ol>
+            </PageHeader>
 
             <!-- Staff: on-behalf notice + customer picker + channel -->
             <template v-if="isStaff">
@@ -122,7 +121,7 @@ function submit() {
                                 <option value=""></option>
                                 <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.full_name }} — {{ c.email }}</option>
                             </Select>
-                            <p v-if="form.errors.customer_id" class="mt-1 text-xs text-destructive">{{ form.errors.customer_id }}</p>
+                            <FieldError :message="form.errors.customer_id" />
                         </div>
                         <Select label="قناة استلام الطلب" v-model="form.channel">
                             <option v-for="ch in channels" :key="ch.key" :value="ch.key">{{ ch.icon }} {{ ch.label }}</option>
@@ -146,7 +145,7 @@ function submit() {
                 <CardContent>
                     <div class="grid grid-cols-2 gap-3 md:grid-cols-3">
                         <button v-for="c in categories" :key="c.id" type="button" @click="pickCategory(c.id)"
-                            class="group relative overflow-hidden rounded-2xl border p-4 text-right transition-all duration-200"
+                            class="group relative overflow-hidden rounded-lg border p-4 text-right transition-all duration-200"
                             :class="form.category_id === c.id ? 'border-transparent shadow-lg -translate-y-0.5' : 'border-border/70 bg-card hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5'"
                             :style="form.category_id === c.id ? { background: `linear-gradient(140deg, ${c.color}12, ${c.color}05 60%, transparent)`, boxShadow: `0 12px 32px -16px ${c.color}80, inset 0 0 0 1.5px ${c.color}55` } : {}">
                             <span class="absolute inset-x-0 top-0 h-1 transition-opacity" :style="{ background: c.color, opacity: form.category_id === c.id ? 1 : 0.25 }"></span>
@@ -160,12 +159,12 @@ function submit() {
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="mb-1 text-sm font-bold leading-tight">{{ c.name_ar }}</div>
-                                    <div v-if="c.description_ar" class="line-clamp-3 text-[11px] leading-snug text-muted-foreground">{{ c.description_ar }}</div>
+                                    <div v-if="c.description_ar" class="line-clamp-3 text-xs leading-snug text-muted-foreground">{{ c.description_ar }}</div>
                                 </div>
                             </div>
                         </button>
                     </div>
-                    <p v-if="form.errors.category_id" class="mt-2 text-xs text-destructive">{{ form.errors.category_id }}</p>
+                    <FieldError :message="form.errors.category_id" />
 
                     <!-- Sub-category chips -->
                     <div v-if="currentCategory?.sub_categories?.length" class="mt-4 border-t border-dashed border-border/70 pt-4">
@@ -176,10 +175,10 @@ function submit() {
                                 </div>
                                 <div>
                                     <div class="text-sm font-semibold leading-tight">التصنيف الفرعي</div>
-                                    <div class="text-[11px] leading-tight text-muted-foreground">يُحسّن التوجيه ودقة التقارير (اختياري)</div>
+                                    <div class="text-xs leading-tight text-muted-foreground">يُحسّن التوجيه ودقة التقارير (اختياري)</div>
                                 </div>
                             </div>
-                            <button v-if="form.sub_category_id" type="button" class="inline-flex items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground" @click="form.sub_category_id = ''">
+                            <button v-if="form.sub_category_id" type="button" class="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground" @click="form.sub_category_id = ''">
                                 <X class="size-3" /> مسح
                             </button>
                         </div>
@@ -204,11 +203,11 @@ function submit() {
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="md:col-span-2">
                             <Input label="عنوان الطلب *" v-model="form.title" />
-                            <div class="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                            <div class="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                                 <span>اكتب عنواناً وصفياً بين 5–200 حرف</span>
                                 <span class="tabular-nums">{{ form.title.length }}/200</span>
                             </div>
-                            <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
+                            <FieldError :message="form.errors.title" />
                         </div>
                         <div v-if="products.length">
                             <Select label="المنتج / الخدمة" v-model="form.product_id">
@@ -220,17 +219,17 @@ function submit() {
 
                     <div>
                         <Textarea label="الوصف التفصيلي *" v-model="form.description" class="min-h-40" />
-                        <div class="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                        <div class="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                             <span>الحد الأدنى 10 أحرف — كلما زادت التفاصيل، أسرعت المعالجة</span>
                             <span class="tabular-nums">{{ descLen }} حرف</span>
                         </div>
-                        <p v-if="form.errors.description" class="mt-1 text-xs text-destructive">{{ form.errors.description }}</p>
+                        <FieldError :message="form.errors.description" />
                     </div>
 
                     <!-- Dynamic per-category fields (floating labels) -->
                     <template v-if="currentCategory?.fields?.length">
                         <div class="flex items-center gap-2 pt-1">
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">حقول إضافية</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-muted-foreground">حقول إضافية</span>
                             <span class="h-px flex-1 bg-gradient-to-l from-border to-transparent"></span>
                         </div>
                         <div v-for="f in currentCategory.fields" :key="f.id">
@@ -250,7 +249,7 @@ function submit() {
                             <Input v-else :label="f.label + (f.required ? ' *' : '')"
                                 :type="f.field_type === 'number' ? 'number' : (f.field_type === 'date' ? 'date' : 'text')"
                                 v-model="form.fields[f.id]" />
-                            <p v-if="form.errors[`fields.${f.id}`]" class="mt-1 text-xs text-destructive">{{ form.errors[`fields.${f.id}`] }}</p>
+                            <FieldError :message="form.errors[`fields.${f.id}`]" />
                         </div>
                     </template>
                 </CardContent>
@@ -286,7 +285,7 @@ function submit() {
                         </div>
                     </dl>
                     <div class="flex items-center justify-between gap-3 pt-1">
-                        <span class="text-[11px] text-muted-foreground">{{ completedSteps }}/{{ steps.length }} خطوات مكتملة — تأكد من المعلومات قبل الإرسال</span>
+                        <span class="text-xs text-muted-foreground">{{ completedSteps }}/{{ steps.length }} خطوات مكتملة — تأكد من المعلومات قبل الإرسال</span>
                         <div class="flex items-center gap-2">
                             <Button variant="outline" @click="router.visit('/requests')">إلغاء</Button>
                             <Button :disabled="form.processing || !canSubmit" @click="submit">

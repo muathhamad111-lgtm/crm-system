@@ -1,7 +1,7 @@
 <script setup>
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import KpiCard from '@/Components/KpiCard.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
@@ -47,18 +47,16 @@ function closeGap(id, status) {
 <template>
     <Head title="لوحة إدارة المعرفة" />
     <AppShell>
-        <div class="glass-stage space-y-6">
-            <PageHero
+        <div class="space-y-4">
+            <PageHeader
                 title="لوحة إدارة المعرفة"
-                subtitle="مؤشرات الأداء، المقالات المعلقة للاعتماد، وفجوات المعرفة المكتشفة"
-                :icon="BookOpen">
+                subtitle="مؤشرات الأداء، المقالات المعلقة للاعتماد، وفجوات المعرفة المكتشفة">
                 <template #actions>
-                    <Button href="/knowledge-base" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20">
+                    <Button href="/knowledge-base" variant="outline">
                         <ArrowRight class="size-4" /> عودة
                     </Button>
                 </template>
-            </PageHero>
+            </PageHeader>
 
             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <KpiCard label="بانتظار الاعتماد" :value="kpis.pending ?? 0" :icon="ClipboardList" tone="warning" />
@@ -84,7 +82,7 @@ function closeGap(id, status) {
                             class="flex items-center justify-between gap-2 rounded-lg border border-border p-2.5">
                             <Link :href="`/knowledge-base/${a.id}`" class="min-w-0 flex-1">
                                 <div class="truncate text-sm font-medium text-foreground hover:text-primary">{{ a.title }}</div>
-                                <div class="mt-0.5 text-[10px] text-muted-foreground">
+                                <div class="mt-0.5 text-2xs text-muted-foreground">
                                     آخر تحديث: {{ fmtDateAr(a.updated_at) }}
                                 </div>
                             </Link>
@@ -163,7 +161,7 @@ function closeGap(id, status) {
                                     <div v-if="g.notes" class="mt-0.5 text-muted-foreground">{{ g.notes }}</div>
                                     <div v-if="(g.keywords ?? []).length" class="mt-1 flex flex-wrap gap-1">
                                         <span v-for="k in g.keywords" :key="k"
-                                            class="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">{{ k }}</span>
+                                            class="rounded bg-muted px-1.5 py-0.5 text-2xs text-muted-foreground">{{ k }}</span>
                                     </div>
                                 </div>
                                 <div v-if="can.manage" class="flex shrink-0 gap-1">

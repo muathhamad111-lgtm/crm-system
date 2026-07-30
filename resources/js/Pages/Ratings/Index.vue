@@ -19,6 +19,9 @@ import {
 import { fmtDateAr } from '@/lib/date';
 import { useClientSort } from '@/lib/useSort';
 
+import PageHeader from '@/Components/PageHeader.vue';
+import Badge from '@/Components/ui/Badge.vue';
+import { num } from '@/lib/utils';
 const props = defineProps({
     ratings: { type: [Object, Array], default: () => ({ data: [] }) },
     stats: { type: Object, default: () => ({}) },
@@ -69,17 +72,10 @@ function openRequest(r) {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">تقييمات العملاء · رضا العملاء</p>
-                        <h1 class="mt-1 text-2xl font-bold">قائمة التقييمات</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">انقر على أي تقييم لفتح بطاقة الطلب وعرض تفاصيل الملاحظات.</p>
-                    </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ filtered.length }} تقييم</span>
-                </div>
-            </div>
+            <PageHeader title="قائمة التقييمات"
+                subtitle="انقر على أي تقييم لفتح بطاقة الطلب وعرض تفاصيل الملاحظات.">
+                <template #badge><Badge variant="muted">{{ num(filtered.length) }} تقييم</Badge></template>
+            </PageHeader>
 
             <!-- CSAT KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
@@ -129,7 +125,7 @@ function openRequest(r) {
                             <TableRow v-for="r in sorted" :key="r.id" class="cursor-pointer transition-colors hover:bg-muted/40" @click="openRequest(r)">
                                 <TableCell v-if="isStaff">
                                     <div class="font-medium">{{ r.customer_name ?? '—' }}</div>
-                                    <div v-if="r.customer_email" class="max-w-[12rem] truncate text-[11px] text-muted-foreground">{{ r.customer_email }}</div>
+                                    <div v-if="r.customer_email" class="max-w-[12rem] truncate text-xs text-muted-foreground">{{ r.customer_email }}</div>
                                 </TableCell>
                                 <TableCell v-if="isStaff" class="text-xs">
                                     <span v-if="r.business_field" class="rounded bg-accent/10 px-2 py-0.5 text-accent">{{ r.business_field }}</span>
@@ -145,7 +141,7 @@ function openRequest(r) {
                                         <Star v-for="n in 5" :key="n" :class="['size-4', n <= r.stars ? 'fill-warning text-warning' : 'text-muted-foreground/30']" />
                                         <span class="mr-1 text-xs text-muted-foreground tabular-nums">({{ r.stars }}/5)</span>
                                     </div>
-                                    <div v-if="(r.dissatisfaction_reasons || []).length" class="mt-1 text-[10px] text-destructive">
+                                    <div v-if="(r.dissatisfaction_reasons || []).length" class="mt-1 text-2xs text-destructive">
                                         {{ (r.dissatisfaction_reasons || []).slice(0, 2).join('، ') }}
                                     </div>
                                 </TableCell>

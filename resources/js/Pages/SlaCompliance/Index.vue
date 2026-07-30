@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import KpiCard from '@/Components/KpiCard.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
@@ -11,6 +11,7 @@ import CardContent from '@/Components/ui/CardContent.vue';
 import Badge from '@/Components/ui/Badge.vue';
 import { Gauge, CheckCircle2, XCircle, AlertTriangle, Clock, Layers, Zap } from 'lucide-vue-next';
 
+import EmptyState from '@/Components/ui/EmptyState.vue';
 const props = defineProps({
     target: { type: Number, default: 80 },
     overall: { type: Object, default: () => ({}) },
@@ -54,20 +55,19 @@ const overallLabel = computed(() =>
 <template>
     <Head title="الالتزام بـ SLA" />
     <AppShell>
-        <div class="glass-stage space-y-6">
-            <PageHero
+        <div class="space-y-4">
+            <PageHeader
                 title="الالتزام بمستوى الخدمة (SLA)"
-                subtitle="نسبة الالتزام مقابل المستهدف والتفصيل حسب الأولوية والتصنيف"
-                :icon="Gauge">
+                subtitle="نسبة الالتزام مقابل المستهدف والتفصيل حسب الأولوية والتصنيف">
                 <div class="flex flex-wrap items-center gap-3">
                     <Badge :variant="overallTone" class="text-sm">
                         المستهدف: {{ target }}%
                     </Badge>
-                    <Badge variant="outline" class="bg-white/10 text-white border-white/25 text-sm">
+                    <Badge variant="outline" class="text-sm">
                         {{ overallLabel }}
                     </Badge>
                 </div>
-            </PageHero>
+            </PageHeader>
 
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -202,9 +202,7 @@ const overallLabel = computed(() =>
                     </CardTitle>
                 </CardHeader>
                 <CardContent class="p-0">
-                    <p v-if="!topDelayingStages.length" class="p-6 text-center text-sm text-muted-foreground">
-                        لا توجد تجاوزات مسجّلة في المراحل حالياً.
-                    </p>
+                    <EmptyState v-if="!topDelayingStages.length" size="sm" title="لا توجد تجاوزات مسجّلة في المراحل حالياً." />
                     <div v-else class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead class="bg-muted/40 text-xs text-muted-foreground">

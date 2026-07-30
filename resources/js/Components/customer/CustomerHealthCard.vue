@@ -84,7 +84,7 @@ const meta = computed(() => LEVEL[health.value.level]);
                 </div>
             </div>
             <div>
-                <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">الإشارات</div>
+                <div class="mb-1.5 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">الإشارات</div>
                 <ul class="space-y-1 text-xs">
                     <li v-for="(r, i) in health.reasons" :key="i" class="flex items-start gap-1.5">
                         <span :class="`mt-1.5 size-1.5 shrink-0 rounded-full ${meta.bar}`"></span>

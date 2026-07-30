@@ -24,6 +24,8 @@ import {
 import { fmtFullDateTimeAr } from '@/lib/date';
 import { num } from '@/lib/utils';
 
+import PageHeader from '@/Components/PageHeader.vue';
+import Pagination from '@/Components/ui/Pagination.vue';
 const props = defineProps({
     messages: { type: Object, default: () => ({ data: [], links: [], total: 0 }) },
     filters: { type: Object, default: () => ({ status: 'all', q: '', sort: 'date', dir: 'desc' }) },
@@ -93,22 +95,10 @@ function submit(status) {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 sm:p-8 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
-                            <Inbox class="size-6" />
-                        </div>
-                        <div>
-                            <p class="text-xs text-white/60">متجر التحول التقني · تواصل معنا</p>
-                            <h1 class="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight">صندوق رسائل المتجر</h1>
-                            <p class="mt-1 max-w-xl text-sm text-white/80">نموذج «تواصل معنا» العام — رسائل من زوّار بدون حساب. هذه ليست تذاكر دعم ولا تخضع لـ SLA.</p>
-                        </div>
-                    </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ num(kpis.total ?? 0) }} رسالة</span>
-                </div>
-            </div>
+            <PageHeader title="صندوق رسائل المتجر"
+                subtitle="نموذج «تواصل معنا» العام — رسائل من زوّار بدون حساب. هذه ليست تذاكر دعم ولا تخضع لـ SLA.">
+                <template #badge><Badge variant="muted">{{ num(kpis.total ?? 0) }} رسالة</Badge></template>
+            </PageHeader>
 
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -174,12 +164,7 @@ function submit(status) {
                 </div>
             </Card>
 
-            <div v-if="messages.last_page > 1" class="flex flex-wrap justify-center gap-1">
-                <Link v-for="link in messages.links" :key="link.label" :href="link.url || '#'" v-html="link.label"
-                    preserve-scroll
-                    class="min-w-9 rounded-md border border-border px-3 py-1.5 text-center text-sm transition-colors"
-                    :class="[link.active ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-muted', !link.url && 'pointer-events-none opacity-40']" />
-            </div>
+            <Pagination :paginator="messages" />
         </div>
 
         <!-- Handle-message dialog -->
@@ -215,12 +200,12 @@ function submit(status) {
                 <Textarea label="ملاحظات داخلية (اختياري)" v-model="form.internal_note" class="min-h-20" />
 
                 <div class="flex flex-row justify-between gap-2">
-                    <Button variant="outline" :disabled="form.processing" @click="submit('archived')">
+                    <Button variant="outline" :loading="form.processing" @click="submit('archived')">
                         <Archive class="size-4" /> أرشفة
                     </Button>
                     <div class="flex gap-2">
-                        <Button variant="ghost" :disabled="form.processing" @click="submit()">حفظ</Button>
-                        <Button :disabled="form.processing" @click="submit('handled')">
+                        <Button variant="ghost" :loading="form.processing" @click="submit()">حفظ</Button>
+                        <Button :loading="form.processing" @click="submit('handled')">
                             <CheckCircle2 class="size-4" /> تم التعامل
                         </Button>
                     </div>

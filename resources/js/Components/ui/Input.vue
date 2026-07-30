@@ -18,7 +18,7 @@ const focused = ref(false);
 const filled = computed(() => props.modelValue !== '' && props.modelValue !== null && props.modelValue !== undefined);
 const isFloat = computed(() => focused.value || filled.value);
 
-const plain = 'flex h-10 w-full rounded-md border border-input bg-card px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+const plain = 'flex h-10 w-full rounded-md border border-input bg-card px-3 text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-foreground/25 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/15 disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-70';
 </script>
 
 <template>

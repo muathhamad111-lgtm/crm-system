@@ -2,4 +2,4 @@
 import { cn } from '@/lib/utils';
 const props = defineProps({ class: { type: [String, Array, Object], default: '' } });
 </script>
-<template><div :class="cn('animate-pulse rounded-md bg-muted', props.class)"></div></template>
+<template><div :class="cn('skeleton', props.class)"></div></template>

@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardContent from '@/Components/ui/CardContent.vue';
 import Badge from '@/Components/ui/Badge.vue';
@@ -54,47 +54,45 @@ function stars(v) {
     <Head title="لوحة المقترحات" />
     <AppShell>
         <div class="space-y-6">
-            <PageHero
+            <PageHeader
                 title="لوحة المقترحات"
-                subtitle="شارك في تقييم المقترحات المنشورة والتعليق عليها لتشكيل مستقبل الخدمة معاً."
-                :icon="Lightbulb">
+                subtitle="شارك في تقييم المقترحات المنشورة والتعليق عليها لتشكيل مستقبل الخدمة معاً.">
                 <template #actions>
-                    <Button :href="route('suggestions.create')" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm" size="sm">
+                    <Button :href="route('suggestions.create')" size="sm">
                         <Plus class="size-4" /> اقتراح جديد
                     </Button>
-                    <Button v-if="isStaff" :href="route('suggestions.inbox')" variant="outline"
-                        class="border-white/30 bg-white/10 text-white hover:bg-white/20" size="sm">
+                    <Button v-if="isStaff" :href="route('suggestions.inbox')" variant="outline" size="sm">
                         <Inbox class="size-4" /> صندوق الفريق
                     </Button>
                 </template>
 
                 <!-- Hero stat tiles -->
                 <div class="grid max-w-2xl grid-cols-3 gap-3">
-                    <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 backdrop-blur-sm">
-                        <div class="mb-1 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-white/70">
+                    <div class="rounded-lg border border-border bg-card px-3 py-2.5">
+                        <div class="mb-1 flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
                             <TrendingUp class="size-3" /> مقترحات منشورة
                         </div>
-                        <div class="text-lg font-bold leading-none tabular-nums text-white">{{ stats.total ?? 0 }}</div>
+                        <div class="text-lg font-bold leading-none tabular-nums text-foreground">{{ stats.total ?? 0 }}</div>
                     </div>
-                    <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 backdrop-blur-sm">
-                        <div class="mb-1 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-white/70">
+                    <div class="rounded-lg border border-border bg-card px-3 py-2.5">
+                        <div class="mb-1 flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
                             <Star class="size-3" /> متوسط التقييم
                         </div>
-                        <div class="text-lg font-bold leading-none tabular-nums text-white">{{ stats.avg ? `${stats.avg} / 5` : '—' }}</div>
+                        <div class="text-lg font-bold leading-none tabular-nums text-foreground">{{ stats.avg ? `${stats.avg} / 5` : '—' }}</div>
                     </div>
-                    <div class="rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 backdrop-blur-sm">
-                        <div class="mb-1 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-white/70">
+                    <div class="rounded-lg border border-border bg-card px-3 py-2.5">
+                        <div class="mb-1 flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
                             <MessageSquare class="size-3" /> تعليقات المجتمع
                         </div>
-                        <div class="text-lg font-bold leading-none tabular-nums text-white">{{ stats.comments ?? 0 }}</div>
+                        <div class="text-lg font-bold leading-none tabular-nums text-foreground">{{ stats.comments ?? 0 }}</div>
                     </div>
                 </div>
-            </PageHero>
+            </PageHeader>
 
             <!-- How it works -->
             <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
                 <div v-for="step in steps" :key="step.n"
-                    class="rounded-2xl border border-border bg-card p-4 transition-all hover:border-primary/40 hover:shadow-md">
+                    class="rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40">
                     <div class="mb-2 flex items-center gap-3">
                         <div class="flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary ring-1 ring-primary/15">
                             <component :is="step.icon" class="size-5" />
@@ -122,18 +120,18 @@ function stars(v) {
             <!-- Results -->
             <div v-if="filtered.length" class="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <Card v-for="s in filtered" :key="s.id"
-                    class="group cursor-pointer overflow-hidden transition-all hover:border-primary/40 hover:shadow-elevated"
+                    class="group cursor-pointer overflow-hidden transition-colors hover:border-primary/40"
                     @click="router.visit(route('suggestions.show', s.id))">
                     <div class="h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-60 transition-opacity group-hover:opacity-100"></div>
                     <CardContent class="space-y-3 p-4">
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0 flex-1">
                                 <div class="mb-1.5 flex flex-wrap items-center gap-2">
-                                    <Badge variant="outline" class="font-mono text-[10px]">{{ s.request_number }}</Badge>
-                                    <Badge :variant="stageBadge(s.idea_stage).tone" class="text-[10px]">
+                                    <Badge variant="outline" class="font-mono text-2xs">{{ s.request_number }}</Badge>
+                                    <Badge :variant="stageBadge(s.idea_stage).tone" class="text-2xs">
                                         {{ stageBadge(s.idea_stage).label }}
                                     </Badge>
-                                    <Badge v-if="s.comments_locked" variant="warning" class="gap-1 text-[10px]">
+                                    <Badge v-if="s.comments_locked" variant="warning" class="gap-1 text-2xs">
                                         <Lock class="size-3" /> مقفل
                                     </Badge>
                                 </div>
@@ -144,7 +142,7 @@ function stars(v) {
                             <ChevronLeft class="mt-1 size-4 shrink-0 text-muted-foreground/50 transition-all group-hover:-translate-x-0.5 group-hover:text-primary" />
                         </div>
                         <p class="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{{ s.description }}</p>
-                        <div v-if="s.product" class="flex items-center gap-1 text-[11px] text-accent">
+                        <div v-if="s.product" class="flex items-center gap-1 text-xs text-accent">
                             <Package class="size-3" /> {{ s.product }}
                         </div>
                         <div class="flex items-center justify-between border-t border-border pt-2">
@@ -169,7 +167,7 @@ function stars(v) {
 
             <Card v-else>
                 <CardContent class="py-14 text-center">
-                    <div class="mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl bg-primary-soft text-primary ring-1 ring-primary/15">
+                    <div class="mx-auto mb-4 flex size-16 items-center justify-center rounded-lg bg-primary-soft text-primary ring-1 ring-primary/15">
                         <Lightbulb class="size-8" />
                     </div>
                     <p class="text-lg font-bold text-foreground">

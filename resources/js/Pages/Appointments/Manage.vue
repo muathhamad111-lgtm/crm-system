@@ -14,6 +14,9 @@ import SortableTh from '@/Components/ui/SortableTh.vue';
 import { APPOINTMENT_STATUS, statusLabel } from '@/lib/labels';
 import { fmtTimeAr } from '@/lib/date';
 import { useClientSort } from '@/lib/useSort';
+import PageHeader from '@/Components/PageHeader.vue';
+import { num } from '@/lib/utils';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 import {
     CalendarDays, Phone, Video, MapPin, GraduationCap, Workflow, HelpCircle, Clock,
     ListChecks, CheckCircle2, XCircle, UserX, TrendingUp, CalendarClock, RotateCcw, Hourglass,
@@ -95,26 +98,20 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">إدارة · متابعة المواعيد</p>
-                        <h1 class="mt-1 text-2xl font-bold">متابعة المواعيد</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">إدارة وتأكيد ومتابعة جميع المواعيد المحجوزة في عرض واحد.</p>
-                    </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs tabular-nums backdrop-blur-sm">{{ stats.total ?? 0 }} موعد</span>
-                </div>
+            <PageHeader title="متابعة المواعيد"
+                subtitle="إدارة وتأكيد ومتابعة جميع المواعيد المحجوزة في عرض واحد.">
+                <template #badge><Badge variant="muted">{{ num(stats.total ?? 0) }} موعد</Badge></template>
 
-                <!-- filter pills -->
-                <div class="relative mt-5 flex flex-wrap gap-2">
-                    <button v-for="t in TABS" :key="t.v" @click="setFilter(t.v)"
-                        :data-active="filter === t.v"
-                        class="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm backdrop-blur-sm transition-all hover:bg-white/20 data-[active=true]:bg-white data-[active=true]:text-primary">
-                        <component :is="t.icon" class="size-4 opacity-80" /> {{ t.l }}
-                    </button>
+                <div class="table-scroll -mx-1 px-1">
+                    <div class="flex w-max min-w-full items-center gap-1.5">
+                        <button v-for="t in TABS" :key="t.v" type="button" @click="setFilter(t.v)"
+                            :data-active="filter === t.v" :aria-pressed="filter === t.v"
+                            class="inline-flex shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground data-[active=true]:border-transparent data-[active=true]:bg-primary data-[active=true]:text-primary-foreground">
+                            <component :is="t.icon" class="size-3.5" aria-hidden="true" /> {{ t.l }}
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </PageHeader>
 
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
@@ -122,7 +119,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
                     <div class="flex items-center gap-3">
                         <div :class="['flex size-9 shrink-0 items-center justify-center rounded-lg', k.tone]"><component :is="k.icon" class="size-4" /></div>
                         <div class="min-w-0">
-                            <div class="truncate text-[10px] uppercase text-muted-foreground">{{ k.label }}</div>
+                            <div class="truncate text-2xs uppercase text-muted-foreground">{{ k.label }}</div>
                             <div :class="['truncate font-bold', k.small ? 'text-sm' : 'text-lg', 'tabular-nums']">{{ k.value }}</div>
                         </div>
                     </div>
@@ -153,7 +150,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
                         <div class="min-w-0 flex-1">
                             <div class="flex flex-wrap items-center gap-2">
                                 <button class="text-sm font-semibold hover:text-primary" @click="router.visit(route('appointments.show', a.id))">{{ a.type?.name_ar ?? 'موعد' }}</button>
-                                <span class="text-[10px] tabular-nums text-muted-foreground">{{ a.appointment_number }}</span>
+                                <span class="text-2xs tabular-nums text-muted-foreground">{{ a.appointment_number }}</span>
                                 <Badge :variant="statusLabel(APPOINTMENT_STATUS, a.status).tone" class="gap-1">
                                     <span :class="['size-1.5 rounded-full', STATUS_DOT[a.status]]"></span>
                                     {{ statusLabel(APPOINTMENT_STATUS, a.status).label }}
@@ -161,7 +158,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
                             </div>
                             <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                 <span v-if="a.customer" class="flex items-center gap-1.5">
-                                    <Avatar :name="a.customer.full_name" class="size-5 text-[9px]" /> {{ a.customer.full_name }}
+                                    <Avatar :name="a.customer.full_name" class="size-5 text-2xs" /> {{ a.customer.full_name }}
                                 </span>
                                 <span class="flex items-center gap-1"><Clock class="size-3" /> {{ dayTime(a.starts_at) }} — {{ fmtTimeAr(a.starts_at) }}</span>
                                 <span class="tabular-nums">{{ a.duration_minutes }} دقيقة</span>
@@ -177,7 +174,7 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
                         </div>
                     </div>
                 </div>
-                <div v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد مواعيد.</div>
+                <EmptyState v-else size="sm" title="لا توجد مواعيد." />
             </Card>
         </div>
 
@@ -196,12 +193,12 @@ function submitReschedule() { if (!reschedSlot.value) return; post(reschedTarget
                     <Label class="mb-1.5 block text-xs">الأوقات المتاحة</Label>
                     <div v-if="reschedHasSlots" class="max-h-56 space-y-3 overflow-y-auto">
                         <div v-for="g in GROUPS" :key="g.key" v-show="reschedSlots[g.key].length">
-                            <p class="mb-1.5 text-[11px] font-bold text-muted-foreground">{{ g.label }}</p>
+                            <p class="mb-1.5 text-xs font-bold text-muted-foreground">{{ g.label }}</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <button v-for="s in reschedSlots[g.key]" :key="s.starts_at" @click="reschedSlot = s.starts_at"
                                     :class="['rounded-lg border px-2.5 py-1.5 text-xs tabular-nums transition-colors',
                                         reschedSlot === s.starts_at ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card hover:bg-muted']">
-                                    <span class="block text-[10px] opacity-70">{{ shortDate(s.starts_at) }}</span>{{ fmtTimeAr(s.starts_at) }}
+                                    <span class="block text-2xs opacity-70">{{ shortDate(s.starts_at) }}</span>{{ fmtTimeAr(s.starts_at) }}
                                 </button>
                             </div>
                         </div>

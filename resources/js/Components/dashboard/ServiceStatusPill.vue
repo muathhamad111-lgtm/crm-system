@@ -16,7 +16,7 @@ const label = computed(() => statusLabel(SERVICE_STATUS, props.status).label);
 </script>
 
 <template>
-    <span :class="['inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold', c.cls]">
+    <span :class="['inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-semibold', c.cls]">
         <span :class="['size-1.5 rounded-full', c.dot]"></span>
         {{ label }}
     </span>

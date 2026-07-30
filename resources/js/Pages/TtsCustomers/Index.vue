@@ -17,6 +17,8 @@ import SortableTh from '@/Components/ui/SortableTh.vue';
 import TableCell from '@/Components/ui/TableCell.vue';
 import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
+import PageHeader from '@/Components/PageHeader.vue';
+import Pagination from '@/Components/ui/Pagination.vue';
 import {
     Users, Search, Building2, User as UserIcon, Mail, Phone, Briefcase,
     CheckCircle2, ChevronLeft, Store, Clock,
@@ -67,22 +69,10 @@ function entityLabel(e) {
     <AppShell>
         <div class="space-y-5">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 sm:p-8 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
-                            <Store class="size-6" />
-                        </div>
-                        <div>
-                            <p class="text-xs text-white/60">متجر التحول التقني · مزامنة المشتركين</p>
-                            <h1 class="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight">عملاء المتجر</h1>
-                            <p class="mt-1 max-w-xl text-sm text-white/80">جميع العملاء المُزامَنون من متجر التحول التقني — أفراد، قطاع غير ربحي، وقطاع خاص. اضغط على أي صف لفتح الملف.</p>
-                        </div>
-                    </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ num(customers.total ?? 0) }} عميل</span>
-                </div>
-            </div>
+            <PageHeader title="عملاء المتجر"
+                subtitle="جميع العملاء المُزامَنون من متجر التحول التقني — أفراد، قطاع غير ربحي، وقطاع خاص. اضغط على أي صف لفتح الملف.">
+                <template #badge><Badge variant="muted">{{ num(customers.total ?? 0) }} عميل</Badge></template>
+            </PageHeader>
 
             <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <KpiCard label="إجمالي العملاء" :value="kpis.total_customers ?? 0" :hint="`أفراد: ${num(kpis.individuals ?? 0)}`" :icon="Users" tone="primary" />
@@ -162,22 +152,7 @@ function entityLabel(e) {
                 </CardContent>
             </Card>
 
-            <div v-if="customers.data.length" class="flex flex-wrap items-center justify-between gap-3">
-                <p class="text-xs text-muted-foreground">
-                    عرض {{ num(customers.from ?? 0) }}–{{ num(customers.to ?? 0) }} من {{ num(customers.total) }}
-                </p>
-                <div class="flex flex-wrap gap-1">
-                    <Link v-for="link in customers.links" :key="link.label"
-                        :href="link.url || '#'"
-                        preserve-scroll
-                        v-html="link.label"
-                        class="min-w-9 rounded-md border border-border px-3 py-1.5 text-sm text-center transition-colors"
-                        :class="[
-                            link.active ? 'bg-primary text-primary-foreground border-primary' : 'bg-card hover:bg-muted',
-                            !link.url ? 'pointer-events-none opacity-40' : '',
-                        ]" />
-                </div>
-            </div>
+            <Pagination :paginator="customers" />
         </div>
     </AppShell>
 </template>

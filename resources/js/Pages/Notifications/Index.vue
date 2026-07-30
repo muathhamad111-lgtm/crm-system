@@ -12,6 +12,8 @@ import {
 import { timeAgoAr } from '@/lib/date';
 import { num } from '@/lib/utils';
 
+import PageHeader from '@/Components/PageHeader.vue';
+import Pagination from '@/Components/ui/Pagination.vue';
 const props = defineProps({
     notifications: { type: Object, default: () => ({ data: [], links: [], total: 0 }) },
     filters: { type: Object, default: () => ({ filter: 'all', type: 'all', priority: 'all', period: 'all', q: '' }) },
@@ -83,27 +85,16 @@ const periodChips = [['all', 'الكل'], ['today', 'اليوم'], ['7d', '7 أ�
     <AppShell>
         <div class="mx-auto max-w-4xl space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
-                            <Bell class="size-6" />
-                        </div>
-                        <div>
-                            <p class="text-xs text-white/60">مركز التنبيهات</p>
-                            <h1 class="mt-0.5 text-2xl font-bold">الإشعارات</h1>
-                            <p class="mt-1 text-sm text-white/80">
-                                {{ unreadCount > 0 ? `${num(unreadCount)} إشعار غير مقروء` : 'تمت قراءة جميع الإشعارات' }}
-                                <span class="text-white/60">· إجمالي {{ num(totalCount) }}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <Button v-if="unreadCount > 0" @click="markAll" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm">
+            <PageHeader title="الإشعارات"
+                :subtitle="unreadCount > 0
+                    ? `${num(unreadCount)} إشعار غير مقروء · إجمالي ${num(totalCount)}`
+                    : `تمت قراءة جميع الإشعارات · إجمالي ${num(totalCount)}`">
+                <template #actions>
+                    <Button v-if="unreadCount > 0" @click="markAll">
                         <CheckCheck class="size-4" /> تعليم الكل كمقروء
                     </Button>
-                </div>
-            </div>
+                </template>
+            </PageHeader>
 
             <!-- Filter panel -->
             <Card class="space-y-2.5 p-3">
@@ -112,36 +103,36 @@ const periodChips = [['all', 'الكل'], ['today', 'اليوم'], ['7d', '7 أ�
                     <Input v-model="q" label="ابحث في العنوان أو النص…" />
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-muted-foreground"><Filter class="size-3" /> الحالة:</span>
+                    <span class="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground"><Filter class="size-3" /> الحالة:</span>
                     <button v-for="[k, l] in statusChips" :key="k" type="button" @click="reload({ filter: k })"
-                        :class="['h-6 rounded-full px-2.5 text-[11px] font-bold transition-colors',
+                        :class="['h-6 rounded-full px-2.5 text-xs font-bold transition-colors',
                             filters.filter === k ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:text-foreground']">{{ l }}</button>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="text-[11px] font-bold text-muted-foreground">النوع:</span>
+                    <span class="text-xs font-bold text-muted-foreground">النوع:</span>
                     <button type="button" @click="reload({ type: 'all' })"
-                        :class="['h-6 rounded-full px-2.5 text-[11px] font-bold transition-colors',
+                        :class="['h-6 rounded-full px-2.5 text-xs font-bold transition-colors',
                             filters.type === 'all' ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:text-foreground']">الكل</button>
                     <button v-for="(l, k) in TYPE_LABEL" :key="k" type="button" @click="reload({ type: k })"
-                        :class="['inline-flex h-6 items-center gap-1 rounded-full px-2.5 text-[11px] font-bold transition-colors',
+                        :class="['inline-flex h-6 items-center gap-1 rounded-full px-2.5 text-xs font-bold transition-colors',
                             filters.type === k ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:text-foreground']">
                         {{ l }}<span v-if="typeCounts[k]" class="tabular-nums opacity-70">({{ typeCounts[k] }})</span>
                     </button>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="text-[11px] font-bold text-muted-foreground">الأهمية:</span>
+                    <span class="text-xs font-bold text-muted-foreground">الأهمية:</span>
                     <button v-for="[k, l] in priorityChips" :key="k" type="button" @click="reload({ priority: k })"
-                        :class="['h-6 rounded-full px-2.5 text-[11px] font-bold transition-colors',
+                        :class="['h-6 rounded-full px-2.5 text-xs font-bold transition-colors',
                             filters.priority === k ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:text-foreground']">{{ l }}</button>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="text-[11px] font-bold text-muted-foreground">الفترة:</span>
+                    <span class="text-xs font-bold text-muted-foreground">الفترة:</span>
                     <button v-for="[k, l] in periodChips" :key="k" type="button" @click="reload({ period: k })"
-                        :class="['h-6 rounded-full px-2.5 text-[11px] font-bold transition-colors',
+                        :class="['h-6 rounded-full px-2.5 text-xs font-bold transition-colors',
                             filters.period === k ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:text-foreground']">{{ l }}</button>
                 </div>
                 <button v-if="activeFilters > 0" type="button" @click="resetFilters"
-                    class="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
+                    class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
                     <RotateCcw class="size-3" /> إعادة تعيين ({{ activeFilters }})
                 </button>
             </Card>
@@ -163,14 +154,14 @@ const periodChips = [['all', 'الكل'], ['today', 'اليوم'], ['7d', '7 أ�
                                 </h3>
                                 <div class="mt-0.5 flex shrink-0 items-center gap-1.5">
                                     <span v-if="!n.read_at" class="size-2 rounded-full" :class="n.priority === 'urgent' ? 'bg-destructive' : 'bg-primary'"></span>
-                                    <span class="whitespace-nowrap text-[10px] tabular-nums text-muted-foreground">{{ timeAgoAr(n.created_at) }}</span>
+                                    <span class="whitespace-nowrap text-2xs tabular-nums text-muted-foreground">{{ timeAgoAr(n.created_at) }}</span>
                                 </div>
                             </div>
                             <p v-if="n.body" class="mt-1 line-clamp-2 text-xs text-muted-foreground [overflow-wrap:anywhere]">{{ n.body }}</p>
                             <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-                                <span class="rounded bg-muted/70 px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">{{ TYPE_LABEL[n.type] ?? n.type }}</span>
-                                <span v-if="n.priority === 'urgent'" class="rounded bg-destructive/10 px-1.5 py-0.5 text-[9px] font-bold text-destructive">عاجل</span>
-                                <span v-else-if="n.priority === 'important'" class="rounded bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary">مهم</span>
+                                <span class="rounded bg-muted/70 px-1.5 py-0.5 text-2xs font-bold text-muted-foreground">{{ TYPE_LABEL[n.type] ?? n.type }}</span>
+                                <span v-if="n.priority === 'urgent'" class="rounded bg-destructive/10 px-1.5 py-0.5 text-2xs font-bold text-destructive">عاجل</span>
+                                <span v-else-if="n.priority === 'important'" class="rounded bg-primary/10 px-1.5 py-0.5 text-2xs font-bold text-primary">مهم</span>
                             </div>
                         </div>
                         <button v-if="!n.read_at" type="button" title="تعليم كمقروء" @click.stop="toggleRead(n)"
@@ -185,12 +176,7 @@ const periodChips = [['all', 'الكل'], ['today', 'اليوم'], ['7d', '7 أ�
                 </div>
             </Card>
 
-            <div v-if="notifications.last_page > 1" class="flex flex-wrap justify-center gap-1">
-                <Link v-for="link in notifications.links" :key="link.label" :href="link.url || '#'" v-html="link.label"
-                    preserve-scroll
-                    class="min-w-9 rounded-md border border-border px-3 py-1.5 text-center text-sm transition-colors"
-                    :class="[link.active ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-muted', !link.url && 'pointer-events-none opacity-40']" />
-            </div>
+            <Pagination :paginator="notifications" />
         </div>
     </AppShell>
 </template>

@@ -20,6 +20,8 @@ import {
 import { REQUEST_STATUS, REQUEST_PRIORITY, IDEA_STAGE, statusLabel } from '@/lib/labels';
 import { num } from '@/lib/utils';
 
+import PageHeader from '@/Components/PageHeader.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 const props = defineProps({
     filters: { type: Object, default: () => ({}) },
     options: { type: Object, default: () => ({}) },
@@ -294,25 +296,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
     <AppShell>
         <div class="space-y-5">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex items-start gap-4">
-                    <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
-                        <BarChart3 class="size-6" />
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-white/60">التقارير · مؤشرات الأداء</p>
-                        <h1 class="mt-1 text-2xl font-bold sm:text-3xl">التقارير ومؤشرات الأداء</h1>
-                        <p class="mt-1 max-w-2xl text-sm text-white/80">تقارير قابلة للتخصيص لاتخاذ قرارات مبنية على البيانات</p>
-                    </div>
-                </div>
-            </div>
+            <PageHeader title="التقارير ومؤشرات الأداء"
+                subtitle="تقارير قابلة للتخصيص لاتخاذ قرارات مبنية على البيانات." />
 
             <!-- Tab strip -->
-            <div class="flex flex-wrap gap-2 rounded-2xl border border-border bg-card p-1.5 shadow-sm">
+            <div class="flex flex-wrap gap-2 rounded-lg border border-border bg-card p-1.5 shadow-sm">
                 <button v-for="t in tabs" :key="t.key" @click="activeTab = t.key"
                     :class="['flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition-all',
-                        activeTab === t.key ? 'bg-primary text-primary-foreground shadow-elevated' : 'text-muted-foreground hover:bg-muted']">
+                        activeTab === t.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted']">
                     <component :is="t.icon" class="size-4" />
                     <span>{{ t.label }}</span>
                 </button>
@@ -421,14 +412,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>توزيع الحالات</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="hasAny(custStatus)" type="donut" height="300" :options="custStatusChart.options" :series="custStatusChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>توزيع النجوم</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="hasAny(c.starsDist)" type="bar" height="300" :options="starsChart.options" :series="starsChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد تقييمات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد تقييمات" />
                         </CardContent>
                     </Card>
                 </div>
@@ -437,7 +428,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <CardHeader><CardTitle>اتجاه رضا العملاء عبر الزمن</CardTitle></CardHeader>
                     <CardContent>
                         <apexchart v-if="(c.csatTrend ?? []).length" type="line" height="320" :options="csatTrendChart.options" :series="csatTrendChart.series" />
-                        <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد تقييمات في هذه الفترة</p>
+                        <EmptyState v-else :icon="BarChart3" title="لا توجد تقييمات في هذه الفترة" />
                     </CardContent>
                 </Card>
 
@@ -446,14 +437,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>متوسط الرضى لكل منتج</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(c.avgSatPerProduct ?? []).length" type="bar" height="320" :options="productSatChart.options" :series="productSatChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>أبرز أسباب عدم الرضى</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(c.dissatisfactionReasons ?? []).length" type="bar" height="320" :options="reasonsChart.options" :series="reasonsChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                 </div>
@@ -462,7 +453,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-success"><ThumbsUp class="size-5" /> أعلى 6 عملاء رضى</CardTitle></CardHeader>
                         <CardContent class="p-0">
-                            <p v-if="!(c.topHappy ?? []).length" class="p-6 text-center text-sm text-muted-foreground">لا توجد تقييمات</p>
+                            <EmptyState v-if="!(c.topHappy ?? []).length" size="sm" title="لا توجد تقييمات" />
                             <div v-else class="divide-y divide-border">
                                 <div v-for="(cust, i) in c.topHappy" :key="cust.id ?? i" class="flex items-center justify-between p-3">
                                     <div class="flex min-w-0 items-center gap-3">
@@ -480,7 +471,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-destructive"><ThumbsDown class="size-5" /> أعلى 6 عملاء عدم رضى</CardTitle></CardHeader>
                         <CardContent class="p-0">
-                            <p v-if="!(c.topUnhappy ?? []).length" class="p-6 text-center text-sm text-muted-foreground">لا توجد تقييمات</p>
+                            <EmptyState v-if="!(c.topUnhappy ?? []).length" size="sm" title="لا توجد تقييمات" />
                             <div v-else class="divide-y divide-border">
                                 <div v-for="(cust, i) in c.topUnhappy" :key="cust.id ?? i" class="flex items-center justify-between p-3">
                                     <div class="flex min-w-0 items-center gap-3">
@@ -501,7 +492,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <CardHeader><CardTitle>توزيع الطلبات حسب التصنيف الفرعي</CardTitle></CardHeader>
                     <CardContent>
                         <apexchart v-if="(c.bySubCategory ?? []).length" type="bar" :height="Math.max(280, (c.bySubCategory ?? []).length * 34)" :options="subCatChart.options" :series="subCatChart.series" />
-                        <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                        <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                     </CardContent>
                 </Card>
             </div>
@@ -520,14 +511,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>توزيع الحالات</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="hasAny(rqStatus)" type="donut" height="300" :options="rqStatusChart.options" :series="rqStatusChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>توزيع الأولوية</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="hasAny(rqPriority)" type="bar" height="300" :options="rqPriorityChart.options" :series="rqPriorityChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                 </div>
@@ -535,7 +526,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <CardHeader><CardTitle>التوزيع حسب التصنيف</CardTitle></CardHeader>
                     <CardContent>
                         <apexchart v-if="(rq.byCategory ?? []).length" type="bar" :height="Math.max(280, (rq.byCategory ?? []).length * 34)" :options="rqCategoryChart.options" :series="rqCategoryChart.series" />
-                        <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                        <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                     </CardContent>
                 </Card>
             </div>
@@ -555,13 +546,13 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>التوزيع حسب المرحلة</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="hasAny(sgStage)" type="bar" :height="Math.max(280, sgStage.length * 34)" :options="sgStageChart.options" :series="sgStageChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>أكثر العملاء تقديماً للمقترحات</CardTitle></CardHeader>
                         <CardContent class="p-0">
-                            <p v-if="!(sg.topSubmitters ?? []).length" class="p-6 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-if="!(sg.topSubmitters ?? []).length" size="sm" title="لا توجد بيانات" />
                             <div v-else class="divide-y divide-border">
                                 <div v-for="(s, i) in sg.topSubmitters" :key="s.id ?? i" class="flex items-center justify-between p-3">
                                     <div class="flex min-w-0 items-center gap-3">
@@ -583,14 +574,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>عدد الطلبات لكل منتج / خدمة</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(pr.requestsPerProduct ?? []).length" type="bar" :height="Math.max(280, (pr.requestsPerProduct ?? []).length * 40)" :options="prReqChart.options" :series="prReqChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>متوسط الرضى لكل منتج / خدمة</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(pr.csatPerProduct ?? []).length" type="bar" :height="Math.max(280, (pr.csatPerProduct ?? []).length * 40)" :options="prCsatChart.options" :series="prCsatChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                 </div>
@@ -612,7 +603,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                                         <td class="p-3 text-center font-bold tabular-nums">{{ p.avg }}★</td>
                                         <td class="p-3 text-center tabular-nums text-muted-foreground">{{ p.count }}</td>
                                     </tr>
-                                    <tr v-if="!(pr.csatPerProduct ?? []).length"><td colspan="3" class="py-8 text-center text-muted-foreground">لا توجد بيانات</td></tr>
+                                    <tr v-if="!(pr.csatPerProduct ?? []).length"><td colspan="3"><EmptyState size="sm" title="لا توجد بيانات" /></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -632,7 +623,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <CardHeader><CardTitle>أكثر الموظفين عبئاً</CardTitle></CardHeader>
                     <CardContent>
                         <apexchart v-if="team.length" type="bar" :height="Math.max(260, Math.min(team.length, 8) * 42)" :options="teamLoadChart.options" :series="teamLoadChart.series" />
-                        <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                        <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                     </CardContent>
                 </Card>
                 <Card>
@@ -659,7 +650,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                                         <td class="p-3 text-center tabular-nums">{{ r.avg_hours }}</td>
                                         <td class="p-3 text-center tabular-nums">{{ r.csat !== null ? `${r.csat} (${r.csat_n})` : '—' }}</td>
                                     </tr>
-                                    <tr v-if="!team.length"><td colspan="6" class="py-8 text-center text-muted-foreground">لا توجد بيانات</td></tr>
+                                    <tr v-if="!team.length"><td colspan="6"><EmptyState size="sm" title="لا توجد بيانات" /></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -680,14 +671,14 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                         <CardHeader><CardTitle>الالتزام حسب الأولوية</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(sla.byPriority ?? []).length" type="bar" height="300" :options="slaPriorityChart.options" :series="slaPriorityChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>الالتزام حسب التصنيف</CardTitle></CardHeader>
                         <CardContent>
                             <apexchart v-if="(sla.byCategory ?? []).length" type="bar" :height="Math.max(280, (sla.byCategory ?? []).length * 34)" :options="slaCategoryChart.options" :series="slaCategoryChart.series" />
-                            <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                            <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                         </CardContent>
                     </Card>
                 </div>
@@ -695,7 +686,7 @@ const { sorted: prodDetailSorted, sortKey: prodDetailSortKey, sortDir: prodDetai
                     <CardHeader><CardTitle>أبرز المراحل المسبّبة للتأخير</CardTitle></CardHeader>
                     <CardContent>
                         <apexchart v-if="(sla.topStages ?? []).length" type="bar" :height="Math.max(280, (sla.topStages ?? []).length * 34)" :options="slaStagesChart.options" :series="slaStagesChart.series" />
-                        <p v-else class="py-12 text-center text-sm text-muted-foreground">لا توجد بيانات</p>
+                        <EmptyState v-else :icon="BarChart3" title="لا توجد بيانات" />
                     </CardContent>
                 </Card>
             </div>

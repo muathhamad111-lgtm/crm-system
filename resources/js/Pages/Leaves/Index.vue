@@ -14,6 +14,10 @@ import {
 } from 'lucide-vue-next';
 import { fmtDateAr } from '@/lib/date';
 
+import FieldError from '@/Components/ui/FieldError.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import Badge from '@/Components/ui/Badge.vue';
+import { num } from '@/lib/utils';
 const props = defineProps({
     leaves: { type: [Object, Array], default: () => ({ data: [] }) },
     leaveTypes: { type: Array, default: () => [] },
@@ -98,40 +102,31 @@ function cancel(id) {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">إجازاتي · سجل الغيابات</p>
-                        <h1 class="mt-1 text-2xl font-bold">إجازاتي</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">سجّل إجازاتك المعتمدة من الموارد البشرية وتتبّع حالتها وأثرها على تغطية أعمالك.</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="hidden items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums md:inline-flex">
-                            <Inbox class="size-3.5" /> {{ stats.total ?? 0 }} إجازة مسجّلة
-                        </span>
-                        <Button class="bg-white text-primary hover:bg-white/90" @click="open = true">
-                            <Plus class="size-4" /> تسجيل إجازة معتمدة
-                        </Button>
+            <PageHeader title="إجازاتي"
+                subtitle="سجّل إجازاتك المعتمدة من الموارد البشرية وتتبّع حالتها وأثرها على تغطية أعمالك.">
+                <template #badge><Badge variant="muted">{{ num(stats.total ?? 0) }} إجازة مسجّلة</Badge></template>
+                <template #actions>
+                    <Button @click="open = true"><Plus class="size-4" /> تسجيل إجازة معتمدة</Button>
+                </template>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <div v-for="(k, i) in kpiChips" :key="i"
+                        class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-sm">
+                        <component :is="k.icon" class="size-3.5 text-muted-foreground" aria-hidden="true" />
+                        <span class="text-muted-foreground">{{ k.label }}</span>
+                        <span class="font-bold tabular-nums text-foreground">{{ k.value }}</span>
                     </div>
                 </div>
-                <!-- KPI chips -->
-                <div class="relative mt-5 flex flex-wrap items-center gap-2">
-                    <div v-for="(k, i) in kpiChips" :key="i" class="flex items-center gap-2 rounded-lg border border-white/15 bg-white/10 px-2.5 py-1.5 backdrop-blur-sm">
-                        <span class="flex size-5 items-center justify-center rounded-md bg-white/20"><component :is="k.icon" class="size-3" /></span>
-                        <span class="text-[11px]"><span class="font-semibold">{{ k.label }}</span> <span class="font-bold text-white/90 tabular-nums">{{ k.value }}</span></span>
-                    </div>
-                </div>
-            </div>
+            </PageHeader>
 
             <!-- How it works -->
             <section class="grid grid-cols-1 gap-3 md:grid-cols-3">
-                <div v-for="(step, i) in HOW_STEPS" :key="i" class="relative rounded-2xl border border-border/60 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-md">
+                <div v-for="(step, i) in HOW_STEPS" :key="i" class="relative rounded-lg border border-border/60 bg-card p-4 transition-colors hover:border-primary/40">
                     <div class="mb-2 flex items-center gap-3">
                         <div class="flex size-10 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/15">
                             <component :is="step.icon" class="size-5 text-primary" />
                         </div>
-                        <span class="text-[10px] font-bold tracking-widest text-muted-foreground/70">0{{ i + 1 }}</span>
+                        <span class="text-2xs font-bold tracking-widest text-muted-foreground/70">0{{ i + 1 }}</span>
                     </div>
                     <h3 class="mb-1 text-sm font-bold">{{ step.title }}</h3>
                     <p class="text-xs leading-relaxed text-muted-foreground">{{ step.body }}</p>
@@ -150,7 +145,7 @@ function cancel(id) {
             <!-- List -->
             <div class="grid gap-2.5">
                 <Card v-if="!filtered.length" class="flex flex-col items-center gap-3 border-dashed p-10 text-center">
-                    <div class="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Sparkles class="size-7" /></div>
+                    <div class="flex size-14 items-center justify-center rounded-lg bg-primary/10 text-primary"><Sparkles class="size-7" /></div>
                     <div>
                         <h3 class="text-base font-bold text-primary">لا توجد إجازات في هذا العرض</h3>
                         <p class="mx-auto mt-1 max-w-md text-xs text-muted-foreground">
@@ -164,11 +159,11 @@ function cancel(id) {
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div class="min-w-0 flex-1 space-y-2">
                             <div class="flex flex-wrap items-center gap-2">
-                                <span class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+                                <span class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-semibold"
                                     :style="{ borderColor: l.leave_type?.color || 'var(--border)', color: l.leave_type?.color || 'var(--foreground)', background: `color-mix(in oklab, ${l.leave_type?.color || 'var(--muted)'} 8%, transparent)` }">
                                     {{ l.leave_type?.label_ar ?? '—' }}
                                 </span>
-                                <span :class="['inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-semibold', STATUS_PILL[statusOf(l)] ?? STATUS_PILL.draft]">
+                                <span :class="['inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-semibold', STATUS_PILL[statusOf(l)] ?? STATUS_PILL.draft]">
                                     <span :class="['size-1.5 rounded-full', STATUS_DOT[statusOf(l)] ?? STATUS_DOT.draft]"></span>
                                     {{ STATUS_LABEL[statusOf(l)] ?? statusOf(l) }}
                                 </span>
@@ -208,12 +203,12 @@ function cancel(id) {
                         <option value=""></option>
                         <option v-for="t in leaveTypes" :key="t.id" :value="t.id">{{ t.label_ar }}</option>
                     </Select>
-                    <p v-if="form.errors.leave_type_id" class="text-xs text-destructive">{{ form.errors.leave_type_id }}</p>
+                    <FieldError :message="form.errors.leave_type_id" />
                     <div class="grid grid-cols-2 gap-2">
                         <Input label="من" type="date" v-model="form.start_date" />
                         <Input label="إلى" type="date" v-model="form.end_date" />
                     </div>
-                    <p v-if="form.errors.end_date" class="text-xs text-destructive">{{ form.errors.end_date }}</p>
+                    <FieldError :message="form.errors.end_date" />
                     <Select v-if="substitutes.length" label="البديل أثناء الإجازة" v-model="form.substitute_id">
                         <option value=""></option>
                         <option v-for="s in substitutes" :key="s.id" :value="s.id">{{ s.full_name }}</option>
@@ -228,7 +223,7 @@ function cancel(id) {
                     <Textarea label="سبب/ملاحظة موجزة" v-model="form.reason" class="min-h-20" />
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="open = false">إلغاء</Button>
-                        <Button :disabled="form.processing" @click="save">حفظ الإجازة</Button>
+                        <Button :loading="form.processing" @click="save">حفظ الإجازة</Button>
                     </div>
                 </div>
             </Dialog>

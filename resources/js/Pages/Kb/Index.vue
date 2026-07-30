@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import KpiCard from '@/Components/KpiCard.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardContent from '@/Components/ui/CardContent.vue';
@@ -61,22 +61,19 @@ function pickCategory(id) {
 <template>
     <Head title="قاعدة المعرفة" />
     <AppShell>
-        <div class="glass-stage space-y-6">
-            <PageHero
+        <div class="space-y-4">
+            <PageHeader
                 title="قاعدة المعرفة"
-                subtitle="مصدر موحد للأسئلة الشائعة، الإجراءات، والحلول التقنية المعتمدة"
-                :icon="BookOpen">
+                subtitle="مصدر موحد للأسئلة الشائعة، الإجراءات، والحلول التقنية المعتمدة">
                 <template #actions>
-                    <Button v-if="can.approve || can.manage" href="/knowledge-base/manage" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20">
+                    <Button v-if="can.approve || can.manage" href="/knowledge-base/manage" variant="outline">
                         <BarChart3 class="size-4" /> لوحة الإدارة
                     </Button>
-                    <Button v-if="can.author" href="/knowledge-base/new"
-                        class="bg-white text-primary hover:bg-white/90">
+                    <Button v-if="can.author" href="/knowledge-base/new">
                         <Plus class="size-4" /> مقال جديد
                     </Button>
                 </template>
-            </PageHero>
+            </PageHeader>
 
             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <KpiCard label="إجمالي المقالات" :value="kpis.total ?? 0" :icon="FileText" tone="primary" />
@@ -141,7 +138,7 @@ function pickCategory(id) {
 
                     <div class="grid gap-3">
                         <Link v-for="a in articles" :key="a.id" :href="`/knowledge-base/${a.id}`"
-                            class="block rounded-xl border border-border bg-card p-4 shadow-card transition-shadow hover:shadow-elevated">
+                            class="block rounded-xl border border-border bg-card p-4 shadow-card transition-colors hover:border-primary/40">
                             <div class="flex items-start justify-between gap-3">
                                 <div class="min-w-0 flex-1 space-y-1.5">
                                     <div class="flex flex-wrap items-center gap-2">

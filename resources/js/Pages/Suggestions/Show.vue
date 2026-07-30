@@ -21,6 +21,8 @@ import {
 import { timeAgoAr, fmtFullDateTimeAr } from '@/lib/date';
 import { IDEA_STAGE, REQUEST_PRIORITY, statusLabel } from '@/lib/labels';
 
+import FieldError from '@/Components/ui/FieldError.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 const props = defineProps({
     suggestion: { type: Object, required: true },
     metrics: { type: Object, default: () => ({}) },
@@ -140,16 +142,16 @@ const stars = [1, 2, 3, 4, 5];
                     <div class="flex flex-wrap items-start justify-between gap-6">
                         <div class="min-w-0 flex-1 space-y-2.5">
                             <div class="flex flex-wrap items-center gap-2">
-                                <Badge variant="outline" class="font-mono text-[10px]">{{ s.request_number }}</Badge>
-                                <Badge :variant="statusLabel(IDEA_STAGE, s.idea_stage).tone" class="text-[10px]">
+                                <Badge variant="outline" class="font-mono text-2xs">{{ s.request_number }}</Badge>
+                                <Badge :variant="statusLabel(IDEA_STAGE, s.idea_stage).tone" class="text-2xs">
                                     {{ statusLabel(IDEA_STAGE, s.idea_stage).label }}
                                 </Badge>
-                                <Badge :variant="DECISION[s.decision]?.tone ?? 'muted'" class="text-[10px]">
+                                <Badge :variant="DECISION[s.decision]?.tone ?? 'muted'" class="text-2xs">
                                     {{ DECISION[s.decision]?.label ?? s.decision }}
                                 </Badge>
-                                <Badge v-if="s.published" variant="success" class="gap-1 text-[10px]"><Eye class="size-3" /> منشور</Badge>
-                                <Badge v-else variant="outline" class="gap-1 text-[10px]"><EyeOff class="size-3" /> غير منشور</Badge>
-                                <Badge v-if="s.comments_locked" variant="muted" class="gap-1 text-[10px]"><Lock class="size-3" /> تعليقات مقفلة</Badge>
+                                <Badge v-if="s.published" variant="success" class="gap-1 text-2xs"><Eye class="size-3" /> منشور</Badge>
+                                <Badge v-else variant="outline" class="gap-1 text-2xs"><EyeOff class="size-3" /> غير منشور</Badge>
+                                <Badge v-if="s.comments_locked" variant="muted" class="gap-1 text-2xs"><Lock class="size-3" /> تعليقات مقفلة</Badge>
                             </div>
                             <h1 class="text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">{{ s.title }}</h1>
                             <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
@@ -161,35 +163,35 @@ const stars = [1, 2, 3, 4, 5];
                         </div>
                         <!-- Metric tiles -->
                         <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                            <div class="min-w-[84px] rounded-xl border border-border bg-card/80 px-3 py-2.5 text-center backdrop-blur">
-                                <div class="flex items-center justify-center gap-1 text-[11px] text-muted-foreground"><Star class="size-3" /> تقييم</div>
+                            <div class="min-w-[84px] rounded-lg border border-border bg-card px-3 py-2.5 text-center">
+                                <div class="flex items-center justify-center gap-1 text-xs text-muted-foreground"><Star class="size-3" /> تقييم</div>
                                 <div class="text-lg font-bold tabular-nums">{{ (metrics.avg_stars ?? 0).toFixed(1) }}</div>
-                                <div class="text-[10px] text-muted-foreground">{{ metrics.ratings_count ?? 0 }} صوت</div>
+                                <div class="text-2xs text-muted-foreground">{{ metrics.ratings_count ?? 0 }} صوت</div>
                             </div>
-                            <div class="min-w-[84px] rounded-xl border border-border bg-card/80 px-3 py-2.5 text-center backdrop-blur">
-                                <div class="flex items-center justify-center gap-1 text-[11px] text-muted-foreground"><MessageSquare class="size-3" /> نقاش</div>
+                            <div class="min-w-[84px] rounded-lg border border-border bg-card px-3 py-2.5 text-center">
+                                <div class="flex items-center justify-center gap-1 text-xs text-muted-foreground"><MessageSquare class="size-3" /> نقاش</div>
                                 <div class="text-lg font-bold tabular-nums">{{ metrics.comments_count ?? 0 }}</div>
                             </div>
-                            <div class="min-w-[84px] rounded-xl border border-border bg-card/80 px-3 py-2.5 text-center backdrop-blur">
-                                <div class="flex items-center justify-center gap-1 text-[11px] text-muted-foreground"><Users class="size-3" /> مشاركون</div>
+                            <div class="min-w-[84px] rounded-lg border border-border bg-card px-3 py-2.5 text-center">
+                                <div class="flex items-center justify-center gap-1 text-xs text-muted-foreground"><Users class="size-3" /> مشاركون</div>
                                 <div class="text-lg font-bold tabular-nums">{{ metrics.unique_voters ?? 0 }}</div>
                             </div>
-                            <div class="min-w-[84px] rounded-xl border border-border bg-card/80 px-3 py-2.5 text-center backdrop-blur">
-                                <div class="flex items-center justify-center gap-1 text-[11px] text-muted-foreground"><Award class="size-3" /> RICE</div>
+                            <div class="min-w-[84px] rounded-lg border border-border bg-card px-3 py-2.5 text-center">
+                                <div class="flex items-center justify-center gap-1 text-xs text-muted-foreground"><Award class="size-3" /> RICE</div>
                                 <div class="text-lg font-bold tabular-nums">{{ metrics.rice_score ?? '—' }}</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Staff publish / lock bar -->
-                    <div v-if="isStaff" class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card/90 p-3 backdrop-blur">
+                    <div v-if="isStaff" class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
                         <div class="flex items-center gap-3">
                             <div :class="['flex size-9 items-center justify-center rounded-lg', s.published ? 'bg-success/15 text-success' : 'bg-muted text-muted-foreground']">
                                 <component :is="s.published ? Eye : EyeOff" class="size-4" />
                             </div>
                             <div class="text-sm">
                                 <div class="font-semibold leading-tight">{{ s.published ? 'المقترح منشور للعملاء' : 'المقترح غير منشور للعملاء' }}</div>
-                                <div class="text-[11px] text-muted-foreground">
+                                <div class="text-xs text-muted-foreground">
                                     <template v-if="s.published">نُشر {{ s.published_at ? timeAgoAr(s.published_at) : '—' }}<template v-if="s.published_by_name"> بواسطة {{ s.published_by_name }}</template></template>
                                     <template v-else>بمجرد النشر، سيتمكّن العملاء المشتركون من التصويت والتعليق والتقييم.</template>
                                 </div>
@@ -216,7 +218,7 @@ const stars = [1, 2, 3, 4, 5];
                                 <div class="mb-2 text-xs font-semibold text-muted-foreground">مسار الفكرة</div>
                                 <div class="flex items-center gap-1 overflow-x-auto pb-1">
                                     <template v-for="(st, i) in STAGE_ORDER" :key="st">
-                                        <div :class="['shrink-0 rounded-md border px-2.5 py-1 text-[11px] font-medium',
+                                        <div :class="['shrink-0 rounded-md border px-2.5 py-1 text-xs font-medium',
                                             !rejected && i === stageIdx ? 'border-primary bg-primary text-primary-foreground'
                                             : !rejected && i < stageIdx ? 'border-primary/30 bg-primary/10 text-primary'
                                             : 'border-border bg-muted text-muted-foreground']">
@@ -285,12 +287,12 @@ const stars = [1, 2, 3, 4, 5];
                                 </div>
                             </div>
 
-                            <div v-if="!roots.length" class="py-6 text-center text-sm text-muted-foreground">لا توجد تعليقات بعد.</div>
+                            <EmptyState v-if="!roots.length" size="sm" title="لا توجد تعليقات بعد." />
                             <div v-for="c in roots" :key="c.id" class="space-y-2">
                                 <div class="rounded-lg border border-border bg-card p-3">
                                     <div class="mb-1 flex items-center justify-between gap-3">
                                         <span class="text-sm font-medium">{{ c.author_name ?? 'مستخدم' }}</span>
-                                        <span class="text-[11px] text-muted-foreground">{{ timeAgoAr(c.created_at) }}</span>
+                                        <span class="text-xs text-muted-foreground">{{ timeAgoAr(c.created_at) }}</span>
                                     </div>
                                     <div v-if="c.deleted_at" class="text-sm italic text-muted-foreground">[تم حذف هذا التعليق]</div>
                                     <div v-else class="whitespace-pre-wrap text-sm">{{ c.body }}</div>
@@ -308,7 +310,7 @@ const stars = [1, 2, 3, 4, 5];
                                 <div v-for="k in childrenOf(c.id)" :key="k.id" class="mr-6 rounded-lg border border-border bg-muted/30 p-3">
                                     <div class="mb-1 flex items-center justify-between gap-3">
                                         <span class="text-sm font-medium">{{ k.author_name ?? 'مستخدم' }}</span>
-                                        <span class="text-[11px] text-muted-foreground">{{ timeAgoAr(k.created_at) }}</span>
+                                        <span class="text-xs text-muted-foreground">{{ timeAgoAr(k.created_at) }}</span>
                                     </div>
                                     <div v-if="k.deleted_at" class="text-sm italic text-muted-foreground">[تم حذف هذا التعليق]</div>
                                     <div v-else class="whitespace-pre-wrap text-sm">{{ k.body }}</div>
@@ -360,7 +362,7 @@ const stars = [1, 2, 3, 4, 5];
                             <Link v-for="d in duplicates" :key="d.id" :href="route('suggestions.show', d.id)"
                                 class="flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/20 p-2 text-xs transition-colors hover:border-primary/40">
                                 <span class="min-w-0 flex-1 truncate">{{ d.title }}</span>
-                                <Badge :variant="statusLabel(IDEA_STAGE, d.idea_stage).tone" class="shrink-0 text-[9px]">{{ statusLabel(IDEA_STAGE, d.idea_stage).label }}</Badge>
+                                <Badge :variant="statusLabel(IDEA_STAGE, d.idea_stage).tone" class="shrink-0 text-2xs">{{ statusLabel(IDEA_STAGE, d.idea_stage).label }}</Badge>
                             </Link>
                         </CardContent>
                     </Card>
@@ -376,19 +378,19 @@ const stars = [1, 2, 3, 4, 5];
                             </div>
                             <div class="flex flex-wrap gap-1">
                                 <button v-for="(t, i) in REASON_TEMPLATES" :key="i" type="button"
-                                    class="rounded-md border border-dashed border-border px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+                                    class="rounded-md border border-dashed border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
                                     @click="stageForm.reason = t">
                                     {{ t.length > 32 ? t.slice(0, 32) + '…' : t }}
                                 </button>
                             </div>
                             <Textarea label="سبب القرار / ملاحظات للفريق" v-model="stageForm.reason" maxlength="2000" class="min-h-16" />
-                            <Button size="sm" class="w-full" :disabled="stageForm.processing" @click="saveStage">حفظ المرحلة</Button>
+                            <Button size="sm" class="w-full" :loading="stageForm.processing" @click="saveStage">حفظ المرحلة</Button>
                             <Separator />
                             <div class="grid grid-cols-2 gap-2">
-                                <Button size="sm" variant="success" :disabled="stageForm.processing" @click="decide('accepted')">قبول</Button>
-                                <Button size="sm" variant="destructive" :disabled="stageForm.processing" @click="decide('rejected')">رفض</Button>
-                                <Button size="sm" variant="outline" :disabled="stageForm.processing" @click="decide('postponed')">تأجيل</Button>
-                                <Button size="sm" variant="outline" :disabled="stageForm.processing" @click="decide('merged')"><GitMerge class="size-4" /> دمج</Button>
+                                <Button size="sm" variant="success" :loading="stageForm.processing" @click="decide('accepted')">قبول</Button>
+                                <Button size="sm" variant="destructive" :loading="stageForm.processing" @click="decide('rejected')">رفض</Button>
+                                <Button size="sm" variant="outline" :loading="stageForm.processing" @click="decide('postponed')">تأجيل</Button>
+                                <Button size="sm" variant="outline" :loading="stageForm.processing" @click="decide('merged')"><GitMerge class="size-4" /> دمج</Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -416,8 +418,8 @@ const stars = [1, 2, 3, 4, 5];
                                 <p class="text-xs text-primary/70">درجة RICE المحتسبة</p>
                                 <p class="text-2xl font-bold tabular-nums text-primary">{{ liveRice }}</p>
                             </div>
-                            <p v-if="riceForm.errors.confidence" class="text-xs text-destructive">{{ riceForm.errors.confidence }}</p>
-                            <Button size="sm" class="w-full" :disabled="riceForm.processing" @click="saveScore">حفظ التقييم</Button>
+                            <FieldError :message="riceForm.errors.confidence" />
+                            <Button size="sm" class="w-full" :loading="riceForm.processing" @click="saveScore">حفظ التقييم</Button>
                         </CardContent>
                     </Card>
 
@@ -446,7 +448,7 @@ const stars = [1, 2, 3, 4, 5];
                                                 <template v-if="l.action === 'stage_change'">: {{ statusLabel(IDEA_STAGE, l.from_value).label }} ← {{ statusLabel(IDEA_STAGE, l.to_value).label }}</template>
                                                 <template v-else-if="l.action === 'decision'">: {{ DECISION[l.to_value]?.label ?? l.to_value }}</template>
                                             </span>
-                                            <span class="text-[11px] text-muted-foreground">{{ timeAgoAr(l.created_at) }}</span>
+                                            <span class="text-xs text-muted-foreground">{{ timeAgoAr(l.created_at) }}</span>
                                         </div>
                                         <div class="mt-0.5 text-muted-foreground">بواسطة: {{ l.actor_name ?? 'النظام' }}</div>
                                         <div v-if="l.notes" class="mt-1 italic text-muted-foreground">"{{ l.notes }}"</div>

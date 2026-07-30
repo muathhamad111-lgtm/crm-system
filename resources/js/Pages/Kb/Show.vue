@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
 import CardTitle from '@/Components/ui/CardTitle.vue';
@@ -72,36 +72,32 @@ function feedback(helpful) {
 <template>
     <Head :title="a.title" />
     <AppShell>
-        <div class="glass-stage space-y-6">
-            <PageHero :title="a.title" :subtitle="a.summary || undefined" :icon="BookOpen">
+        <div class="space-y-4">
+            <PageHeader :title="a.title" :subtitle="a.summary || undefined">
                 <template #actions>
-                    <Button href="/knowledge-base" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20">
+                    <Button href="/knowledge-base" variant="outline">
                         <ArrowRight class="size-4" /> عودة
                     </Button>
-                    <Button v-if="canEdit" :href="`/knowledge-base/${a.id}/edit`" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20">
+                    <Button v-if="canEdit" :href="`/knowledge-base/${a.id}/edit`" variant="outline">
                         <Edit class="size-4" /> تعديل
                     </Button>
-                    <Button v-if="can.approve && a.status === 'in_review'" class="bg-white text-primary hover:bg-white/90"
+                    <Button v-if="can.approve && a.status === 'in_review'"
                         @click="setStatus('approved')">
                         <CheckCircle2 class="size-4" /> اعتماد
                     </Button>
-                    <Button v-if="can.approve && a.status === 'approved'" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20" @click="setStatus('archived')">
+                    <Button v-if="can.approve && a.status === 'approved'" variant="outline" @click="setStatus('archived')">
                         <Archive class="size-4" /> أرشفة
                     </Button>
-                    <Button v-if="can.approve && a.status === 'archived'" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20" @click="setStatus('draft')">
+                    <Button v-if="can.approve && a.status === 'archived'" variant="outline" @click="setStatus('draft')">
                         <RotateCcw class="size-4" /> استعادة
                     </Button>
                     <Button v-if="can.author && a.status === 'draft' && a.author_id === currentUserId"
-                        variant="outline" class="bg-white/12 border-white/25 text-white hover:bg-white/20"
+                        variant="outline"
                         @click="setStatus('in_review')">
                         <Send class="size-4" /> إرسال للمراجعة
                     </Button>
                 </template>
-            </PageHero>
+            </PageHeader>
 
             <div class="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">
                 <!-- Main content -->

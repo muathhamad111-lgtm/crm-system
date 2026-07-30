@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import StatCard from '@/Components/ui/StatCard.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
@@ -31,6 +33,8 @@ import { num } from '@/lib/utils';
 import { useClientSort } from '@/lib/useSort';
 import { REQUEST_PRIORITY, IDEA_STAGE, statusLabel } from '@/lib/labels';
 import { fmtDateAr, fmtFullDateTimeAr, timeAgoAr } from '@/lib/date';
+import FieldError from '@/Components/ui/FieldError.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 import {
     ArrowLeft, Mail, Phone, MapPin, Briefcase, Hash, FileText, Users, Package, Star,
     Activity, AlertTriangle, UserCircle2, Gauge, Lightbulb, TrendingUp, Building2,
@@ -62,24 +66,23 @@ const sat = computed(() => props.stats.satisfaction ?? {});
 const sug = computed(() => props.stats.suggestions ?? {});
 const stats = props.stats;
 
-const TAB_CLS = 'rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow';
-
-const heroChips = computed(() => [
-    { label: 'اشتراكات نشطة', value: num(activeSubs.value), icon: Users, ring: 'bg-success text-success-foreground' },
-    {
-        label: 'طلبات متأخرة', value: num(req.value.overdue ?? 0), icon: AlertTriangle,
-        ring: (req.value.overdue ?? 0) > 0 ? 'bg-destructive text-destructive-foreground' : 'bg-white/20 text-white',
-    },
-]);
-
 const kpis = computed(() => [
-    { label: 'إجمالي الطلبات', value: num(req.value.total ?? 0), icon: FileText, chip: 'bg-primary/10 text-primary', numCls: 'text-primary' },
-    { label: 'مفتوحة', value: num(req.value.open ?? 0), icon: Activity, chip: (req.value.open ?? 0) > 0 ? 'bg-warning/15 text-warning' : 'bg-muted text-muted-foreground', numCls: 'text-foreground' },
-    { label: 'متأخرة', value: num(req.value.overdue ?? 0), icon: AlertTriangle, chip: (req.value.overdue ?? 0) > 0 ? 'bg-destructive/15 text-destructive' : 'bg-muted text-muted-foreground', numCls: (req.value.overdue ?? 0) > 0 ? 'text-destructive' : 'text-foreground' },
-    { label: 'جهات الاتصال', value: num(stats.contacts ?? 0), icon: UserCircle2, chip: 'bg-accent/15 text-accent', numCls: 'text-accent' },
-    { label: 'رضا العميل', value: sat.value.csat != null ? `${sat.value.csat}/5` : '—', sub: `${num(sat.value.count ?? 0)} تقييم`, icon: Star, chip: 'bg-warning/15 text-warning', numCls: 'text-warning' },
-    { label: 'التزام SLA', value: req.value.sla_pct != null ? `${req.value.sla_pct}%` : '—', icon: Gauge, chip: (req.value.sla_pct ?? 0) >= 80 ? 'bg-success/15 text-success' : 'bg-warning/15 text-warning', numCls: (req.value.sla_pct ?? 0) >= 80 ? 'text-success' : 'text-warning' },
-    { label: 'المقترحات', value: num(sug.value.total ?? 0), sub: `${num(sug.value.accepted ?? 0)} مقبول`, icon: Lightbulb, chip: 'bg-accent/15 text-accent', numCls: 'text-accent' },
+    { label: 'إجمالي الطلبات', value: num(req.value.total ?? 0), icon: FileText, tone: 'primary' },
+    { label: 'مفتوحة', value: num(req.value.open ?? 0), icon: Activity, tone: (req.value.open ?? 0) > 0 ? 'warning' : 'muted' },
+    { label: 'متأخرة', value: num(req.value.overdue ?? 0), icon: AlertTriangle, tone: (req.value.overdue ?? 0) > 0 ? 'destructive' : 'muted' },
+    { label: 'جهات الاتصال', value: num(stats.contacts ?? 0), icon: UserCircle2, tone: 'accent' },
+    {
+        label: 'رضا العميل', value: sat.value.csat != null ? `${sat.value.csat}/5` : '—',
+        hint: `${num(sat.value.count ?? 0)} تقييم`, icon: Star, tone: 'warning',
+    },
+    {
+        label: 'التزام SLA', value: req.value.sla_pct != null ? `${req.value.sla_pct}%` : '—',
+        icon: Gauge, tone: (req.value.sla_pct ?? 0) >= 80 ? 'success' : 'warning',
+    },
+    {
+        label: 'المقترحات', value: num(sug.value.total ?? 0),
+        hint: `${num(sug.value.accepted ?? 0)} مقبول`, icon: Lightbulb, tone: 'accent',
+    },
 ]);
 
 const SUB_STATUS = {
@@ -300,109 +303,70 @@ function deleteAttachment(at) {
 <template>
     <Head :title="profile.full_name || 'ملف العميل'" />
     <AppShell>
-        <div class="space-y-5">
-            <!-- Immersive hero -->
-            <section class="relative overflow-hidden rounded-3xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="pointer-events-none absolute -right-16 -top-24 size-80 rounded-full bg-accent/30 blur-3xl"></div>
-                <div class="pointer-events-none absolute -bottom-20 left-1/3 size-72 rounded-full bg-primary/50 blur-3xl"></div>
-                <div class="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                    <div class="flex min-w-0 flex-1 items-start gap-4">
-                        <div class="flex size-20 shrink-0 items-center justify-center rounded-2xl border border-white/25 bg-white/15 text-3xl font-black backdrop-blur-md">
-                            {{ initial }}
-                        </div>
-                        <div class="min-w-0">
-                            <div class="mb-2 inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-white/75">
-                                <span class="relative flex size-2">
-                                    <span v-if="!profile.suspended" class="absolute inline-flex size-full animate-ping rounded-full bg-success/70"></span>
-                                    <span :class="`relative inline-flex size-2 rounded-full ${profile.suspended ? 'bg-destructive' : 'bg-success'}`"></span>
-                                </span>
-                                ملف العميل · بطاقة شاملة
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{{ profile.full_name || 'ملف العميل' }}</h1>
-                                <Badge v-if="profile.account_number" variant="outline" class="border-white/30 bg-white/15 font-mono text-white">
-                                    <Hash class="size-3" /> {{ profile.account_number }}
-                                </Badge>
-                                <Badge v-if="profile.tier && profile.tier !== 'standard'" variant="warning" class="uppercase">{{ TIER[profile.tier] ?? profile.tier }}</Badge>
-                                <Badge v-if="profile.suspended" variant="destructive">موقوف</Badge>
-                                <Badge v-if="activeSubs > 0" class="border border-success/40 bg-success/25 text-white">مشترك نشط</Badge>
-                                <Badge v-else variant="outline" class="border-white/20 bg-white/10 text-white/80">بدون اشتراك نشط</Badge>
-                            </div>
-                            <div class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/80 sm:text-sm" dir="ltr">
-                                <a v-if="profile.email" :href="`mailto:${profile.email}`" class="flex items-center gap-1.5 hover:text-white">
-                                    <Mail class="size-3.5" /> {{ profile.email }}
-                                </a>
-                                <a v-if="profile.phone" :href="`tel:${profile.phone}`" class="flex items-center gap-1.5 hover:text-white">
-                                    <Phone class="size-3.5" /> {{ profile.phone }}
-                                </a>
-                                <span v-if="profile.city || profile.region" class="flex items-center gap-1.5">
-                                    <MapPin class="size-3.5" /> {{ [profile.city, profile.region].filter(Boolean).join('، ') }}
-                                </span>
-                            </div>
-                            <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-white/65">
-                                <span v-if="profile.business_field" class="inline-flex items-center gap-1">
-                                    <Briefcase class="size-3" /> {{ profile.business_field }}
-                                </span>
-                                <span>عضو منذ {{ fmtDateAr(profile.created_at) }}</span>
-                            </div>
-                        </div>
-                    </div>
+        <div>
+            <PageHeader :title="profile.full_name || 'ملف العميل'" :trail="[{ label: 'ملف العميل' }]">
+                <template #badge>
+                    <Badge v-if="profile.account_number" variant="outline">
+                        <Hash class="size-3" /> {{ profile.account_number }}
+                    </Badge>
+                    <Badge v-if="profile.tier && profile.tier !== 'standard'" variant="warning">{{ TIER[profile.tier] ?? profile.tier }}</Badge>
+                    <Badge v-if="profile.suspended" variant="destructive" dot>موقوف</Badge>
+                    <Badge v-else-if="activeSubs > 0" variant="success" dot>مشترك نشط</Badge>
+                    <Badge v-else variant="muted">بدون اشتراك نشط</Badge>
+                </template>
+                <template #actions>
+                    <Button v-if="isStaff" variant="outline" @click="openAccount"><Pencil class="size-4" /> تعديل البيانات</Button>
+                    <Button :href="route('customers.index')" variant="ghost-muted"><ArrowLeft class="size-4" /> رجوع للعملاء</Button>
+                </template>
 
-                    <div class="flex shrink-0 flex-wrap gap-2.5">
-                        <div v-for="chip in heroChips" :key="chip.label"
-                            class="flex min-w-[150px] items-center gap-3 rounded-2xl border border-white/15 bg-white/12 px-3.5 py-2.5 backdrop-blur-md">
-                            <span :class="`flex size-9 shrink-0 items-center justify-center rounded-xl shadow-inner ${chip.ring}`">
-                                <component :is="chip.icon" class="size-4" />
+                <!-- Identity card: who this customer is, at a glance -->
+                <div class="flex flex-wrap items-start gap-4 rounded-lg border border-border bg-card p-4">
+                    <span class="flex size-14 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-2xl font-bold text-primary" aria-hidden="true">
+                        {{ initial }}
+                    </span>
+                    <div class="min-w-0 flex-1 space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm" dir="ltr">
+                            <a v-if="profile.email" :href="`mailto:${profile.email}`" class="flex items-center gap-1.5 text-foreground hover:text-primary">
+                                <Mail class="size-3.5 shrink-0 text-muted-foreground" /> {{ profile.email }}
+                            </a>
+                            <a v-if="profile.phone" :href="`tel:${profile.phone}`" class="flex items-center gap-1.5 text-foreground hover:text-primary">
+                                <Phone class="size-3.5 shrink-0 text-muted-foreground" /> {{ profile.phone }}
+                            </a>
+                            <span v-if="profile.city || profile.region" class="flex items-center gap-1.5 text-foreground">
+                                <MapPin class="size-3.5 shrink-0 text-muted-foreground" /> {{ [profile.city, profile.region].filter(Boolean).join('، ') }}
                             </span>
-                            <div class="min-w-0">
-                                <div class="text-[10px] uppercase tracking-wider text-white/70">{{ chip.label }}</div>
-                                <div class="mt-0.5 text-lg font-extrabold tabular-nums text-white">{{ chip.value }}</div>
-                            </div>
                         </div>
-                        <div class="flex flex-col gap-2 self-start">
-                            <button v-if="isStaff" type="button" @click="openAccount"
-                                class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20">
-                                <Pencil class="size-4" /> تعديل البيانات
-                            </button>
-                            <Link :href="route('customers.index')"
-                                class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/20">
-                                <ArrowLeft class="size-4" /> رجوع للعملاء
-                            </Link>
-                        </div>
+                        <p class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                            <span v-if="profile.business_field" class="inline-flex items-center gap-1">
+                                <Briefcase class="size-3" aria-hidden="true" /> {{ profile.business_field }}
+                            </span>
+                            <span>عضو منذ {{ fmtDateAr(profile.created_at) }}</span>
+                        </p>
                     </div>
                 </div>
-            </section>
+            </PageHeader>
 
+            <div class="space-y-4">
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
-                <Card v-for="k in kpis" :key="k.label" class="p-3">
-                    <div class="flex items-start gap-3">
-                        <div :class="`flex size-10 shrink-0 items-center justify-center rounded-xl ${k.chip}`">
-                            <component :is="k.icon" class="size-5" />
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{{ k.label }}</div>
-                            <div :class="`truncate text-xl font-black leading-tight tabular-nums ${k.numCls}`">{{ k.value }}</div>
-                            <div v-if="k.sub" class="mt-0.5 text-[10px] text-muted-foreground">{{ k.sub }}</div>
-                        </div>
-                    </div>
-                </Card>
+                <StatCard v-for="k in kpis" :key="k.label" :label="k.label" :value="k.value" :icon="k.icon"
+                    :tone="k.tone" :hint="k.hint ?? ''" :format-number="false" />
             </div>
 
             <Tabs model-value="overview" class="space-y-4">
-                <TabsList class="flex flex-wrap gap-1 border border-border/60 bg-card p-1">
-                    <TabsTrigger value="overview" :class="TAB_CLS">نظرة عامة</TabsTrigger>
-                    <TabsTrigger value="account" :class="TAB_CLS">بيانات العميل</TabsTrigger>
-                    <TabsTrigger value="contacts" :class="TAB_CLS">جهات التواصل ({{ num(contacts.length) }})</TabsTrigger>
-                    <TabsTrigger value="subscriptions" :class="TAB_CLS">المنتجات والاشتراكات ({{ num(subscriptions.length) }})</TabsTrigger>
-                    <TabsTrigger v-if="isStaff" value="activation" :class="TAB_CLS">مهام التفعيل ({{ num(activationTasks.length) }})</TabsTrigger>
-                    <TabsTrigger value="requests" :class="TAB_CLS">الطلبات ({{ num(req.total ?? 0) }})</TabsTrigger>
-                    <TabsTrigger value="suggestions" :class="TAB_CLS">المقترحات ({{ num(sug.total ?? 0) }})</TabsTrigger>
-                    <TabsTrigger value="meetings" :class="TAB_CLS">المواعيد</TabsTrigger>
-                    <TabsTrigger v-if="isStaff" value="internal_notes" :class="TAB_CLS">الملاحظات الداخلية</TabsTrigger>
-                    <TabsTrigger v-if="isStaff" value="attachments" :class="TAB_CLS">المرفقات ({{ num(attachments.length) }})</TabsTrigger>
-                    <TabsTrigger value="timeline" :class="TAB_CLS">سجل النشاط</TabsTrigger>
-                    <TabsTrigger value="ratings" :class="TAB_CLS">التقييمات ({{ num(sat.count ?? 0) }})</TabsTrigger>
+                <TabsList>
+                    <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+                    <TabsTrigger value="account">بيانات العميل</TabsTrigger>
+                    <TabsTrigger value="contacts">جهات التواصل ({{ num(contacts.length) }})</TabsTrigger>
+                    <TabsTrigger value="subscriptions">المنتجات والاشتراكات ({{ num(subscriptions.length) }})</TabsTrigger>
+                    <TabsTrigger v-if="isStaff" value="activation">مهام التفعيل ({{ num(activationTasks.length) }})</TabsTrigger>
+                    <TabsTrigger value="requests">الطلبات ({{ num(req.total ?? 0) }})</TabsTrigger>
+                    <TabsTrigger value="suggestions">المقترحات ({{ num(sug.total ?? 0) }})</TabsTrigger>
+                    <TabsTrigger value="meetings">المواعيد</TabsTrigger>
+                    <TabsTrigger v-if="isStaff" value="internal_notes">الملاحظات الداخلية</TabsTrigger>
+                    <TabsTrigger v-if="isStaff" value="attachments">المرفقات ({{ num(attachments.length) }})</TabsTrigger>
+                    <TabsTrigger value="timeline">سجل النشاط</TabsTrigger>
+                    <TabsTrigger value="ratings">التقييمات ({{ num(sat.count ?? 0) }})</TabsTrigger>
                 </TabsList>
 
                 <!-- Overview -->
@@ -435,7 +399,7 @@ function deleteAttachment(at) {
                                 </CardHeader>
                                 <CardContent class="space-y-3">
                                     <div>
-                                        <div class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">التصنيفات</div>
+                                        <div class="mb-2 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">التصنيفات</div>
                                         <div v-if="!topCategories.length" class="text-xs italic text-muted-foreground">لا توجد بيانات</div>
                                         <div v-else class="flex flex-wrap gap-1.5">
                                             <Badge v-for="c in topCategories" :key="c.name" variant="outline" class="gap-1 border-primary/20 bg-primary/5">
@@ -444,7 +408,7 @@ function deleteAttachment(at) {
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">المنتجات</div>
+                                        <div class="mb-2 text-2xs font-semibold uppercase tracking-wider text-muted-foreground">المنتجات</div>
                                         <div v-if="!topProducts.length" class="text-xs italic text-muted-foreground">لا توجد بيانات</div>
                                         <div v-else class="flex flex-wrap gap-1.5">
                                             <Badge v-for="p in topProducts" :key="p.name" variant="outline" class="gap-1 border-accent/20 bg-accent/5">
@@ -510,7 +474,7 @@ function deleteAttachment(at) {
                                 <span class="font-semibold text-foreground">{{ profile.last_contact_at ? fmtDateAr(profile.last_contact_at) : '—' }}</span>
                             </div>
                             <div v-if="isStaff && profile.internal_notes" class="mt-2 border-t border-dashed pt-2">
-                                <div class="mb-1 flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                                <div class="mb-1 flex items-center gap-1 text-2xs uppercase tracking-wider text-muted-foreground">
                                     <StickyNote class="size-3" /> ملاحظات داخلية (للموظفين فقط)
                                 </div>
                                 <div class="whitespace-pre-wrap rounded-lg border border-warning/20 bg-warning/5 p-2 text-sm text-foreground">{{ profile.internal_notes }}</div>
@@ -559,7 +523,7 @@ function deleteAttachment(at) {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                            <div v-else class="p-8 text-center text-sm text-muted-foreground">لا توجد جهات تواصل مسجّلة.</div>
+                            <EmptyState v-else size="sm" title="لا توجد جهات تواصل مسجّلة." />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -601,9 +565,7 @@ function deleteAttachment(at) {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                            <div v-else class="p-8 text-center text-sm text-muted-foreground">
-                                لا توجد اشتراكات مسجّلة لهذا العميل. ستظهر هنا تلقائياً عند ربط منصة العملاء.
-                            </div>
+                            <EmptyState v-else size="sm" title="لا توجد اشتراكات مسجّلة لهذا العميل. ستظهر هنا تلقائياً عند ربط منصة العملاء." />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -616,7 +578,7 @@ function deleteAttachment(at) {
                             <Button size="sm" @click="openTask()"><Plus class="size-3.5" /> إضافة مهمة</Button>
                         </CardHeader>
                         <CardContent class="space-y-2">
-                            <div v-if="!activationTasks.length" class="p-8 text-center text-sm text-muted-foreground">لا توجد مهام تفعيل.</div>
+                            <EmptyState v-if="!activationTasks.length" size="sm" title="لا توجد مهام تفعيل." />
                             <div v-for="t in activationTasks" :key="t.id"
                                 class="flex items-start justify-between gap-3 rounded-lg border border-border p-3">
                                 <div class="flex min-w-0 items-start gap-2.5">
@@ -627,8 +589,8 @@ function deleteAttachment(at) {
                                     <div class="min-w-0">
                                         <div class="font-medium" :class="isTaskDone(t.status) ? 'text-muted-foreground line-through' : 'text-foreground'">{{ t.title }}</div>
                                         <div v-if="t.description" class="mt-0.5 text-xs text-muted-foreground">{{ t.description }}</div>
-                                        <div class="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-                                            <Badge variant="outline" class="text-[10px]">{{ taskStatusLabel(t.status) }}</Badge>
+                                        <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                                            <Badge variant="outline" class="text-2xs">{{ taskStatusLabel(t.status) }}</Badge>
                                             <span v-if="t.due_date">⏳ {{ fmtDateAr(t.due_date) }}</span>
                                         </div>
                                     </div>
@@ -650,7 +612,7 @@ function deleteAttachment(at) {
                             <Link :href="`/requests?customer=${profile.id}`" class="text-xs text-primary hover:underline">عرض كل الطلبات ←</Link>
                         </CardHeader>
                         <CardContent class="p-0">
-                            <div v-if="!requests.length" class="p-8 text-center text-sm text-muted-foreground">لا توجد طلبات.</div>
+                            <EmptyState v-if="!requests.length" size="sm" title="لا توجد طلبات." />
                             <div v-else class="divide-y divide-border">
                                 <Link v-for="r in requests" :key="r.id" :href="`/requests/${r.id}`"
                                     class="flex items-start gap-3 p-3 transition hover:bg-muted/30">
@@ -668,7 +630,7 @@ function deleteAttachment(at) {
                                     </div>
                                     <div class="flex shrink-0 flex-col items-end gap-1">
                                         <StatusBadge :status="r.status" />
-                                        <span class="text-[10px] text-muted-foreground">{{ priorityLabel(r.priority) }}</span>
+                                        <span class="text-2xs text-muted-foreground">{{ priorityLabel(r.priority) }}</span>
                                     </div>
                                 </Link>
                             </div>
@@ -681,7 +643,7 @@ function deleteAttachment(at) {
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><Lightbulb class="size-5 text-accent" /> المقترحات المُقدّمة</CardTitle></CardHeader>
                         <CardContent class="p-0">
-                            <div v-if="!suggestions.length" class="p-8 text-center text-sm text-muted-foreground">لم يقدّم العميل أي مقترح بعد.</div>
+                            <EmptyState v-if="!suggestions.length" size="sm" title="لم يقدّم العميل أي مقترح بعد." />
                             <div v-else class="divide-y divide-border">
                                 <Link v-for="s in suggestions" :key="s.id" :href="`/suggestions/${s.id}`"
                                     class="flex items-start gap-3 p-3 transition hover:bg-muted/30">
@@ -689,7 +651,7 @@ function deleteAttachment(at) {
                                         <div class="flex flex-wrap items-center gap-2">
                                             <span class="font-mono text-xs text-muted-foreground">{{ s.request_number }}</span>
                                             <span class="truncate font-medium text-foreground">{{ s.title }}</span>
-                                            <Badge v-if="s.published_to_customers" variant="outline" class="text-[10px]">منشور</Badge>
+                                            <Badge v-if="s.published_to_customers" variant="outline" class="text-2xs">منشور</Badge>
                                         </div>
                                         <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                             <span v-if="s.product_name">📦 {{ s.product_name }}</span>
@@ -699,7 +661,7 @@ function deleteAttachment(at) {
                                     </div>
                                     <div class="flex shrink-0 flex-col items-end gap-1">
                                         <Badge variant="outline">{{ stageLabel(s.idea_stage) }}</Badge>
-                                        <span v-if="s.decision && s.decision !== 'pending'" class="text-[10px] text-muted-foreground">{{ s.decision }}</span>
+                                        <span v-if="s.decision && s.decision !== 'pending'" class="text-2xs text-muted-foreground">{{ s.decision }}</span>
                                     </div>
                                 </Link>
                             </div>
@@ -712,10 +674,10 @@ function deleteAttachment(at) {
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><Calendar class="size-5 text-primary" /> المواعيد والاجتماعات</CardTitle></CardHeader>
                         <CardContent class="space-y-5">
-                            <div v-if="!meetings.length" class="py-8 text-center text-sm text-muted-foreground">لا توجد مواعيد مسجلة لهذا العميل.</div>
+                            <EmptyState v-if="!meetings.length" size="sm" title="لا توجد مواعيد مسجلة لهذا العميل." />
                             <template v-else>
                                 <div v-for="section in [{ title: 'القادمة', items: upcomingMeetings }, { title: 'السابقة', items: pastMeetings }]" :key="section.title">
-                                    <div class="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                         {{ section.title }} ({{ num(section.items.length) }})
                                     </div>
                                     <div v-if="!section.items.length" class="px-2 py-3 text-xs italic text-muted-foreground">لا توجد مواعيد.</div>
@@ -724,11 +686,11 @@ function deleteAttachment(at) {
                                             <div class="flex flex-wrap items-start justify-between gap-3">
                                                 <div class="min-w-0 flex-1">
                                                     <div class="flex flex-wrap items-center gap-2">
-                                                        <Badge variant="outline" class="text-[10px]">{{ EVENT_TYPE[m.event_type] ?? m.event_type }}</Badge>
+                                                        <Badge variant="outline" class="text-2xs">{{ EVENT_TYPE[m.event_type] ?? m.event_type }}</Badge>
                                                         <span class="truncate font-semibold text-foreground">{{ m.title }}</span>
                                                     </div>
                                                     <p v-if="m.description" class="mt-1 line-clamp-2 text-xs text-muted-foreground">{{ m.description }}</p>
-                                                    <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                                                    <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                                         <span class="inline-flex items-center gap-1"><Clock class="size-3" /> {{ fmtFullDateTimeAr(m.starts_at) }}</span>
                                                         <span v-if="m.location" class="inline-flex items-center gap-1"><MapPin class="size-3" /> {{ m.location }}</span>
                                                         <a v-if="m.meeting_url" :href="m.meeting_url" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-primary hover:underline">
@@ -753,9 +715,9 @@ function deleteAttachment(at) {
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><StickyNote class="size-5 text-warning" /> الملاحظات الداخلية</CardTitle></CardHeader>
                         <CardContent class="space-y-3">
                             <Textarea v-model="notesForm.internal_notes" class="min-h-[160px]" placeholder="اكتب ملاحظات داخلية عن العميل (تظهر للموظفين فقط)..." />
-                            <div v-if="notesForm.errors.internal_notes" class="text-xs text-destructive">{{ notesForm.errors.internal_notes }}</div>
+                            <FieldError :message="notesForm.errors.internal_notes" />
                             <div class="flex justify-end">
-                                <Button :disabled="notesForm.processing" @click="submitNotes"><Save class="size-4" /> حفظ الملاحظات</Button>
+                                <Button :loading="notesForm.processing" @click="submitNotes"><Save class="size-4" /> حفظ الملاحظات</Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -775,12 +737,12 @@ function deleteAttachment(at) {
                                     <input ref="fileRef" type="file" class="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm" @change="onFile" />
                                     <Button :disabled="!attForm.file || attForm.processing" @click="submitAttachment"><Upload class="size-4" /> رفع الملف</Button>
                                 </div>
-                                <div v-if="attForm.errors.file" class="mt-1 text-xs text-destructive">{{ attForm.errors.file }}</div>
+                                <FieldError :message="attForm.errors.file" />
                                 <div v-if="attForm.progress" class="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
                                     <div class="h-full bg-primary" :style="{ width: `${attForm.progress.percentage}%` }"></div>
                                 </div>
                             </div>
-                            <div v-if="!attachments.length" class="p-8 text-center text-sm text-muted-foreground">لا توجد مرفقات.</div>
+                            <EmptyState v-if="!attachments.length" size="sm" title="لا توجد مرفقات." />
                             <div v-for="at in attachments" :key="at.id" class="flex items-center justify-between gap-3 rounded-lg border border-border p-2.5 text-sm">
                                 <a :href="at.storage_path" target="_blank" rel="noreferrer" class="flex min-w-0 items-center gap-2 hover:underline">
                                     <CheckCircle2 class="size-4 shrink-0 text-primary" />
@@ -813,7 +775,7 @@ function deleteAttachment(at) {
                     <Card>
                         <CardHeader><CardTitle class="flex items-center gap-2 text-base"><Star class="size-5 text-warning" /> تقييمات العميل</CardTitle></CardHeader>
                         <CardContent class="space-y-2">
-                            <div v-if="!ratings.length" class="p-8 text-center text-sm text-muted-foreground">لم يقم العميل بأي تقييم بعد.</div>
+                            <EmptyState v-if="!ratings.length" size="sm" title="لم يقم العميل بأي تقييم بعد." />
                             <div v-for="r in ratings" :key="r.id" class="rounded-lg border border-border bg-card/50 p-3">
                                 <div class="flex flex-wrap items-center justify-between gap-2">
                                     <div class="flex items-center gap-1">
@@ -824,12 +786,13 @@ function deleteAttachment(at) {
                                 </div>
                                 <div class="mt-1 text-xs text-muted-foreground">{{ r.request_title }}</div>
                                 <div v-if="r.notes" class="mt-1.5 rounded bg-muted/40 p-2 text-sm">{{ r.notes }}</div>
-                                <div class="mt-1 text-[10px] text-muted-foreground">{{ fmtFullDateTimeAr(r.created_at) }}</div>
+                                <div class="mt-1 text-2xs text-muted-foreground">{{ fmtFullDateTimeAr(r.created_at) }}</div>
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
             </Tabs>
+            </div>
         </div>
 
         <!-- ===================== Dialogs (staff) ===================== -->
@@ -840,7 +803,7 @@ function deleteAttachment(at) {
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
                         <Input label="الاسم الكامل" v-model="accountForm.full_name" />
-                        <div v-if="accountForm.errors.full_name" class="text-xs text-destructive">{{ accountForm.errors.full_name }}</div>
+                        <FieldError :message="accountForm.errors.full_name" />
                     </div>
                     <Input label="الهاتف" v-model="accountForm.phone" dir="ltr" />
                     <Input label="القطاع" v-model="accountForm.business_field" />
@@ -865,7 +828,7 @@ function deleteAttachment(at) {
                 <Textarea label="ملاحظات داخلية (للموظفين فقط)" v-model="accountForm.internal_notes" class="min-h-[90px]" />
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="accountOpen = false">إلغاء</Button>
-                    <Button type="submit" :disabled="accountForm.processing"><Save class="size-4" /> حفظ</Button>
+                    <Button type="submit" :loading="accountForm.processing"><Save class="size-4" /> حفظ</Button>
                 </div>
             </form>
         </Dialog>
@@ -876,13 +839,13 @@ function deleteAttachment(at) {
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
                         <Input label="الاسم الكامل" v-model="contactForm.full_name" />
-                        <div v-if="contactForm.errors.full_name" class="text-xs text-destructive">{{ contactForm.errors.full_name }}</div>
+                        <FieldError :message="contactForm.errors.full_name" />
                     </div>
                     <Input label="المسمى الوظيفي" v-model="contactForm.job_title" />
                     <Input label="القسم" v-model="contactForm.department" />
                     <div class="space-y-1">
                         <Input label="البريد الإلكتروني" v-model="contactForm.email" type="email" dir="ltr" />
-                        <div v-if="contactForm.errors.email" class="text-xs text-destructive">{{ contactForm.errors.email }}</div>
+                        <FieldError :message="contactForm.errors.email" />
                     </div>
                     <Input label="الهاتف" v-model="contactForm.phone" dir="ltr" />
                     <Input label="الجوال" v-model="contactForm.mobile" dir="ltr" />
@@ -895,7 +858,7 @@ function deleteAttachment(at) {
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="contactOpen = false">إلغاء</Button>
-                    <Button type="submit" :disabled="contactForm.processing"><Save class="size-4" /> حفظ</Button>
+                    <Button type="submit" :loading="contactForm.processing"><Save class="size-4" /> حفظ</Button>
                 </div>
             </form>
         </Dialog>
@@ -906,7 +869,7 @@ function deleteAttachment(at) {
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
                         <Input label="اسم المنتج" v-model="subForm.product_name" />
-                        <div v-if="subForm.errors.product_name" class="text-xs text-destructive">{{ subForm.errors.product_name }}</div>
+                        <FieldError :message="subForm.errors.product_name" />
                     </div>
                     <Input label="الباقة" v-model="subForm.plan_name" />
                     <Select label="الحالة" v-model="subForm.status">
@@ -918,7 +881,7 @@ function deleteAttachment(at) {
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="subOpen = false">إلغاء</Button>
-                    <Button type="submit" :disabled="subForm.processing"><Save class="size-4" /> حفظ</Button>
+                    <Button type="submit" :loading="subForm.processing"><Save class="size-4" /> حفظ</Button>
                 </div>
             </form>
         </Dialog>
@@ -928,7 +891,7 @@ function deleteAttachment(at) {
             <form class="space-y-3" @submit.prevent="submitTask">
                 <div class="space-y-1">
                     <Input label="العنوان" v-model="taskForm.title" />
-                    <div v-if="taskForm.errors.title" class="text-xs text-destructive">{{ taskForm.errors.title }}</div>
+                    <FieldError :message="taskForm.errors.title" />
                 </div>
                 <Textarea label="الوصف" v-model="taskForm.description" class="min-h-[80px]" />
                 <div class="grid gap-3 sm:grid-cols-3">
@@ -940,7 +903,7 @@ function deleteAttachment(at) {
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="taskOpen = false">إلغاء</Button>
-                    <Button type="submit" :disabled="taskForm.processing"><Save class="size-4" /> حفظ</Button>
+                    <Button type="submit" :loading="taskForm.processing"><Save class="size-4" /> حفظ</Button>
                 </div>
             </form>
         </Dialog>
@@ -959,13 +922,13 @@ function deleteAttachment(at) {
                     </Select>
                     <div class="space-y-1">
                         <Input label="الموضوع" v-model="activityForm.subject" />
-                        <div v-if="activityForm.errors.subject" class="text-xs text-destructive">{{ activityForm.errors.subject }}</div>
+                        <FieldError :message="activityForm.errors.subject" />
                     </div>
                 </div>
                 <Textarea label="التفاصيل" v-model="activityForm.summary" class="min-h-[90px]" />
                 <div class="flex justify-end gap-2 pt-1">
                     <Button type="button" variant="outline" @click="activityOpen = false">إلغاء</Button>
-                    <Button type="submit" :disabled="activityForm.processing"><Save class="size-4" /> تسجيل</Button>
+                    <Button type="submit" :loading="activityForm.processing"><Save class="size-4" /> تسجيل</Button>
                 </div>
             </form>
         </Dialog>

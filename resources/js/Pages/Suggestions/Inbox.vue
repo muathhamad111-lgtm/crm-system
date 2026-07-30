@@ -13,6 +13,8 @@ import SortableTh from '@/Components/ui/SortableTh.vue';
 import { timeAgoAr } from '@/lib/date';
 import { IDEA_STAGE, statusLabel } from '@/lib/labels';
 import { useClientSort } from '@/lib/useSort';
+import PageHeader from '@/Components/PageHeader.vue';
+import { num } from '@/lib/utils';
 import {
     Inbox, Plus, Search, Sparkles, Loader2, Clock, AlertTriangle, CheckCircle2,
     RotateCcw, XCircle, MessageSquare, ThumbsUp, ChevronLeft, Star, Calendar,
@@ -101,29 +103,25 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => props.suggestio
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">صندوق المقترحات · فريق الدعم · {{ suggestions.length }} معروض</p>
-                        <h1 class="mt-1 text-2xl font-bold">صندوق المقترحات</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">تابع وعالج مقترحات العملاء — استخدم البطاقات السريعة للفلترة.</p>
-                    </div>
-                    <Button :href="route('suggestions.create')" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm">
-                        <Plus class="size-4" /> مقترح جديد
-                    </Button>
-                </div>
+            <PageHeader title="صندوق المقترحات"
+                subtitle="تابع وعالج مقترحات العملاء — استخدم البطاقات السريعة للفلترة.">
+                <template #badge><Badge variant="muted">{{ num(suggestions.length) }} معروض</Badge></template>
+                <template #actions>
+                    <Button :href="route('suggestions.create')"><Plus class="size-4" /> مقترح جديد</Button>
+                </template>
 
-                <!-- KPI stat pills -->
-                <div class="relative mt-5 flex flex-wrap gap-2">
-                    <button v-for="p in pills" :key="p.key" @click="p.go()" :data-active="p.active"
-                        :class="['group flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm backdrop-blur-sm transition-all hover:bg-white/20', pillTones[p.tone]]">
-                        <component :is="p.icon" class="size-4 opacity-80" />
-                        <span>{{ p.label }}</span>
-                        <span class="rounded-full bg-black/20 px-1.5 text-xs font-bold tabular-nums">{{ p.value }}</span>
-                    </button>
+                <div class="table-scroll -mx-1 px-1">
+                    <div class="flex w-max min-w-full items-center gap-1.5">
+                        <button v-for="p in pills" :key="p.key" type="button" @click="p.go()"
+                            :data-active="p.active" :aria-pressed="p.active"
+                            :class="['inline-flex shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground data-[active=true]:border-transparent', pillTones[p.tone]]">
+                            <component :is="p.icon" class="size-3.5" aria-hidden="true" />
+                            <span>{{ p.label }}</span>
+                            <span class="rounded-full bg-current/15 px-1.5 text-xs font-bold tabular-nums">{{ p.value }}</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </PageHeader>
 
             <!-- Filter bar -->
             <Card class="p-3">
@@ -195,23 +193,23 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => props.suggestio
                             <div class="min-w-0 flex-1">
                                 <!-- Badges row -->
                                 <div class="mb-1.5 flex flex-wrap items-center gap-2">
-                                    <span class="rounded border border-primary/20 bg-primary/5 px-1.5 py-0.5 font-mono text-[11px] font-bold text-primary">{{ s.request_number }}</span>
+                                    <span class="rounded border border-primary/20 bg-primary/5 px-1.5 py-0.5 font-mono text-xs font-bold text-primary">{{ s.request_number }}</span>
                                     <StatusBadge :status="s.status" />
-                                    <Badge :variant="stageBadge(s.idea_stage).tone" class="text-[10px]">{{ stageBadge(s.idea_stage).label }}</Badge>
+                                    <Badge :variant="stageBadge(s.idea_stage).tone" class="text-2xs">{{ stageBadge(s.idea_stage).label }}</Badge>
                                     <PriorityBadge :priority="s.priority" />
-                                    <Badge v-if="s.reopened_count > 0" variant="warning" class="gap-1 text-[10px]">
+                                    <Badge v-if="s.reopened_count > 0" variant="warning" class="gap-1 text-2xs">
                                         <RotateCcw class="size-3" /> أُعيد فتحه ×{{ s.reopened_count }}
                                     </Badge>
-                                    <Badge v-if="s.overdue" variant="destructive" class="gap-1 text-[10px]">
+                                    <Badge v-if="s.overdue" variant="destructive" class="gap-1 text-2xs">
                                         <AlertTriangle class="size-3" /> متأخر
                                     </Badge>
                                 </div>
                                 <!-- Title -->
-                                <div class="truncate text-[15px] font-semibold leading-tight text-foreground">{{ s.title }}</div>
+                                <div class="truncate text-lg font-semibold leading-tight text-foreground">{{ s.title }}</div>
                                 <!-- Description -->
                                 <p v-if="s.description" class="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{{ s.description }}</p>
                                 <!-- Meta -->
-                                <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                                <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                                     <span class="inline-flex items-center gap-1"><Calendar class="size-3" /> {{ timeAgoAr(s.created_at) }}</span>
                                     <span v-if="s.category" class="inline-flex items-center gap-1">
                                         <span class="size-1.5 rounded-full" :style="{ background: s.category_color || 'var(--muted-foreground)' }"></span>
@@ -233,10 +231,10 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => props.suggestio
                             <!-- Side metrics -->
                             <div class="flex shrink-0 flex-col items-end justify-between gap-2">
                                 <div class="flex items-center gap-1.5">
-                                    <span class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/60 px-2 py-1 text-[11px] font-semibold tabular-nums text-foreground/80" title="نقاط الدعم">
+                                    <span class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/60 px-2 py-1 text-xs font-semibold tabular-nums text-foreground/80" title="نقاط الدعم">
                                         <ThumbsUp class="size-3" /> {{ s.support_count ?? 0 }}
                                     </span>
-                                    <span class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/60 px-2 py-1 text-[11px] font-semibold tabular-nums text-foreground/80" title="عدد التعليقات">
+                                    <span class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/60 px-2 py-1 text-xs font-semibold tabular-nums text-foreground/80" title="عدد التعليقات">
                                         <MessageSquare class="size-3" /> {{ s.comments_count ?? 0 }}
                                     </span>
                                 </div>

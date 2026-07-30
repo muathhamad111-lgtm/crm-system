@@ -12,6 +12,8 @@ import Dialog from '@/Components/ui/Dialog.vue';
 import Badge from '@/Components/ui/Badge.vue';
 import { APPOINTMENT_STATUS, statusLabel } from '@/lib/labels';
 import { fmtTimeAr } from '@/lib/date';
+import PageHeader from '@/Components/PageHeader.vue';
+import StatCard from '@/Components/ui/StatCard.vue';
 import {
     CalendarDays, Plus, MapPin, Video, Phone, GraduationCap, Workflow, HelpCircle,
     Clock, CalendarClock, CheckCircle2, Hourglass, Search, Hash, RotateCcw, Share2,
@@ -191,37 +193,22 @@ function submitCancel() {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">بوابة العميل · مواعيدك</p>
-                        <h1 class="mt-1 text-2xl font-bold">مواعيدي</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">إدارة كاملة لمواعيدك مع الفريق: اعرض، أعد الجدولة، ألغِ، وزامنها مع تقويمك المفضّل.</p>
-                    </div>
-                    <Button :href="route('appointments.create')" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm">
-                        <Plus class="size-4" /> حجز موعد جديد
-                    </Button>
-                </div>
+            <PageHeader title="مواعيدي"
+                subtitle="إدارة كاملة لمواعيدك مع الفريق: اعرض، أعد الجدولة، ألغِ، وزامنها مع تقويمك المفضّل.">
+                <template #actions>
+                    <Button :href="route('appointments.create')"><Plus class="size-4" /> حجز موعد جديد</Button>
+                </template>
 
-                <!-- Hero stats -->
-                <div class="relative mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4 max-w-3xl">
-                    <div v-for="s in [
-                        { icon: CalendarClock, label: 'قادمة', value: stats.upcoming ?? 0 },
-                        { icon: CheckCircle2, label: 'مؤكدة', value: stats.confirmed ?? 0 },
-                        { icon: Hourglass, label: 'بانتظار التأكيد', value: stats.pending ?? 0 },
-                        { icon: Clock, label: 'أقرب موعد', value: nextLabel },
-                    ]" :key="s.label" class="flex items-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 backdrop-blur-sm">
-                        <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/15">
-                            <component :is="s.icon" class="size-4" />
-                        </div>
-                        <div class="min-w-0">
-                            <div class="truncate text-[10px] font-bold uppercase tracking-wider text-white/70">{{ s.label }}</div>
-                            <div class="truncate text-sm font-bold tabular-nums">{{ s.value }}</div>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <StatCard v-for="s in [
+                        { icon: CalendarClock, label: 'قادمة', value: stats.upcoming ?? 0, tone: 'primary' },
+                        { icon: CheckCircle2, label: 'مؤكدة', value: stats.confirmed ?? 0, tone: 'success' },
+                        { icon: Hourglass, label: 'بانتظار التأكيد', value: stats.pending ?? 0, tone: 'warning' },
+                        { icon: Clock, label: 'أقرب موعد', value: nextLabel, tone: 'info' },
+                    ]" :key="s.label" :label="s.label" :value="s.value" :icon="s.icon" :tone="s.tone"
+                        :format-number="typeof s.value === 'number'" />
                 </div>
-            </div>
+            </PageHeader>
 
             <!-- Toolbar -->
             <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
@@ -241,14 +228,14 @@ function submitCancel() {
             <!-- Cards -->
             <div v-if="filtered.length" class="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <div v-for="a in filtered" :key="a.id"
-                    class="group relative flex overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-elevated">
+                    class="group relative flex overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-colors hover:border-primary/40">
                     <!-- date strip -->
                     <button @click="router.visit(route('appointments.show', a.id))"
                         class="flex w-20 shrink-0 flex-col items-center justify-center text-white sm:w-24"
                         :style="{ background: a.type?.color || 'var(--primary)' }">
-                        <span class="mb-0.5 text-[10px] font-light opacity-80">{{ monthShort(a.starts_at) }}</span>
+                        <span class="mb-0.5 text-2xs font-light opacity-80">{{ monthShort(a.starts_at) }}</span>
                         <span class="mb-1 text-3xl font-bold leading-none tracking-tighter tabular-nums">{{ dayNum(a.starts_at) }}</span>
-                        <span class="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-medium tabular-nums">{{ fmtTimeAr(a.starts_at) }}</span>
+                        <span class="rounded-full bg-white/20 px-2 py-0.5 text-2xs font-medium tabular-nums">{{ fmtTimeAr(a.starts_at) }}</span>
                     </button>
 
                     <!-- body -->
@@ -264,7 +251,7 @@ function submitCancel() {
                                         class="block truncate text-sm font-bold text-foreground transition-colors hover:text-primary">
                                         {{ a.type?.name_ar ?? 'موعد' }}
                                     </button>
-                                    <span class="mt-0.5 flex items-center gap-1 text-[10px] tabular-nums text-muted-foreground">
+                                    <span class="mt-0.5 flex items-center gap-1 text-2xs tabular-nums text-muted-foreground">
                                         <Hash class="size-2.5" />{{ a.appointment_number }}
                                     </span>
                                 </div>
@@ -274,36 +261,36 @@ function submitCancel() {
                                     <span :class="['size-1.5 rounded-full', STATUS_DOT[a.status], a.status === 'pending_confirmation' && 'animate-pulse']"></span>
                                     {{ statusLabel(APPOINTMENT_STATUS, a.status).label }}
                                 </Badge>
-                                <span class="text-[10px] font-medium text-muted-foreground">{{ relativeWhen(a.starts_at).label }}</span>
+                                <span class="text-2xs font-medium text-muted-foreground">{{ relativeWhen(a.starts_at).label }}</span>
                             </div>
                         </div>
 
                         <!-- details -->
                         <div class="mb-3 flex flex-wrap gap-x-5 gap-y-2">
                             <div class="flex flex-col">
-                                <span class="mb-0.5 text-[9px] uppercase tracking-wide text-muted-foreground">اليوم</span>
-                                <span class="text-[11px] font-semibold text-foreground">{{ dayMonth(a.starts_at) }}</span>
+                                <span class="mb-0.5 text-2xs uppercase tracking-wide text-muted-foreground">اليوم</span>
+                                <span class="text-xs font-semibold text-foreground">{{ dayMonth(a.starts_at) }}</span>
                             </div>
                             <div class="flex flex-col">
-                                <span class="mb-0.5 text-[9px] uppercase tracking-wide text-muted-foreground">المدة</span>
-                                <span class="text-[11px] font-semibold text-foreground tabular-nums">{{ a.duration_minutes }} دقيقة</span>
+                                <span class="mb-0.5 text-2xs uppercase tracking-wide text-muted-foreground">المدة</span>
+                                <span class="text-xs font-semibold text-foreground tabular-nums">{{ a.duration_minutes }} دقيقة</span>
                             </div>
                             <div v-if="a.related_request" class="flex flex-col">
-                                <span class="mb-0.5 text-[9px] uppercase tracking-wide text-muted-foreground">الطلب المرتبط</span>
-                                <span class="inline-flex w-fit items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground">
+                                <span class="mb-0.5 text-2xs uppercase tracking-wide text-muted-foreground">الطلب المرتبط</span>
+                                <span class="inline-flex w-fit items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-2xs font-medium tabular-nums text-muted-foreground">
                                     <FileText class="size-2.5" />{{ a.related_request.request_number }}
                                 </span>
                             </div>
                             <div v-if="a.location" class="flex flex-col">
-                                <span class="mb-0.5 text-[9px] uppercase tracking-wide text-muted-foreground">الموقع</span>
+                                <span class="mb-0.5 text-2xs uppercase tracking-wide text-muted-foreground">الموقع</span>
                                 <a :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.location)}`" target="_blank" rel="noreferrer"
-                                    class="inline-flex items-center gap-1 text-[10px] font-semibold text-warning hover:underline">
+                                    class="inline-flex items-center gap-1 text-2xs font-semibold text-warning hover:underline">
                                     <MapPin class="size-3 shrink-0" /><span class="max-w-[180px] truncate">{{ a.location }}</span>
                                 </a>
                             </div>
                             <div v-if="a.type?.mode === 'video' && a.meeting_url" class="flex flex-col">
-                                <span class="mb-0.5 text-[9px] uppercase tracking-wide text-muted-foreground">الاجتماع المرئي</span>
-                                <a :href="a.meeting_url" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-[10px] font-semibold text-info hover:underline">
+                                <span class="mb-0.5 text-2xs uppercase tracking-wide text-muted-foreground">الاجتماع المرئي</span>
+                                <a :href="a.meeting_url" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 text-2xs font-semibold text-info hover:underline">
                                     <Link2 class="size-3" /> انضمام للاجتماع
                                 </a>
                             </div>
@@ -318,7 +305,7 @@ function submitCancel() {
                             </div>
                             <span v-else></span>
                             <button v-if="isActive(a)" @click="cancelTarget = a"
-                                class="px-2 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-destructive">
+                                class="px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-destructive">
                                 إلغاء
                             </button>
                             <Button v-else :href="route('appointments.show', a.id)" variant="ghost" size="sm">التفاصيل</Button>
@@ -330,7 +317,7 @@ function submitCancel() {
             <!-- Empty -->
             <Card v-else>
                 <CardContent class="py-16 text-center">
-                    <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+                    <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-lg bg-primary-soft text-primary">
                         <CalendarDays class="size-7" />
                     </div>
                     <p class="mb-4 text-sm text-muted-foreground">
@@ -347,7 +334,7 @@ function submitCancel() {
                 <div class="space-y-1.5 rounded-lg border border-border bg-muted/40 p-3">
                     <div class="flex items-center justify-between gap-2">
                         <span class="truncate text-sm font-semibold">{{ reschedTarget.type?.name_ar ?? 'موعد' }}</span>
-                        <span class="shrink-0 text-[11px] tabular-nums text-muted-foreground">{{ reschedTarget.appointment_number }}</span>
+                        <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{ reschedTarget.appointment_number }}</span>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <CalendarDays class="size-3.5" /> {{ dayMonth(reschedTarget.starts_at) }} — {{ fmtTimeAr(reschedTarget.starts_at) }}
@@ -360,14 +347,14 @@ function submitCancel() {
                     <Label class="mb-1.5 block text-xs">الأوقات المتاحة</Label>
                     <div v-if="reschedHasSlots" class="max-h-56 space-y-3 overflow-y-auto">
                         <div v-for="g in GROUPS" :key="g.key" v-show="reschedSlots[g.key].length">
-                            <p class="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground">
+                            <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
                                 <component :is="g.icon" class="size-3.5" /> {{ g.label }}
                             </p>
                             <div class="flex flex-wrap gap-1.5">
                                 <button v-for="s in reschedSlots[g.key]" :key="s.starts_at" @click="reschedSlot = s.starts_at"
                                     :class="['rounded-lg border px-2.5 py-1.5 text-xs tabular-nums transition-colors',
                                         reschedSlot === s.starts_at ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card hover:bg-muted']">
-                                    <span class="block text-[10px] opacity-70">{{ monthShort(s.starts_at) }} {{ dayNum(s.starts_at) }}</span>
+                                    <span class="block text-2xs opacity-70">{{ monthShort(s.starts_at) }} {{ dayNum(s.starts_at) }}</span>
                                     {{ fmtTimeAr(s.starts_at) }}
                                 </button>
                             </div>

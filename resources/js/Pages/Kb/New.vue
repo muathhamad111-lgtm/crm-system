@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
 import CardTitle from '@/Components/ui/CardTitle.vue';
@@ -13,6 +13,7 @@ import Textarea from '@/Components/ui/Textarea.vue';
 import Select from '@/Components/ui/Select.vue';
 import { BookOpen, ArrowRight, X, Save, Send } from 'lucide-vue-next';
 
+import FieldError from '@/Components/ui/FieldError.vue';
 const props = defineProps({
     article: { type: Object, default: null },
     categories: { type: Array, default: () => [] },
@@ -75,18 +76,16 @@ function submit(status) {
 <template>
     <Head :title="editing ? 'تعديل مقال' : 'مقال جديد'" />
     <AppShell>
-        <div class="glass-stage space-y-6">
-            <PageHero
+        <div class="space-y-4">
+            <PageHeader
                 :title="editing ? 'تعديل المقال' : 'مقال جديد'"
-                :subtitle="editing ? 'حدّث محتوى المقال — التغييرات تُحفظ مباشرة' : 'أنشئ مقالاً جديداً في قاعدة المعرفة — سيبدأ كمسودة قابلة للتحرير قبل الاعتماد'"
-                :icon="BookOpen">
+                :subtitle="editing ? 'حدّث محتوى المقال — التغييرات تُحفظ مباشرة' : 'أنشئ مقالاً جديداً في قاعدة المعرفة — سيبدأ كمسودة قابلة للتحرير قبل الاعتماد'">
                 <template #actions>
-                    <Button href="/knowledge-base" variant="outline"
-                        class="bg-white/12 border-white/25 text-white hover:bg-white/20">
+                    <Button href="/knowledge-base" variant="outline">
                         <ArrowRight class="size-4" /> عودة
                     </Button>
                 </template>
-            </PageHero>
+            </PageHeader>
 
             <!-- Basic info -->
             <Card>
@@ -94,7 +93,7 @@ function submit(status) {
                 <CardContent class="space-y-4">
                     <div>
                         <Input label="العنوان *" v-model="form.title" />
-                        <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
+                        <FieldError :message="form.errors.title" />
                     </div>
                     <Textarea label="ملخص مختصر" v-model="form.summary" :rows="2" />
                     <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -152,17 +151,17 @@ function submit(status) {
                     <Textarea label="التحذيرات والتنبيهات" v-model="form.warnings" :rows="2" />
                     <div>
                         <Textarea label="المحتوى الكامل *" v-model="form.body" :rows="14" class="font-mono text-sm" />
-                        <p v-if="form.errors.body" class="mt-1 text-xs text-destructive">{{ form.errors.body }}</p>
+                        <FieldError :message="form.errors.body" />
                     </div>
                 </CardContent>
             </Card>
 
             <div class="flex justify-end gap-2">
                 <Button href="/knowledge-base" variant="outline">إلغاء</Button>
-                <Button variant="outline" :disabled="form.processing" @click="submit('draft')">
+                <Button variant="outline" :loading="form.processing" @click="submit('draft')">
                     <Save class="size-4" /> {{ editing ? 'حفظ' : 'حفظ كمسودة' }}
                 </Button>
-                <Button v-if="!editing" :disabled="form.processing" @click="submit('in_review')">
+                <Button v-if="!editing" :loading="form.processing" @click="submit('in_review')">
                     <Send class="size-4" /> إرسال للمراجعة
                 </Button>
             </div>

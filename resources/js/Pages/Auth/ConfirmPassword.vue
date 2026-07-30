@@ -5,6 +5,7 @@ import Input from '@/Components/ui/Input.vue';
 import Label from '@/Components/ui/Label.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
+import FieldError from '@/Components/ui/FieldError.vue';
 const form = useForm({ password: '' });
 const submit = () => form.post(route('password.confirm'), { onFinish: () => form.reset() });
 </script>
@@ -19,9 +20,9 @@ const submit = () => form.post(route('password.confirm'), { onFinish: () => form
         <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <Input label="كلمة المرور" type="password" v-model="form.password" required autofocus autocomplete="current-password" />
-                <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
+                <FieldError :message="form.errors.password" />
             </div>
-            <Button type="submit" class="w-full" variant="accent" :disabled="form.processing">تأكيد</Button>
+            <Button type="submit" class="w-full" variant="accent" :loading="form.processing">تأكيد</Button>
         </form>
     </GuestLayout>
 </template>

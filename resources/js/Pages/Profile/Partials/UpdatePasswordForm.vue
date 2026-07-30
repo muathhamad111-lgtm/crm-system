@@ -5,6 +5,7 @@ import Label from '@/Components/ui/Label.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
+import FieldError from '@/Components/ui/FieldError.vue';
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
 const form = useForm({ current_password: '', password: '', password_confirmation: '' });
@@ -25,18 +26,18 @@ const updatePassword = () => {
     <form @submit.prevent="updatePassword" class="space-y-4">
         <div>
             <Input label="كلمة المرور الحالية" ref="currentPasswordInput" v-model="form.current_password" type="password" autocomplete="current-password" />
-            <p v-if="form.errors.current_password" class="mt-1 text-xs text-destructive">{{ form.errors.current_password }}</p>
+            <FieldError :message="form.errors.current_password" />
         </div>
         <div>
             <Input label="كلمة المرور الجديدة" ref="passwordInput" v-model="form.password" type="password" autocomplete="new-password" />
-            <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
+            <FieldError :message="form.errors.password" />
         </div>
         <div>
             <Input label="تأكيد كلمة المرور" v-model="form.password_confirmation" type="password" autocomplete="new-password" />
-            <p v-if="form.errors.password_confirmation" class="mt-1 text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
+            <FieldError :message="form.errors.password_confirmation" />
         </div>
         <div class="flex items-center gap-3">
-            <Button type="submit" :disabled="form.processing">حفظ</Button>
+            <Button type="submit" :loading="form.processing">حفظ</Button>
             <Transition enter-active-class="transition" enter-from-class="opacity-0" leave-active-class="transition" leave-to-class="opacity-0">
                 <p v-if="form.recentlySuccessful" class="text-sm text-success">تم الحفظ.</p>
             </Transition>

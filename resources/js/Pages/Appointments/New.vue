@@ -9,6 +9,7 @@ import Label from '@/Components/ui/Label.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Badge from '@/Components/ui/Badge.vue';
 import { fmtTimeAr } from '@/lib/date';
+import PageHeader from '@/Components/PageHeader.vue';
 import {
     CalendarDays, Phone, Video, MapPin, GraduationCap, Workflow, HelpCircle,
     Check, CheckCircle2, Info, Clock, Sunrise, Sun, Moon, Sparkles, ChevronLeft, ChevronRight,
@@ -80,19 +81,14 @@ function submit() {
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">حجز موعد · رحلة مبسّطة من 4 خطوات</p>
-                        <h1 class="mt-1 text-2xl font-bold">احجز موعدك مع الفريق</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">اختر نوع الموعد المناسب، حدّد الوقت من الأوقات المتاحة فعلياً، ونؤكّد لك إلكترونياً.</p>
-                    </div>
-                    <Button :href="route('appointments.index')" variant="outline" class="border-white/30 bg-white/10 text-white hover:bg-white/20">
+            <PageHeader title="احجز موعدك مع الفريق"
+                subtitle="اختر نوع الموعد المناسب، حدّد الوقت من الأوقات المتاحة فعلياً، ونؤكّد لك إلكترونياً.">
+                <template #actions>
+                    <Button :href="route('appointments.index')" variant="outline">
                         <ArrowRight class="size-4" /> مواعيدي
                     </Button>
-                </div>
-            </div>
+                </template>
+            </PageHeader>
 
             <!-- Stepper -->
             <Card class="p-3">
@@ -107,7 +103,7 @@ function submit() {
                                 <component :is="s.icon" v-else class="size-4" />
                             </div>
                             <div class="hidden min-w-0 sm:block">
-                                <div class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">خطوة {{ s.n }}</div>
+                                <div class="text-2xs font-bold uppercase tracking-wider text-muted-foreground/70">خطوة {{ s.n }}</div>
                                 <div :class="['truncate text-xs font-bold', step === s.n ? 'text-foreground' : step > s.n ? 'text-success' : 'text-muted-foreground']">{{ s.l }}</div>
                             </div>
                         </div>
@@ -128,7 +124,7 @@ function submit() {
                             </div>
                             <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                                 <button v-for="t in types" :key="t.id" type="button" @click="pickType(t.id)"
-                                    :class="['group relative rounded-2xl border-2 p-4 text-start transition-all hover:shadow-md',
+                                    :class="['group relative rounded-lg border-2 p-4 text-start transition-all hover:shadow-md',
                                         form.type_id === t.id ? 'border-primary bg-primary-soft shadow-md' : 'border-border bg-card hover:border-primary/30']">
                                     <div v-if="form.type_id === t.id" class="absolute left-2.5 top-2.5 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
                                         <Check class="size-3" />
@@ -141,11 +137,11 @@ function submit() {
                                         <div class="min-w-0 flex-1">
                                             <div class="mb-1 flex flex-wrap items-center gap-1.5 text-sm font-bold">
                                                 {{ t.name_ar }}
-                                                <Badge v-if="t.requires_approval" variant="warning" class="text-[9px]">يحتاج موافقة</Badge>
-                                                <Badge v-if="t.requires_request_link" variant="secondary" class="text-[9px]">ربط بطلب</Badge>
+                                                <Badge v-if="t.requires_approval" variant="warning" class="text-2xs">يحتاج موافقة</Badge>
+                                                <Badge v-if="t.requires_request_link" variant="secondary" class="text-2xs">ربط بطلب</Badge>
                                             </div>
                                             <p v-if="t.description" class="line-clamp-2 text-xs text-muted-foreground">{{ t.description }}</p>
-                                            <div class="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
+                                            <div class="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
                                                 <Clock class="size-3" /> {{ t.duration_minutes }} دقيقة
                                             </div>
                                         </div>
@@ -171,7 +167,7 @@ function submit() {
                                         {{ r.label }}
                                         <Check v-if="form.reason_code === r.value" class="size-4 shrink-0 text-primary" />
                                     </div>
-                                    <div class="mt-0.5 text-[11px] text-muted-foreground">{{ r.desc }}</div>
+                                    <div class="mt-0.5 text-xs text-muted-foreground">{{ r.desc }}</div>
                                 </button>
                             </div>
                             <div v-if="form.reason_code === 'other'">
@@ -182,7 +178,7 @@ function submit() {
                                 <Label class="text-sm font-bold">
                                     ربط بطلب قائم
                                     <span v-if="selectedType.requires_request_link" class="text-destructive">*</span>
-                                    <span v-else class="text-[11px] font-normal text-muted-foreground">(اختياري)</span>
+                                    <span v-else class="text-xs font-normal text-muted-foreground">(اختياري)</span>
                                 </Label>
                                 <div v-if="!openRequests.length" class="rounded-lg bg-muted/30 py-3 text-center text-xs text-muted-foreground">
                                     لا توجد طلبات مفتوحة لديك حالياً
@@ -196,7 +192,7 @@ function submit() {
                                     <button v-for="r in openRequests" :key="r.id" type="button" @click="form.related_request_id = r.id"
                                         :class="['w-full rounded-lg border-2 p-2.5 text-start transition-all',
                                             form.related_request_id === r.id ? 'border-primary bg-primary-soft' : 'border-border hover:border-primary/30']">
-                                        <div class="text-[10px] tabular-nums text-muted-foreground">{{ r.request_number }}</div>
+                                        <div class="text-2xs tabular-nums text-muted-foreground">{{ r.request_number }}</div>
                                         <div class="truncate text-xs font-semibold">{{ r.title }}</div>
                                     </button>
                                 </div>
@@ -211,7 +207,7 @@ function submit() {
                             </div>
                             <div v-if="hasSlots" class="space-y-4">
                                 <div v-for="g in GROUPS" :key="g.key" v-show="slots[g.key].length">
-                                    <div class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                                    <div class="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                         <component :is="g.icon" class="size-3.5" /> {{ g.label }}
                                         <span class="font-normal text-muted-foreground/60">({{ slots[g.key].length }})</span>
                                     </div>
@@ -219,7 +215,7 @@ function submit() {
                                         <button v-for="s in slots[g.key]" :key="s.starts_at" type="button" @click="form.starts_at = s.starts_at"
                                             :class="['rounded-lg border-2 px-2 py-2 text-center text-sm font-bold transition-all',
                                                 form.starts_at === s.starts_at ? 'border-primary bg-primary text-primary-foreground shadow-sm' : 'border-border hover:border-primary/30 hover:bg-muted']">
-                                            <span class="block text-[10px] font-normal opacity-70">{{ shortDate(s.starts_at) }}</span>
+                                            <span class="block text-2xs font-normal opacity-70">{{ shortDate(s.starts_at) }}</span>
                                             <span class="tabular-nums">{{ fmtTimeAr(s.starts_at) }}</span>
                                         </button>
                                     </div>
@@ -245,7 +241,7 @@ function submit() {
                                     <div class="text-xs text-muted-foreground">يمكنك إلغاء الموعد لاحقاً من صفحة "مواعيدي".</div>
                                 </div>
                             </div>
-                            <div class="space-y-3 rounded-2xl border border-border bg-muted/30 p-4">
+                            <div class="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
                                 <div class="flex items-center gap-3 border-b border-border pb-3">
                                     <div class="flex size-11 items-center justify-center rounded-lg"
                                         :style="{ background: (selectedType?.color || 'var(--primary)') + '1a', color: selectedType?.color || 'var(--primary)' }">
@@ -289,35 +285,35 @@ function submit() {
                             </div>
                             <div class="space-y-3">
                                 <div>
-                                    <div class="mb-0.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+                                    <div class="mb-0.5 flex items-center gap-2 text-2xs font-bold uppercase tracking-wider">
                                         <span :class="['size-1.5 rounded-full', form.type_id ? 'bg-success' : 'bg-muted-foreground/30']"></span>
                                         <span :class="form.type_id ? 'text-success' : 'text-muted-foreground'">نوع الموعد</span>
                                     </div>
                                     <div :class="['pr-3.5 text-xs font-semibold', selectedType ? 'text-foreground' : 'text-muted-foreground/60']">{{ selectedType?.name_ar || 'لم يُحدّد بعد' }}</div>
                                 </div>
                                 <div>
-                                    <div class="mb-0.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+                                    <div class="mb-0.5 flex items-center gap-2 text-2xs font-bold uppercase tracking-wider">
                                         <span :class="['size-1.5 rounded-full', reasonValid ? 'bg-success' : 'bg-muted-foreground/30']"></span>
                                         <span :class="reasonValid ? 'text-success' : 'text-muted-foreground'">السبب</span>
                                     </div>
                                     <div :class="['pr-3.5 text-xs font-semibold', selectedReason ? 'text-foreground' : 'text-muted-foreground/60']">{{ selectedReason?.label || 'لم يُحدّد بعد' }}</div>
                                 </div>
                                 <div v-if="selectedType?.requires_request_link">
-                                    <div class="mb-0.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+                                    <div class="mb-0.5 flex items-center gap-2 text-2xs font-bold uppercase tracking-wider">
                                         <span :class="['size-1.5 rounded-full', form.related_request_id ? 'bg-success' : 'bg-muted-foreground/30']"></span>
                                         <span :class="form.related_request_id ? 'text-success' : 'text-muted-foreground'">طلب مرتبط</span>
                                     </div>
                                     <div :class="['pr-3.5 text-xs font-semibold', selectedRequest ? 'text-foreground' : 'text-muted-foreground/60']">{{ selectedRequest?.request_number || 'لم يُحدّد بعد' }}</div>
                                 </div>
                                 <div>
-                                    <div class="mb-0.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+                                    <div class="mb-0.5 flex items-center gap-2 text-2xs font-bold uppercase tracking-wider">
                                         <span :class="['size-1.5 rounded-full', form.starts_at ? 'bg-success' : 'bg-muted-foreground/30']"></span>
                                         <span :class="form.starts_at ? 'text-success' : 'text-muted-foreground'">التاريخ والوقت</span>
                                     </div>
                                     <div :class="['pr-3.5 text-xs font-semibold', form.starts_at ? 'text-foreground' : 'text-muted-foreground/60']">{{ form.starts_at ? shortDate(form.starts_at) + ' — ' + fmtTimeAr(form.starts_at) : 'لم يُحدّد بعد' }}</div>
                                 </div>
                             </div>
-                            <div class="mt-4 flex items-start gap-1.5 border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
+                            <div class="mt-4 flex items-start gap-1.5 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
                                 <Info class="mt-0.5 size-3 shrink-0 text-primary" />
                                 الأوقات المعروضة محدّثة. يمكنك إعادة الجدولة أو الإلغاء لاحقاً.
                             </div>

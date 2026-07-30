@@ -2,21 +2,27 @@
 import { ref, watch, computed } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import Card from '@/Components/ui/Card.vue';
 import Button from '@/Components/ui/Button.vue';
 import Input from '@/Components/ui/Input.vue';
 import Select from '@/Components/ui/Select.vue';
 import Textarea from '@/Components/ui/Textarea.vue';
 import Avatar from '@/Components/ui/Avatar.vue';
-import Dialog from '@/Components/ui/Dialog.vue';
-import StatusBadge from '@/Components/StatusBadge.vue';
 import Badge from '@/Components/ui/Badge.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
+import Pagination from '@/Components/ui/Pagination.vue';
+import SortableTh from '@/Components/ui/SortableTh.vue';
+import TableHead from '@/Components/ui/TableHead.vue';
+import ConfirmDialog from '@/Components/ui/ConfirmDialog.vue';
+import StatusBadge from '@/Components/StatusBadge.vue';
 import {
-    PlusCircle, Search, ExternalLink, Paperclip, Star, RotateCcw,
+    PlusCircle, ExternalLink, Paperclip, Star, RotateCcw, Inbox,
     Sparkles, Loader2, Hourglass, AlertTriangle, Clock, CheckCircle2, LayoutGrid,
     MoreHorizontal, Eye, MessageSquare, Pencil, UserCheck, Copy, Trash2,
     ChevronLeft, ArrowUpDown, ArrowUp, ArrowDown, X,
 } from 'lucide-vue-next';
+import { num } from '@/lib/utils';
 import { timeAgoAr } from '@/lib/date';
 import { REQUEST_PRIORITY, SERVICE_STATUS, statusLabel } from '@/lib/labels';
 
@@ -139,38 +145,36 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
 <template>
     <Head :title="title" />
     <AppShell>
-        <div class="space-y-4" @click="openMenu = null">
-            <!-- Gradient header -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">صندوق الطلبات · لوحة العمليات</p>
-                        <h1 class="mt-1 text-2xl font-bold">{{ title }}</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">{{ subtitle }}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ requests.total }} طلب</span>
-                        <Button href="/requests/new" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm">
-                            <PlusCircle class="size-4" /> {{ isStaff ? 'إضافة طلب لعميل' : 'طلب جديد' }}
-                        </Button>
-                    </div>
-                </div>
-                <div class="relative mt-5 flex flex-wrap gap-2">
-                    <button v-for="p in pills" :key="p.key" @click="apply({ status: p.key })" :data-active="activeStatus === p.key"
-                        :class="['group flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm backdrop-blur-sm transition-all hover:bg-white/20', pillTones[p.tone]]">
-                        <component :is="p.icon" class="size-4 opacity-80" />
-                        <span>{{ p.label }}</span>
-                        <span class="rounded-full bg-black/20 px-1.5 text-xs font-bold tabular-nums">{{ counts[p.key] ?? 0 }}</span>
-                    </button>
-                </div>
-            </div>
+        <div @click="openMenu = null">
+            <PageHeader :title="title" :subtitle="subtitle">
+                <template #badge>
+                    <Badge variant="muted">{{ num(requests.total) }} طلب</Badge>
+                </template>
+                <template #actions>
+                    <Button href="/requests/new">
+                        <PlusCircle class="size-4" /> {{ isStaff ? 'إضافة طلب لعميل' : 'طلب جديد' }}
+                    </Button>
+                </template>
 
+                <!-- Status segments: the primary way people slice this list -->
+                <div class="table-scroll -mx-1 px-1">
+                    <div class="flex w-max min-w-full items-center gap-1.5">
+                        <button v-for="p in pills" :key="p.key" type="button" @click="apply({ status: p.key })"
+                            :data-active="activeStatus === p.key" :aria-pressed="activeStatus === p.key"
+                            :class="['inline-flex shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground data-[active=true]:border-transparent', pillTones[p.tone]]">
+                            <component :is="p.icon" class="size-3.5" aria-hidden="true" />
+                            <span>{{ p.label }}</span>
+                            <span class="rounded-full bg-current/15 px-1.5 text-xs font-bold tabular-nums">{{ num(counts[p.key] ?? 0) }}</span>
+                        </button>
+                    </div>
+                </div>
+            </PageHeader>
+
+            <div class="space-y-4">
             <!-- Filter bar -->
             <Card class="p-3">
                 <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                    <div class="relative sm:col-span-2 lg:col-span-1">
-                        <Search class="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <div class="sm:col-span-2 lg:col-span-1">
                         <Input v-model="q" label="بحث برقم الطلب أو العنوان…" />
                     </div>
                     <Select :model-value="filters.priority" header="مستوى الأولوية" @update:model-value="v => apply({ priority: v })">
@@ -209,9 +213,9 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
             </Card>
 
             <!-- Bulk action bar -->
-            <Card v-if="isStaff && selected.size" class="flex flex-wrap items-center gap-2 border-primary/30 bg-primary-soft/40 p-3">
-                <span class="text-sm font-medium">{{ selected.size }} محدد</span>
-                <div class="mr-auto flex flex-wrap gap-2">
+            <Card v-if="isStaff && selected.size" class="flex flex-wrap items-center gap-2 border-primary/30 bg-primary-soft/50 p-3">
+                <span class="text-base font-semibold">{{ num(selected.size) }} محدد</span>
+                <div class="ms-auto flex flex-wrap gap-2">
                     <Button size="sm" variant="outline" @click="copyNumbers"><Copy class="size-4" /> نسخ الأرقام</Button>
                     <Button size="sm" variant="outline" @click="bulkAssign"><UserCheck class="size-4" /> إسناد إليّ</Button>
                     <Button size="sm" variant="ghost" @click="clearSelection"><X class="size-4" /> إلغاء التحديد</Button>
@@ -219,154 +223,155 @@ const colCount = computed(() => (props.isStaff ? 11 : 6));
             </Card>
 
             <!-- Table -->
-            <Card class="overflow-visible p-0">
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse text-sm">
-                        <thead class="bg-muted/50">
-                            <tr class="border-b border-border text-xs text-muted-foreground">
-                                <th v-if="isStaff" class="w-10 px-2 py-3 text-center">
-                                    <input type="checkbox" :checked="allSelected" @change="toggleAll" class="size-4 rounded border-input align-middle" />
+            <Card class="overflow-hidden">
+                <div class="table-scroll">
+                    <table class="w-full border-collapse text-base">
+                        <thead class="bg-muted/60">
+                            <tr class="border-b border-border">
+                                <th v-if="isStaff" class="w-10 px-2 py-2.5 text-center">
+                                    <input type="checkbox" :checked="allSelected" @change="toggleAll" aria-label="تحديد كل الصفوف"
+                                        class="size-4 rounded border-input align-middle accent-[var(--primary)]" />
                                 </th>
-                                <th class="w-10 px-2 py-3 text-center">#</th>
-                                <th class="px-3 py-3 text-start">
-                                    <button class="inline-flex items-center gap-1 hover:text-foreground" @click="setSort('number')">الطلب <component :is="sortIcon('number')" class="size-3" /></button>
-                                </th>
-                                <th class="px-3 py-3 text-start">
-                                    <button class="inline-flex items-center gap-1 hover:text-foreground" @click="setSort('status')">الحالة <component :is="sortIcon('status')" class="size-3" /></button>
-                                </th>
-                                <th class="px-3 py-3 text-start">التصنيف</th>
-                                <th class="px-3 py-3 text-start">المنتج</th>
-                                <th v-if="isStaff" class="px-3 py-3 text-start">العميل</th>
-                                <th v-if="isStaff" class="px-3 py-3 text-start">المسؤول</th>
-                                <th v-if="isStaff" class="px-3 py-3 text-start">
-                                    <button class="inline-flex items-center gap-1 hover:text-foreground" @click="setSort('sla')">SLA <component :is="sortIcon('sla')" class="size-3" /></button>
-                                </th>
-                                <th v-if="isStaff" class="px-3 py-3 text-start">التقييم</th>
-                                <th class="px-3 py-3 text-start whitespace-nowrap">
-                                    <button class="inline-flex items-center gap-1 hover:text-foreground" @click="setSort('updated')">آخر تحديث <component :is="sortIcon('updated')" class="size-3" /></button>
-                                </th>
-                                <th class="w-10 px-2 py-3"></th>
+                                <th class="w-12 px-2 py-2.5 text-center text-xs font-bold text-muted-foreground">#</th>
+                                <SortableTh col="number" :sort-key="sort" :sort-dir="dir" @sort="setSort">الطلب</SortableTh>
+                                <SortableTh col="status" :sort-key="sort" :sort-dir="dir" @sort="setSort">الحالة</SortableTh>
+                                <TableHead>التصنيف</TableHead>
+                                <TableHead>المنتج</TableHead>
+                                <TableHead v-if="isStaff">العميل</TableHead>
+                                <TableHead v-if="isStaff">المسؤول</TableHead>
+                                <SortableTh v-if="isStaff" col="sla" :sort-key="sort" :sort-dir="dir" @sort="setSort">SLA</SortableTh>
+                                <TableHead v-if="isStaff">التقييم</TableHead>
+                                <SortableTh col="updated" :sort-key="sort" :sort-dir="dir" @sort="setSort">آخر تحديث</SortableTh>
+                                <th class="w-10 px-2 py-2.5"><span class="sr-only">إجراءات</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(r, i) in requests.data" :key="r.id"
-                                class="group cursor-pointer border-b border-border transition-colors hover:bg-muted/40"
+                                :data-state="selected.has(r.id) ? 'selected' : undefined"
+                                class="group cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/50 data-[state=selected]:bg-primary-soft/60"
                                 @click="open(r.id)">
-                                <td v-if="isStaff" class="px-2 py-3 text-center" @click.stop>
-                                    <input type="checkbox" :checked="selected.has(r.id)" @change="toggleRow(r.id)" class="size-4 rounded border-input align-middle" />
+                                <td v-if="isStaff" class="px-2 py-2.5 text-center" @click.stop>
+                                    <input type="checkbox" :checked="selected.has(r.id)" @change="toggleRow(r.id)"
+                                        :aria-label="`تحديد الطلب ${r.request_number}`"
+                                        class="size-4 rounded border-input align-middle accent-[var(--primary)]" />
                                 </td>
-                                <td class="px-2 py-3">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="h-8 w-1 rounded-full" :class="priorityBar[r.priority] ?? 'bg-muted'"></span>
+                                <td class="px-2 py-2.5">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="h-7 w-1 rounded-full" :class="priorityBar[r.priority] ?? 'bg-muted'"
+                                            :title="statusLabel(REQUEST_PRIORITY, r.priority).label"></span>
                                         <span class="text-xs tabular-nums text-muted-foreground">{{ (requests.from ?? 1) + i }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-3 py-3">
-                                    <div class="flex items-center gap-2">
-                                        <span class="max-w-[16rem] truncate font-medium">{{ r.title }}</span>
-                                        <RotateCcw v-if="r.reopened_count" class="size-3.5 shrink-0 text-warning" />
-                                    </div>
-                                    <div class="mt-1 flex items-center gap-2">
-                                        <span class="rounded bg-primary-soft px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-primary">{{ r.request_number }}</span>
-                                        <span v-if="r.attachments_count" class="flex items-center gap-0.5 text-[11px] text-muted-foreground"><Paperclip class="size-3" />{{ r.attachments_count }}</span>
-                                        <Badge variant="muted" class="!px-1.5 !py-0 text-[10px]">{{ statusLabel(REQUEST_PRIORITY, r.priority).label }}</Badge>
-                                    </div>
-                                </td>
-                                <td class="px-3 py-3">
-                                    <StatusBadge v-if="isStaff" :status="r.status" />
-                                    <Badge v-else :variant="statusLabel(SERVICE_STATUS, r.service_status).tone">{{ statusLabel(SERVICE_STATUS, r.service_status).label }}</Badge>
-                                </td>
-                                <td class="px-3 py-3">
-                                    <span class="flex items-center gap-1.5 text-sm">
-                                        <span class="size-2 rounded-full" :style="{ background: r.category?.color || 'var(--muted-foreground)' }"></span>
-                                        {{ r.category?.name_ar ?? '—' }}
                                     </span>
                                 </td>
-                                <td class="px-3 py-3">
-                                    <span v-if="r.product" class="flex items-center gap-1 text-sm text-muted-foreground"><ExternalLink class="size-3.5" /> {{ r.product.name_ar }}</span>
+                                <td class="px-3 py-2.5">
+                                    <span class="flex items-center gap-2">
+                                        <span class="max-w-64 truncate font-semibold">{{ r.title }}</span>
+                                        <RotateCcw v-if="r.reopened_count" class="size-3.5 shrink-0 text-warning" title="أُعيد فتحه" />
+                                    </span>
+                                    <span class="mt-1 flex items-center gap-2">
+                                        <span class="ref-chip">{{ r.request_number }}</span>
+                                        <span v-if="r.attachments_count" class="flex items-center gap-0.5 text-xs text-muted-foreground">
+                                            <Paperclip class="size-3" />{{ num(r.attachments_count) }}
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="px-3 py-2.5">
+                                    <StatusBadge v-if="isStaff" :status="r.status" />
+                                    <Badge v-else :variant="statusLabel(SERVICE_STATUS, r.service_status).tone" dot>
+                                        {{ statusLabel(SERVICE_STATUS, r.service_status).label }}
+                                    </Badge>
+                                </td>
+                                <td class="px-3 py-2.5">
+                                    <span class="flex items-center gap-1.5 text-sm">
+                                        <span class="size-2 shrink-0 rounded-full" :style="{ background: r.category?.color || 'var(--muted-foreground)' }"></span>
+                                        <span class="truncate">{{ r.category?.name_ar ?? '—' }}</span>
+                                    </span>
+                                </td>
+                                <td class="px-3 py-2.5">
+                                    <span v-if="r.product" class="flex items-center gap-1 text-sm text-muted-foreground">
+                                        <ExternalLink class="size-3.5 shrink-0" /> <span class="truncate">{{ r.product.name_ar }}</span>
+                                    </span>
                                     <span v-else class="text-muted-foreground">—</span>
                                 </td>
-                                <td v-if="isStaff" class="px-3 py-3">
-                                    <div v-if="r.customer" class="flex items-center gap-2">
-                                        <Avatar :name="r.customer.full_name" class="size-6 text-[10px]" />
-                                        <span class="max-w-[8rem] truncate text-sm">{{ r.customer.full_name }}</span>
-                                    </div>
+                                <td v-if="isStaff" class="px-3 py-2.5">
+                                    <span v-if="r.customer" class="flex items-center gap-2">
+                                        <Avatar :name="r.customer.full_name" class="size-6 text-2xs" />
+                                        <span class="max-w-32 truncate text-sm">{{ r.customer.full_name }}</span>
+                                    </span>
                                     <span v-else class="text-muted-foreground">—</span>
                                 </td>
-                                <td v-if="isStaff" class="px-3 py-3">
-                                    <div v-if="r.assignee" class="flex items-center gap-2">
-                                        <Avatar :name="r.assignee.full_name" class="size-6 text-[10px]" />
-                                        <span class="max-w-[8rem] truncate text-sm">{{ r.assignee.full_name }}</span>
-                                    </div>
+                                <td v-if="isStaff" class="px-3 py-2.5">
+                                    <span v-if="r.assignee" class="flex items-center gap-2">
+                                        <Avatar :name="r.assignee.full_name" class="size-6 text-2xs" />
+                                        <span class="max-w-32 truncate text-sm">{{ r.assignee.full_name }}</span>
+                                    </span>
                                     <span v-else class="text-xs text-muted-foreground">غير مُسند</span>
                                 </td>
-                                <td v-if="isStaff" class="px-3 py-3">
-                                    <span class="flex items-center gap-1 text-xs font-bold" :class="SLA[r.sla_state]?.class">
+                                <td v-if="isStaff" class="px-3 py-2.5">
+                                    <span class="flex items-center gap-1 whitespace-nowrap text-xs font-bold" :class="SLA[r.sla_state]?.class">
                                         <span class="size-1.5 rounded-full bg-current"></span>{{ SLA[r.sla_state]?.label ?? '—' }}
                                     </span>
                                 </td>
-                                <td v-if="isStaff" class="px-3 py-3">
-                                    <span v-if="r.rating" class="flex items-center gap-0.5 text-warning"><Star class="size-3.5 fill-current" /><span class="text-xs tabular-nums">{{ r.rating }}</span></span>
+                                <td v-if="isStaff" class="px-3 py-2.5">
+                                    <span v-if="r.rating" class="flex items-center gap-0.5 text-warning">
+                                        <Star class="size-3.5 fill-current" /><span class="text-xs tabular-nums">{{ r.rating }}</span>
+                                    </span>
                                     <span v-else class="text-muted-foreground">—</span>
                                 </td>
-                                <td class="px-3 py-3 whitespace-nowrap text-xs text-muted-foreground">{{ timeAgoAr(r.updated_at) }}</td>
+                                <td class="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">{{ timeAgoAr(r.updated_at) }}</td>
 
                                 <!-- Row actions -->
-                                <td class="px-2 py-3 text-center" @click.stop>
-                                    <div class="flex items-center gap-0.5">
-                                        <button class="rounded-md p-1.5 text-muted-foreground opacity-60 transition hover:bg-muted hover:text-foreground group-hover:opacity-100" title="إجراءات" @click="toggleMenu(r.id, $event)">
+                                <td class="px-2 py-2.5 text-center" @click.stop>
+                                    <span class="flex items-center gap-0.5">
+                                        <button type="button" aria-label="إجراءات الطلب" @click="toggleMenu(r.id, $event)"
+                                            class="rounded-md p-1.5 text-muted-foreground opacity-70 transition-colors hover:bg-muted hover:text-foreground group-hover:opacity-100">
                                             <MoreHorizontal class="size-4" />
                                         </button>
-                                        <ChevronLeft class="hidden size-4 text-muted-foreground/40 transition group-hover:text-primary md:block" />
-                                    </div>
+                                        <ChevronLeft class="hidden size-4 text-muted-foreground/40 transition-colors group-hover:text-primary md:block" aria-hidden="true" />
+                                    </span>
                                 </td>
                             </tr>
                             <tr v-if="!requests.data.length">
-                                <td :colspan="colCount" class="py-12 text-center text-muted-foreground">لا توجد طلبات مطابقة.</td>
+                                <td :colspan="colCount">
+                                    <EmptyState :icon="Inbox" title="لا توجد طلبات مطابقة"
+                                        description="جرّب تعديل البحث أو عوامل التصفية أعلاه." />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </Card>
 
-            <div v-if="requests.last_page > 1" class="flex justify-center gap-1">
-                <Link v-for="link in requests.links" :key="link.label" :href="link.url || '#'" v-html="link.label"
-                    :class="['rounded-md px-3 py-1.5 text-sm', link.active ? 'bg-primary text-primary-foreground' : 'hover:bg-muted', !link.url && 'pointer-events-none opacity-40']" />
+            <Pagination :paginator="requests" />
             </div>
         </div>
 
         <!-- Row actions menu (teleported, never clipped, opens inward) -->
         <Teleport to="body">
             <div v-if="openRequest" class="fixed inset-0 z-40" @click="openMenu = null">
-                <div dir="rtl" class="fixed w-52 rounded-lg border border-border bg-popover p-1.5 text-start shadow-elevated"
+                <div dir="rtl" role="menu" class="fixed w-52 rounded-lg border border-border bg-popover p-1.5 text-start shadow-elevated"
                     :style="{ top: menuPos.top + 'px', left: menuPos.left + 'px' }" @click.stop>
-                    <p class="px-2 py-1 text-[11px] font-bold text-muted-foreground">إجراءات الطلب</p>
-                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><Eye class="size-4" /> فتح الطلب</button>
-                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><MessageSquare class="size-4" /> إضافة تعليق</button>
+                    <p class="px-2 py-1 text-2xs font-bold text-muted-foreground">إجراءات الطلب</p>
+                    <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base hover:bg-muted" @click="open(openRequest.id)"><Eye class="size-4" /> فتح الطلب</button>
+                    <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base hover:bg-muted" @click="open(openRequest.id)"><MessageSquare class="size-4" /> إضافة تعليق</button>
                     <template v-if="isStaff && !isClosed(openRequest)">
-                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="open(openRequest.id)"><Pencil class="size-4" /> تعديل الحالة</button>
-                        <button v-if="!openRequest.assignee" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="assignMe(openRequest.id)"><UserCheck class="size-4" /> إسناد إليّ</button>
+                        <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base hover:bg-muted" @click="open(openRequest.id)"><Pencil class="size-4" /> تعديل الحالة</button>
+                        <button v-if="!openRequest.assignee" type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base hover:bg-muted" @click="assignMe(openRequest.id)"><UserCheck class="size-4" /> إسناد إليّ</button>
                     </template>
                     <div class="my-1 h-px bg-border"></div>
-                    <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted" @click="copyNumber(openRequest.request_number)"><Copy class="size-4" /> نسخ رقم الطلب</button>
+                    <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base hover:bg-muted" @click="copyNumber(openRequest.request_number)"><Copy class="size-4" /> نسخ رقم الطلب</button>
                     <template v-if="isAdmin">
                         <div class="my-1 h-px bg-border"></div>
-                        <button class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-destructive hover:bg-muted" @click="askDelete(openRequest)"><Trash2 class="size-4" /> حذف الطلب نهائيًا</button>
+                        <button type="button" role="menuitem" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-base text-destructive hover:bg-destructive/10" @click="askDelete(openRequest)"><Trash2 class="size-4" /> حذف الطلب نهائيًا</button>
                     </template>
                 </div>
             </div>
         </Teleport>
 
         <!-- Delete confirmation (admin) -->
-        <Dialog :open="!!delTarget" title="حذف الطلب نهائيًا"
-            :description="delTarget ? `سيتم حذف الطلب ${delTarget.request_number} وكل بياناته نهائيًا. لا يمكن التراجع.` : ''" @close="delTarget = null">
-            <div class="space-y-3">
-                <Textarea v-model="delReason" placeholder="سبب الحذف (اختياري)" class="min-h-16" />
-                <div class="flex justify-end gap-2">
-                    <Button variant="outline" @click="delTarget = null">إلغاء</Button>
-                    <Button variant="destructive" @click="doDelete">حذف نهائيًا</Button>
-                </div>
-            </div>
-        </Dialog>
+        <ConfirmDialog :open="!!delTarget" title="حذف الطلب نهائيًا" confirm-label="حذف نهائيًا"
+            :description="delTarget ? `سيتم حذف الطلب ${delTarget.request_number} وكل بياناته نهائيًا. لا يمكن التراجع.` : ''"
+            @cancel="delTarget = null" @confirm="doDelete">
+            <Textarea v-model="delReason" label="سبب الحذف (اختياري)" />
+        </ConfirmDialog>
     </AppShell>
 </template>

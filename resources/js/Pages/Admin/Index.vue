@@ -23,6 +23,10 @@ import {
 import { ROLE_LABELS, REQUEST_PRIORITY, statusLabel } from '@/lib/labels';
 import { fmtFullDateTimeAr, timeAgoAr } from '@/lib/date';
 
+import FieldError from '@/Components/ui/FieldError.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import IconChip from '@/Components/ui/IconChip.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 const props = defineProps({
     categories: { type: Array, default: () => [] },
     products: { type: Array, default: () => [] },
@@ -394,43 +398,40 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
     <AppShell>
         <div class="space-y-5">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">إدارة النظام · لوحة التحكم</p>
-                        <h1 class="mt-1 text-2xl font-bold">إدارة النظام</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">تحكّم كامل بتصنيفات الطلبات، الأدوار، الإشعارات، والتكاملات.</p>
-                    </div>
-                    <Button class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm lg:hidden" @click="mobileOpen = !mobileOpen">
+            <PageHeader title="إدارة النظام"
+                subtitle="تحكّم كامل بتصنيفات الطلبات، الأدوار، الإشعارات، والتكاملات.">
+                <template #actions>
+                    <Button variant="outline" class="lg:hidden" @click="mobileOpen = !mobileOpen">
                         <Menu class="size-4" /> الأقسام
                     </Button>
-                </div>
-                <!-- KPI ribbon -->
-                <div class="relative mt-5 flex flex-wrap gap-2">
+                </template>
+
+                <div class="flex flex-wrap gap-2">
                     <div v-for="p in heroPills" :key="p.label"
-                        class="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm backdrop-blur-sm">
-                        <component :is="p.icon" class="size-4 opacity-80" />
-                        <span>{{ p.label }}</span>
-                        <span class="rounded-full bg-black/20 px-1.5 text-xs font-bold tabular-nums">{{ p.value }}</span>
+                        class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm">
+                        <component :is="p.icon" class="size-3.5 text-muted-foreground" aria-hidden="true" />
+                        <span class="text-muted-foreground">{{ p.label }}</span>
+                        <span class="font-bold tabular-nums text-foreground">{{ p.value }}</span>
                     </div>
                 </div>
-            </div>
+            </PageHeader>
 
             <div class="grid gap-5 lg:grid-cols-[260px_1fr]">
                 <!-- Sidebar -->
                 <aside :class="[mobileOpen ? 'block' : 'hidden', 'lg:block lg:sticky lg:top-4 lg:self-start']">
-                    <nav class="space-y-4 rounded-2xl border border-border bg-card p-2">
+                    <nav class="space-y-4 rounded-lg border border-border bg-card p-2" aria-label="أقسام الإدارة">
                         <div v-for="g in groupKeys" :key="g">
-                            <div class="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{{ GROUPS[g] }}</div>
+                            <p class="px-3 pb-1 pt-2 text-2xs font-bold uppercase tracking-wider text-muted-foreground">{{ GROUPS[g] }}</p>
                             <ul class="space-y-0.5">
                                 <li v-for="s in SECTIONS.filter((x) => x.group === g)" :key="s.key">
-                                    <button type="button" @click="pick(s.key)"
-                                        :class="['flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all',
-                                            active === s.key ? 'bg-primary font-semibold text-primary-foreground shadow-sm' : 'text-foreground/80 hover:bg-muted hover:text-foreground']">
-                                        <component :is="s.icon" :class="['size-4 shrink-0', active === s.key ? 'text-primary-foreground' : 'text-muted-foreground']" />
+                                    <button type="button" @click="pick(s.key)" :aria-current="active === s.key ? 'true' : undefined"
+                                        :class="['relative flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-base font-semibold transition-colors',
+                                            active === s.key
+                                                ? 'bg-primary-soft text-primary'
+                                                : 'text-foreground/75 hover:bg-muted hover:text-foreground']">
+                                        <span v-if="active === s.key" class="absolute inset-y-1.5 right-0 w-[3px] rounded-s-full bg-primary" aria-hidden="true"></span>
+                                        <component :is="s.icon" :class="['size-4 shrink-0', active === s.key ? 'text-primary' : 'text-muted-foreground']" />
                                         <span class="flex-1 text-right">{{ s.label }}</span>
-                                        <ChevronLeft v-if="active === s.key" class="size-3.5 opacity-70" />
                                     </button>
                                 </li>
                             </ul>
@@ -442,11 +443,9 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                 <main class="min-w-0">
                     <Card class="p-4 md:p-6">
                         <div class="mb-5 flex items-start gap-3 border-b border-border pb-4">
-                            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                                <component :is="activeMeta.icon" class="size-5" />
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-bold text-foreground md:text-xl">{{ activeMeta.label }}</h2>
+                            <IconChip :icon="activeMeta.icon" size="md" />
+                            <div class="min-w-0">
+                                <h2 class="text-xl font-bold text-foreground">{{ activeMeta.label }}</h2>
                                 <p class="mt-0.5 text-sm text-muted-foreground">{{ activeMeta.desc }}</p>
                             </div>
                         </div>
@@ -472,7 +471,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                                 <span class="size-2.5 rounded-full" :style="{ background: c.color || 'var(--muted-foreground)' }"></span>
                                                 <div>
                                                     <div class="font-medium">{{ c.name_ar }}</div>
-                                                    <div class="font-mono text-[11px] text-muted-foreground" dir="ltr">{{ c.key }}</div>
+                                                    <div class="font-mono text-xs text-muted-foreground" dir="ltr">{{ c.key }}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -487,7 +486,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                             <Button size="sm" variant="outline" @click="openCat(c)"><Pencil class="size-3.5" /> تعديل</Button>
                                         </td>
                                     </tr>
-                                    <tr v-if="!categories.length"><td colspan="7" class="py-10 text-center text-muted-foreground">لا توجد تصنيفات.</td></tr>
+                                    <tr v-if="!categories.length"><td colspan="7"><EmptyState size="sm" title="لا توجد تصنيفات." /></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -530,7 +529,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                                 <Button size="sm" variant="outline" @click="openProduct(p)"><Pencil class="size-3.5" /> تعديل</Button>
                                             </td>
                                         </tr>
-                                        <tr v-if="!products.length"><td colspan="8" class="py-10 text-center text-muted-foreground">لا توجد منتجات.</td></tr>
+                                        <tr v-if="!products.length"><td colspan="8"><EmptyState size="sm" title="لا توجد منتجات." /></td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -542,10 +541,10 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                 <div class="flex items-center gap-2">
                                     <span class="size-4 rounded-full" :style="{ background: t.color || 'var(--primary)' }"></span>
                                     <span class="font-semibold">{{ t.name_ar }}</span>
-                                    <Badge v-if="!t.active" variant="muted" class="ms-auto text-[10px]">معطّل</Badge>
+                                    <Badge v-if="!t.active" variant="muted" class="ms-auto text-2xs">معطّل</Badge>
                                 </div>
                                 <p v-if="t.description" class="mt-2 text-xs text-muted-foreground">{{ t.description }}</p>
-                                <p class="mt-2 font-mono text-[11px] text-muted-foreground" dir="ltr">{{ t.key }}</p>
+                                <p class="mt-2 font-mono text-xs text-muted-foreground" dir="ltr">{{ t.key }}</p>
                             </div>
                             <p v-if="!teams.length" class="text-muted-foreground">لا توجد فرق.</p>
                         </div>
@@ -555,7 +554,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                             <div v-if="settingKeys.length" class="grid gap-3 md:grid-cols-2">
                                 <SettingRow v-for="k in settingKeys" :key="k" :setting-key="k" :value="settings[k]" />
                             </div>
-                            <p v-else class="py-10 text-center text-muted-foreground">لا توجد إعدادات محفوظة.</p>
+                            <EmptyState v-else size="sm" title="لا توجد إعدادات محفوظة." />
                         </div>
 
                         <!-- ============ STAFF ============ -->
@@ -579,7 +578,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                         <tr v-for="s in staffSorted" :key="s.id" class="border-b border-border align-top hover:bg-muted/40">
                                             <td class="px-3 py-3">
                                                 <div class="flex items-center gap-2">
-                                                    <Avatar :name="s.full_name" class="size-7 text-[10px]" />
+                                                    <Avatar :name="s.full_name" class="size-7 text-2xs" />
                                                     <span class="font-medium">{{ s.full_name }}</span>
                                                 </div>
                                             </td>
@@ -610,7 +609,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr v-if="!staff.length"><td colspan="5" class="py-10 text-center text-muted-foreground">لا يوجد موظفون.</td></tr>
+                                        <tr v-if="!staff.length"><td colspan="5"><EmptyState size="sm" title="لا يوجد موظفون." /></td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -651,8 +650,8 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                         <tbody>
                                             <tr v-for="cap in filteredCaps" :key="cap.capability" class="border-b border-border hover:bg-muted/30">
                                                 <td class="sticky right-0 z-10 bg-card px-3 py-2">
-                                                    <div class="font-mono text-[11px] text-foreground" dir="ltr">{{ cap.capability }}</div>
-                                                    <div v-if="cap.description" class="mt-0.5 max-w-[220px] truncate text-[10px] text-muted-foreground">{{ cap.description }}</div>
+                                                    <div class="font-mono text-xs text-foreground" dir="ltr">{{ cap.capability }}</div>
+                                                    <div v-if="cap.description" class="mt-0.5 max-w-[220px] truncate text-2xs text-muted-foreground">{{ cap.description }}</div>
                                                 </td>
                                                 <td v-for="role in permRoles" :key="role" class="px-2 py-2 text-center">
                                                     <input type="checkbox"
@@ -664,7 +663,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                                         @change="togglePerm(role, cap.capability)" />
                                                 </td>
                                             </tr>
-                                            <tr v-if="!filteredCaps.length"><td :colspan="permRoles.length + 1" class="py-8 text-center text-muted-foreground">لا توجد صلاحيات مطابقة.</td></tr>
+                                            <tr v-if="!filteredCaps.length"><td :colspan="permRoles.length + 1"><EmptyState size="sm" title="لا توجد صلاحيات مطابقة." /></td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -693,7 +692,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                             <Button size="sm" variant="accent" @click="saveMultiplier(m)"><Save class="size-3.5" /> حفظ</Button>
                                         </td>
                                     </tr>
-                                    <tr v-if="!multipliers.length"><td colspan="3" class="py-10 text-center text-muted-foreground">لا توجد معاملات.</td></tr>
+                                    <tr v-if="!multipliers.length"><td colspan="3"><EmptyState size="sm" title="لا توجد معاملات." /></td></tr>
                                 </tbody>
                             </table>
                             <p class="mt-3 text-xs text-muted-foreground">يُضرب زمن SLA الأساسي في معامل الأولوية لحساب موعد الاستحقاق الفعلي.</p>
@@ -710,17 +709,17 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                     <div v-for="t in g.items" :key="t.id ?? t.event_key" class="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                                         <div class="min-w-0">
                                             <div class="font-medium">{{ t.name_ar }}</div>
-                                            <div class="font-mono text-[11px] text-muted-foreground" dir="ltr">{{ t.event_key }}</div>
+                                            <div class="font-mono text-xs text-muted-foreground" dir="ltr">{{ t.event_key }}</div>
                                         </div>
                                         <div class="flex items-center gap-1.5">
-                                            <Badge v-for="ch in (Array.isArray(t.channels) ? t.channels : [])" :key="ch" variant="secondary" class="text-[10px]">{{ CHANNEL_LABELS[ch] ?? ch }}</Badge>
+                                            <Badge v-for="ch in (Array.isArray(t.channels) ? t.channels : [])" :key="ch" variant="secondary" class="text-2xs">{{ CHANNEL_LABELS[ch] ?? ch }}</Badge>
                                             <Badge :variant="t.active ? 'success' : 'muted'">{{ t.active ? 'مفعّل' : 'معطّل' }}</Badge>
                                             <Button size="sm" variant="outline" @click="openTpl(t)"><Pencil class="size-3.5" /> تعديل</Button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <p v-if="!groupedTemplates.length" class="py-10 text-center text-muted-foreground">لا توجد قوالب.</p>
+                            <EmptyState v-if="!groupedTemplates.length" size="sm" title="لا توجد قوالب." />
                         </div>
 
                         <!-- ============ INTEGRATIONS ============ -->
@@ -736,7 +735,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                     </Badge>
                                 </div>
                                 <div class="mt-3 font-medium">{{ i.name }}</div>
-                                <div class="font-mono text-[11px] text-muted-foreground" dir="ltr">{{ i.key }}</div>
+                                <div class="font-mono text-xs text-muted-foreground" dir="ltr">{{ i.key }}</div>
                             </div>
                             <p v-if="!allIntegrations.length" class="text-muted-foreground">لا توجد تكاملات.</p>
                         </div>
@@ -773,7 +772,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                             <td class="px-3 py-3 text-xs">{{ entityLabel(a.entity_type) }}</td>
                                             <td class="max-w-md truncate px-3 py-3 text-xs text-muted-foreground" :title="JSON.stringify(a.details)">{{ summarizeDetails(a.details) }}</td>
                                         </tr>
-                                        <tr v-if="!filteredAudit.length"><td colspan="5" class="py-10 text-center text-muted-foreground">لا يوجد سجل.</td></tr>
+                                        <tr v-if="!filteredAudit.length"><td colspan="5"><EmptyState size="sm" title="لا يوجد سجل." /></td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -800,21 +799,21 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     <template v-else>
                         <div>
                             <Input label="الاسم الكامل" v-model="staffForm.name" />
-                            <p v-if="staffForm.errors.name" class="mt-1 text-xs text-destructive">{{ staffForm.errors.name }}</p>
+                            <FieldError :message="staffForm.errors.name" />
                         </div>
                         <div>
                             <Input label="البريد الإلكتروني" v-model="staffForm.email" type="email" dir="ltr" />
-                            <p v-if="staffForm.errors.email" class="mt-1 text-xs text-destructive">{{ staffForm.errors.email }}</p>
+                            <FieldError :message="staffForm.errors.email" />
                         </div>
                         <div>
                             <Select label="الدور" v-model="staffForm.role">
                                 <option v-for="r in staffRoles" :key="r" :value="r">{{ roleLabel(r) }}</option>
                             </Select>
-                            <p v-if="staffForm.errors.role" class="mt-1 text-xs text-destructive">{{ staffForm.errors.role }}</p>
+                            <FieldError :message="staffForm.errors.role" />
                         </div>
                         <div class="flex justify-end gap-2 pt-1">
                             <Button variant="outline" @click="addOpen = false">إلغاء</Button>
-                            <Button variant="accent" :disabled="staffForm.processing" @click="submitStaff">إنشاء الحساب</Button>
+                            <Button variant="accent" :loading="staffForm.processing" @click="submitStaff">إنشاء الحساب</Button>
                         </div>
                     </template>
                 </div>
@@ -825,7 +824,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                 <div class="space-y-3">
                     <div>
                         <Input label="اسم التصنيف" v-model="catForm.name_ar" />
-                        <p v-if="catForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ catForm.errors.name_ar }}</p>
+                        <FieldError :message="catForm.errors.name_ar" />
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -835,7 +834,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                         </div>
                         <div>
                             <Input label="SLA (ساعة)" v-model="catForm.sla_hours" type="number" min="0" dir="ltr" />
-                            <p v-if="catForm.errors.sla_hours" class="mt-1 text-xs text-destructive">{{ catForm.errors.sla_hours }}</p>
+                            <FieldError :message="catForm.errors.sla_hours" />
                         </div>
                     </div>
                     <div>
@@ -844,7 +843,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                             <option v-for="tm in (options.teams ?? [])" :key="tm" :value="tm">{{ tm }}</option>
                             <option v-if="catForm.target_team && !(options.teams ?? []).includes(catForm.target_team)" :value="catForm.target_team">{{ catForm.target_team }}</option>
                         </Select>
-                        <p v-if="catForm.errors.target_team" class="mt-1 text-xs text-destructive">{{ catForm.errors.target_team }}</p>
+                        <FieldError :message="catForm.errors.target_team" />
                     </div>
                     <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
                         <span class="text-sm">الحالة</span>
@@ -855,7 +854,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="catOpen = false">إلغاء</Button>
-                        <Button variant="accent" :disabled="catForm.processing" @click="saveCat"><Save class="size-4" /> حفظ التغييرات</Button>
+                        <Button variant="accent" :loading="catForm.processing" @click="saveCat"><Save class="size-4" /> حفظ التغييرات</Button>
                     </div>
                 </div>
             </Dialog>
@@ -865,7 +864,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                 <div class="space-y-3">
                     <div>
                         <Input label="الاسم" v-model="prodForm.name_ar" />
-                        <p v-if="prodForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.name_ar }}</p>
+                        <FieldError :message="prodForm.errors.name_ar" />
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -873,29 +872,29 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                                 <option value="product">منتج</option>
                                 <option value="service">خدمة</option>
                             </Select>
-                            <p v-if="prodForm.errors.type" class="mt-1 text-xs text-destructive">{{ prodForm.errors.type }}</p>
+                            <FieldError :message="prodForm.errors.type" />
                         </div>
                         <div>
                             <Input label="اللون" v-model="prodForm.color" dir="ltr" />
-                            <p v-if="prodForm.errors.color" class="mt-1 text-xs text-destructive">{{ prodForm.errors.color }}</p>
+                            <FieldError :message="prodForm.errors.color" />
                         </div>
                     </div>
                     <div>
                         <Textarea label="الوصف" v-model="prodForm.description_ar" rows="3" />
-                        <p v-if="prodForm.errors.description_ar" class="mt-1 text-xs text-destructive">{{ prodForm.errors.description_ar }}</p>
+                        <FieldError :message="prodForm.errors.description_ar" />
                     </div>
                     <div class="grid grid-cols-3 gap-3">
                         <div>
                             <Input label="SLA (ساعة)" v-model="prodForm.sla_hours" type="number" min="0" dir="ltr" />
-                            <p v-if="prodForm.errors.sla_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sla_hours }}</p>
+                            <FieldError :message="prodForm.errors.sla_hours" />
                         </div>
                         <div>
                             <Input label="التصعيد (ساعة)" v-model="prodForm.escalation_hours" type="number" min="0" dir="ltr" />
-                            <p v-if="prodForm.errors.escalation_hours" class="mt-1 text-xs text-destructive">{{ prodForm.errors.escalation_hours }}</p>
+                            <FieldError :message="prodForm.errors.escalation_hours" />
                         </div>
                         <div>
                             <Input label="الترتيب" v-model="prodForm.sort_order" type="number" min="0" dir="ltr" />
-                            <p v-if="prodForm.errors.sort_order" class="mt-1 text-xs text-destructive">{{ prodForm.errors.sort_order }}</p>
+                            <FieldError :message="prodForm.errors.sort_order" />
                         </div>
                     </div>
                     <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
@@ -914,7 +913,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="prodOpen = false">إلغاء</Button>
-                        <Button variant="accent" :disabled="prodForm.processing" @click="saveProduct"><Save class="size-4" /> {{ prodForm.id ? 'حفظ التغييرات' : 'إضافة' }}</Button>
+                        <Button variant="accent" :loading="prodForm.processing" @click="saveProduct"><Save class="size-4" /> {{ prodForm.id ? 'حفظ التغييرات' : 'إضافة' }}</Button>
                     </div>
                 </div>
             </Dialog>
@@ -924,7 +923,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                 <div class="space-y-3">
                     <div>
                         <Input label="اسم القالب" v-model="tplForm.name_ar" />
-                        <p v-if="tplForm.errors.name_ar" class="mt-1 text-xs text-destructive">{{ tplForm.errors.name_ar }}</p>
+                        <FieldError :message="tplForm.errors.name_ar" />
                     </div>
                     <div>
                         <Select label="نوع المستلم" v-model="tplForm.recipient_type">
@@ -932,7 +931,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                             <option v-for="r in RECIPIENT_OPTIONS" :key="r" :value="r">{{ r }}</option>
                             <option v-if="tplForm.recipient_type && !RECIPIENT_OPTIONS.includes(tplForm.recipient_type)" :value="tplForm.recipient_type">{{ tplForm.recipient_type }}</option>
                         </Select>
-                        <p v-if="tplForm.errors.recipient_type" class="mt-1 text-xs text-destructive">{{ tplForm.errors.recipient_type }}</p>
+                        <FieldError :message="tplForm.errors.recipient_type" />
                     </div>
                     <div>
                         <Label>قنوات الإرسال</Label>
@@ -946,16 +945,16 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <div>
                         <Input label="نص العنوان" v-model="tplForm.title_template" />
-                        <p v-if="tplForm.errors.title_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.title_template }}</p>
+                        <FieldError :message="tplForm.errors.title_template" />
                     </div>
                     <div>
                         <Textarea label="نص المحتوى" v-model="tplForm.body_template" rows="4" />
-                        <p v-if="tplForm.errors.body_template" class="mt-1 text-xs text-destructive">{{ tplForm.errors.body_template }}</p>
+                        <FieldError :message="tplForm.errors.body_template" />
                     </div>
                     <div class="rounded-lg border border-border bg-muted/30 px-3 py-2">
                         <p class="text-xs text-muted-foreground">المتغيرات المتاحة:</p>
                         <div class="mt-1.5 flex flex-wrap gap-1.5">
-                            <code v-for="v in TEMPLATE_VARS" :key="v" class="rounded bg-card px-1.5 py-0.5 font-mono text-[11px] text-primary" dir="ltr">{{ v }}</code>
+                            <code v-for="v in TEMPLATE_VARS" :key="v" class="rounded bg-card px-1.5 py-0.5 font-mono text-xs text-primary" dir="ltr">{{ v }}</code>
                         </div>
                     </div>
                     <div class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
@@ -967,7 +966,7 @@ const { sorted: auditSorted, sortKey: auditSortKey, sortDir: auditSortDir, toggl
                     </div>
                     <div class="flex justify-end gap-2 pt-1">
                         <Button variant="outline" @click="tplOpen = false">إلغاء</Button>
-                        <Button variant="accent" :disabled="tplForm.processing" @click="saveTpl"><Save class="size-4" /> حفظ التغييرات</Button>
+                        <Button variant="accent" :loading="tplForm.processing" @click="saveTpl"><Save class="size-4" /> حفظ التغييرات</Button>
                     </div>
                 </div>
             </Dialog>

@@ -6,6 +6,7 @@ import Label from '@/Components/ui/Label.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { UserPlus } from 'lucide-vue-next';
 
+import FieldError from '@/Components/ui/FieldError.vue';
 const form = useForm({ name: '', email: '', phone: '', password: '', password_confirmation: '' });
 const submit = () => form.post(route('register'), { onFinish: () => form.reset('password', 'password_confirmation') });
 </script>
@@ -20,24 +21,24 @@ const submit = () => form.post(route('register'), { onFinish: () => form.reset('
         <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <Input label="الاسم الكامل" v-model="form.name" required autofocus autocomplete="name" />
-                <p v-if="form.errors.name" class="mt-1 text-xs text-destructive">{{ form.errors.name }}</p>
+                <FieldError :message="form.errors.name" />
             </div>
             <div>
                 <Input label="البريد الإلكتروني" type="email" v-model="form.email" required autocomplete="username" />
-                <p v-if="form.errors.email" class="mt-1 text-xs text-destructive">{{ form.errors.email }}</p>
+                <FieldError :message="form.errors.email" />
             </div>
             <div>
                 <Input label="رقم الجوال" type="tel" v-model="form.phone" autocomplete="tel" />
-                <p v-if="form.errors.phone" class="mt-1 text-xs text-destructive">{{ form.errors.phone }}</p>
+                <FieldError :message="form.errors.phone" />
             </div>
             <div>
                 <Input label="كلمة المرور" type="password" v-model="form.password" required autocomplete="new-password" />
-                <p v-if="form.errors.password" class="mt-1 text-xs text-destructive">{{ form.errors.password }}</p>
+                <FieldError :message="form.errors.password" />
             </div>
             <div>
                 <Input label="تأكيد كلمة المرور" type="password" v-model="form.password_confirmation" required autocomplete="new-password" />
             </div>
-            <Button type="submit" class="w-full gap-2" variant="accent" :disabled="form.processing"><UserPlus class="size-4" /> إنشاء الحساب</Button>
+            <Button type="submit" class="w-full gap-2" variant="accent" :loading="form.processing"><UserPlus class="size-4" /> إنشاء الحساب</Button>
         </form>
         <p class="mt-6 text-center text-sm text-muted-foreground">
             لديك حساب بالفعل؟

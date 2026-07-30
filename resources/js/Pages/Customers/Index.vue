@@ -10,6 +10,9 @@ import Avatar from '@/Components/ui/Avatar.vue';
 import SortableTh from '@/Components/ui/SortableTh.vue';
 import { num } from '@/lib/utils';
 import { fmtDateAr } from '@/lib/date';
+import PageHeader from '@/Components/PageHeader.vue';
+import Badge from '@/Components/ui/Badge.vue';
+import Pagination from '@/Components/ui/Pagination.vue';
 import {
     Users, Search, Star, FileText, ChevronLeft, Briefcase, AlertTriangle, Activity,
 } from 'lucide-vue-next';
@@ -53,19 +56,10 @@ const kpiRibbon = computed(() => [
     <AppShell>
         <div class="space-y-5">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">العملاء · لوحة المتابعة · {{ num(kpis.total_customers ?? 0) }} عميل</p>
-                        <h1 class="mt-1 text-2xl font-bold">قائمة العملاء</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">
-                            إدارة جميع العملاء، متابعة طلباتهم ومستوى رضاهم — اضغط على أي صف لفتح الملف التفصيلي.
-                        </p>
-                    </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs backdrop-blur-sm tabular-nums">{{ num(customers.total) }} عميل</span>
-                </div>
-            </div>
+            <PageHeader title="قائمة العملاء"
+                subtitle="إدارة جميع العملاء، متابعة طلباتهم ومستوى رضاهم — اضغط على أي صف لفتح الملف التفصيلي.">
+                <template #badge><Badge variant="muted">{{ num(customers.total) }} عميل</Badge></template>
+            </PageHeader>
 
             <!-- KPI ribbon -->
             <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
@@ -75,7 +69,7 @@ const kpiRibbon = computed(() => [
                             <component :is="k.icon" class="size-5" />
                         </div>
                         <div class="min-w-0">
-                            <div class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{{ k.label }}</div>
+                            <div class="text-2xs font-medium uppercase tracking-wider text-muted-foreground">{{ k.label }}</div>
                             <div :class="`text-xl font-black tabular-nums ${k.num}`">{{ k.value }}</div>
                         </div>
                     </div>
@@ -127,7 +121,7 @@ const kpiRibbon = computed(() => [
                                         <Avatar :name="c.full_name" />
                                         <div class="min-w-0">
                                             <div class="truncate font-bold text-foreground">{{ c.full_name || '—' }}</div>
-                                            <div class="truncate text-[11px] text-muted-foreground">{{ c.email || '—' }}</div>
+                                            <div class="truncate text-xs text-muted-foreground">{{ c.email || '—' }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -156,11 +150,11 @@ const kpiRibbon = computed(() => [
                                     <span v-if="c.avg_csat != null" class="inline-flex items-center gap-1">
                                         <Star class="size-3.5 fill-warning text-warning" />
                                         <span class="font-medium tabular-nums">{{ c.avg_csat }}</span>
-                                        <span class="text-[10px] text-muted-foreground">({{ num(c.rating_count ?? 0) }})</span>
+                                        <span class="text-2xs text-muted-foreground">({{ num(c.rating_count ?? 0) }})</span>
                                     </span>
                                     <span v-else class="text-muted-foreground">—</span>
                                 </td>
-                                <td class="px-3 py-3 text-center text-[11px] text-muted-foreground whitespace-nowrap">
+                                <td class="px-3 py-3 text-center text-xs text-muted-foreground whitespace-nowrap">
                                     {{ c.last_request_at ? fmtDateAr(c.last_request_at) : (c.last_contact_at ? fmtDateAr(c.last_contact_at) : '—') }}
                                 </td>
                                 <td class="px-2 py-3 text-muted-foreground transition group-hover:text-primary">
@@ -176,21 +170,7 @@ const kpiRibbon = computed(() => [
                 </div>
             </Card>
 
-            <!-- Pagination -->
-            <div v-if="customers.data.length" class="flex flex-wrap items-center justify-between gap-3">
-                <p class="text-xs text-muted-foreground">
-                    عرض {{ num(customers.from ?? 0) }}–{{ num(customers.to ?? 0) }} من {{ num(customers.total) }}
-                </p>
-                <div class="flex flex-wrap gap-1">
-                    <Link v-for="link in customers.links" :key="link.label"
-                        :href="link.url || '#'" preserve-scroll v-html="link.label"
-                        class="min-w-9 rounded-md border border-border px-3 py-1.5 text-center text-sm transition-colors"
-                        :class="[
-                            link.active ? 'border-primary bg-primary text-primary-foreground' : 'bg-card hover:bg-muted',
-                            !link.url ? 'pointer-events-none opacity-40' : '',
-                        ]" />
-                </div>
-            </div>
+            <Pagination :paginator="customers" />
         </div>
     </AppShell>
 </template>

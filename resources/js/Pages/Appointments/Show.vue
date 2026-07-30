@@ -12,6 +12,7 @@ import Badge from '@/Components/ui/Badge.vue';
 import Dialog from '@/Components/ui/Dialog.vue';
 import { fmtFullDateTimeAr, fmtTimeAr } from '@/lib/date';
 import { APPOINTMENT_STATUS, statusLabel } from '@/lib/labels';
+import PageHeader from '@/Components/PageHeader.vue';
 import {
     ArrowRight, Clock, MapPin, Video, Phone, GraduationCap, Workflow, HelpCircle, CalendarDays,
     Hash, Info, FileText, User, RotateCcw, CheckCircle2, XCircle, CalendarClock, History,
@@ -109,20 +110,16 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
             <Button :href="route('appointments.index')" variant="ghost" size="sm"><ArrowRight class="size-4" /> العودة لمواعيدي</Button>
 
             <!-- Header -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div class="min-w-0">
-                        <p class="text-xs tabular-nums text-white/70">{{ a.appointment_number }}</p>
-                        <h1 class="mt-1 text-2xl font-bold">{{ a.type?.name_ar ?? 'موعد' }}</h1>
-                        <p class="mt-1 flex items-center gap-2 text-sm text-white/80"><Clock class="size-4" /> {{ fmtFullDateTimeAr(a.starts_at) }}</p>
-                    </div>
-                    <Badge :variant="statusLabel(APPOINTMENT_STATUS, a.status).tone" class="gap-1 bg-white/15 text-white">
-                        <span :class="['size-1.5 rounded-full', STATUS_DOT[a.status]]"></span>
+            <PageHeader :title="a.type?.name_ar ?? 'موعد'" :trail="[{ label: a.appointment_number }]">
+                <template #badge>
+                    <Badge :variant="statusLabel(APPOINTMENT_STATUS, a.status).tone" dot>
                         {{ statusLabel(APPOINTMENT_STATUS, a.status).label }}
                     </Badge>
-                </div>
-            </div>
+                </template>
+                <p class="flex items-center gap-2 text-base text-muted-foreground">
+                    <Clock class="size-4 shrink-0" aria-hidden="true" /> {{ fmtFullDateTimeAr(a.starts_at) }}
+                </p>
+            </PageHeader>
 
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <!-- Main info -->
@@ -143,23 +140,23 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
                         <div class="grid grid-cols-1 gap-2 border-t border-border pt-3 sm:grid-cols-2">
                             <div class="flex items-start gap-2 rounded-md bg-muted/30 p-2">
                                 <Hash class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                <div class="min-w-0"><div class="text-[10px] uppercase tracking-wider text-muted-foreground">رقم الموعد</div><div class="truncate text-xs font-medium tabular-nums">{{ a.appointment_number }}</div></div>
+                                <div class="min-w-0"><div class="text-2xs uppercase tracking-wider text-muted-foreground">رقم الموعد</div><div class="truncate text-xs font-medium tabular-nums">{{ a.appointment_number }}</div></div>
                             </div>
                             <div v-if="a.created_at" class="flex items-start gap-2 rounded-md bg-muted/30 p-2">
                                 <CalendarDays class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                <div class="min-w-0"><div class="text-[10px] uppercase tracking-wider text-muted-foreground">تاريخ الإنشاء</div><div class="truncate text-xs font-medium">{{ shortDate(a.created_at) }}</div></div>
+                                <div class="min-w-0"><div class="text-2xs uppercase tracking-wider text-muted-foreground">تاريخ الإنشاء</div><div class="truncate text-xs font-medium">{{ shortDate(a.created_at) }}</div></div>
                             </div>
                             <div v-if="a.reason_label" class="flex items-start gap-2 rounded-md bg-muted/30 p-2">
                                 <Info class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                <div class="min-w-0"><div class="text-[10px] uppercase tracking-wider text-muted-foreground">سبب الحجز</div><div class="truncate text-xs font-medium">{{ a.reason_code === 'other' && a.reason_other ? a.reason_label + ': ' + a.reason_other : a.reason_label }}</div></div>
+                                <div class="min-w-0"><div class="text-2xs uppercase tracking-wider text-muted-foreground">سبب الحجز</div><div class="truncate text-xs font-medium">{{ a.reason_code === 'other' && a.reason_other ? a.reason_label + ': ' + a.reason_other : a.reason_label }}</div></div>
                             </div>
                             <div v-if="a.customer" class="flex items-start gap-2 rounded-md bg-muted/30 p-2">
                                 <User class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                <div class="min-w-0"><div class="text-[10px] uppercase tracking-wider text-muted-foreground">العميل</div><div class="truncate text-xs font-medium">{{ a.customer.full_name }}</div></div>
+                                <div class="min-w-0"><div class="text-2xs uppercase tracking-wider text-muted-foreground">العميل</div><div class="truncate text-xs font-medium">{{ a.customer.full_name }}</div></div>
                             </div>
                             <div v-if="a.reschedule_count" class="flex items-start gap-2 rounded-md bg-muted/30 p-2">
                                 <RotateCcw class="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
-                                <div class="min-w-0"><div class="text-[10px] uppercase tracking-wider text-muted-foreground">مرات إعادة الجدولة</div><div class="text-xs font-medium tabular-nums">{{ a.reschedule_count }}</div></div>
+                                <div class="min-w-0"><div class="text-2xs uppercase tracking-wider text-muted-foreground">مرات إعادة الجدولة</div><div class="text-xs font-medium tabular-nums">{{ a.reschedule_count }}</div></div>
                             </div>
                         </div>
 
@@ -231,11 +228,11 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
                                         <component :is="actionMeta(ev.action).icon" class="size-3.5" /> {{ actionMeta(ev.action).label }}
                                     </div>
                                     <div v-if="ev.notes" class="mt-0.5 whitespace-pre-wrap text-xs text-muted-foreground">{{ ev.notes }}</div>
-                                    <div v-if="ev.old_status && ev.new_status && ev.old_status !== ev.new_status" class="mt-0.5 text-[10px] text-muted-foreground">
+                                    <div v-if="ev.old_status && ev.new_status && ev.old_status !== ev.new_status" class="mt-0.5 text-2xs text-muted-foreground">
                                         {{ statusLabel(APPOINTMENT_STATUS, ev.old_status).label }} ← {{ statusLabel(APPOINTMENT_STATUS, ev.new_status).label }}
                                     </div>
                                 </div>
-                                <div class="shrink-0 whitespace-nowrap text-[10px] text-muted-foreground">{{ fmt(ev.created_at, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) }}</div>
+                                <div class="shrink-0 whitespace-nowrap text-2xs text-muted-foreground">{{ fmt(ev.created_at, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) }}</div>
                             </div>
                         </li>
                     </ol>
@@ -253,12 +250,12 @@ function submitReschedule() { if (!reschedSlot.value) return; post('reschedule',
                     <Label class="mb-1.5 block text-xs">الأوقات المتاحة</Label>
                     <div v-if="hasSlots" class="max-h-56 space-y-3 overflow-y-auto">
                         <div v-for="g in GROUPS" :key="g.key" v-show="slots[g.key].length">
-                            <p class="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground"><component :is="g.icon" class="size-3.5" /> {{ g.label }}</p>
+                            <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-muted-foreground"><component :is="g.icon" class="size-3.5" /> {{ g.label }}</p>
                             <div class="flex flex-wrap gap-1.5">
                                 <button v-for="s in slots[g.key]" :key="s.starts_at" @click="reschedSlot = s.starts_at"
                                     :class="['rounded-lg border px-2.5 py-1.5 text-xs tabular-nums transition-colors',
                                         reschedSlot === s.starts_at ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card hover:bg-muted']">
-                                    <span class="block text-[10px] opacity-70">{{ shortDate(s.starts_at) }}</span>{{ fmtTimeAr(s.starts_at) }}
+                                    <span class="block text-2xs opacity-70">{{ shortDate(s.starts_at) }}</span>{{ fmtTimeAr(s.starts_at) }}
                                 </button>
                             </div>
                         </div>

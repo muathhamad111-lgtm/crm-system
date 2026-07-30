@@ -25,6 +25,9 @@ import { num } from '@/lib/utils';
 import { fmtDateAr, fmtFullDateTimeAr } from '@/lib/date';
 import { useClientSort } from '@/lib/useSort';
 
+import PageHeader from '@/Components/PageHeader.vue';
+import Button from '@/Components/ui/Button.vue';
+import EmptyState from '@/Components/ui/EmptyState.vue';
 const props = defineProps({
     customer: { type: Object, default: () => ({}) },
     contacts: { type: Array, default: () => [] },
@@ -58,31 +61,21 @@ const {
     <AppShell>
         <div class="space-y-5">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 sm:p-8 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
-                            <component :is="customer.entity_type === 'individual' ? UserIcon : Building2" class="size-6" />
-                        </div>
-                        <div>
-                            <p class="text-xs text-white/60">عميل من المتجر · {{ entityLabel(customer.entity_type) }}</p>
-                            <h1 class="mt-0.5 text-2xl sm:text-3xl font-bold tracking-tight">{{ customer.full_name ?? '—' }}</h1>
-                            <p class="mt-1 text-sm text-white/80" dir="ltr">{{ customer.email || customer.phone || 'بيانات مزامنة من المتجر' }}</p>
-                        </div>
-                    </div>
-                    <Link href="/tts-customers"
-                        class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/12 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-white/20">
-                        <ArrowLeft class="size-4" /> رجوع للقائمة
-                    </Link>
-                </div>
-            </div>
+            <PageHeader :title="customer.full_name ?? '—'"
+                :trail="[{ label: entityLabel(customer.entity_type) }]">
+                <template #actions>
+                    <Button href="/tts-customers" variant="outline"><ArrowLeft class="size-4" /> رجوع للقائمة</Button>
+                </template>
+                <p class="text-base text-muted-foreground" dir="ltr">
+                    {{ customer.email || customer.phone || 'بيانات مزامنة من المتجر' }}
+                </p>
+            </PageHeader>
 
             <!-- Customer data card -->
             <Card>
                 <CardContent class="p-5">
                     <div class="flex flex-wrap items-start gap-4">
-                        <div class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+                        <div class="flex size-16 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
                             <component :is="customer.entity_type === 'individual' ? UserIcon : Building2" class="size-7" />
                         </div>
                         <div class="min-w-[240px] flex-1">
@@ -105,21 +98,21 @@ const {
                         <div class="flex flex-wrap gap-3">
                             <div class="rounded-xl border border-success/30 bg-success/10 px-4 py-2 text-center">
                                 <div class="text-lg font-bold tabular-nums text-success">{{ num(stats.active_subscriptions ?? 0) }}</div>
-                                <div class="text-[10px] text-muted-foreground">اشتراك نشط</div>
+                                <div class="text-2xs text-muted-foreground">اشتراك نشط</div>
                             </div>
                             <div class="rounded-xl border border-primary/20 bg-primary-soft px-4 py-2 text-center">
                                 <div class="text-lg font-bold tabular-nums text-primary">{{ num(stats.subscriptions_count ?? subscriptions.length) }}</div>
-                                <div class="text-[10px] text-muted-foreground">إجمالي الاشتراكات</div>
+                                <div class="text-2xs text-muted-foreground">إجمالي الاشتراكات</div>
                             </div>
                             <div class="rounded-xl border border-accent/30 bg-accent/10 px-4 py-2 text-center">
                                 <div class="text-lg font-bold tabular-nums text-accent">{{ num(stats.contacts_count ?? contacts.length) }}</div>
-                                <div class="text-[10px] text-muted-foreground">موظف/مفوّض</div>
+                                <div class="text-2xs text-muted-foreground">موظف/مفوّض</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Sync info -->
-                    <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-[11px] text-muted-foreground">
+                    <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-xs text-muted-foreground">
                         <span class="inline-flex items-center gap-1"><Clock class="size-3" /> آخر مزامنة: {{ customer.last_synced_at ? fmtFullDateTimeAr(customer.last_synced_at) : '—' }}</span>
                         <span v-if="customer.external_id" class="inline-flex items-center gap-1"><Hash class="size-3" /> معرّف المتجر: {{ customer.external_id }}</span>
                         <span v-if="customer.source" class="inline-flex items-center gap-1"><Tag class="size-3" /> المصدر: {{ customer.source }}</span>
@@ -168,7 +161,7 @@ const {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                            <div v-else class="p-8 text-center text-sm text-muted-foreground">لا توجد اشتراكات.</div>
+                            <EmptyState v-else size="sm" title="لا توجد اشتراكات." />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -201,7 +194,7 @@ const {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                            <div v-else class="p-8 text-center text-sm text-muted-foreground">لا يوجد موظفون مسجّلون.</div>
+                            <EmptyState v-else size="sm" title="لا يوجد موظفون مسجّلون." />
                         </CardContent>
                     </Card>
                 </TabsContent>

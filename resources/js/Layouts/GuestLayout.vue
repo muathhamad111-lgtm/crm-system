@@ -1,42 +1,56 @@
 <script setup>
 import { ShieldCheck, Sparkles, Clock } from 'lucide-vue-next';
+
+/**
+ * Unauthenticated shell — a brand panel that states what the platform is, and a
+ * calm, centred form column. The brand panel is hidden below `lg`, where the
+ * form is the only thing that matters.
+ */
+const highlights = [
+    { icon: ShieldCheck, text: 'مسارات عمل متخصّصة واعتماد إشرافي' },
+    { icon: Clock, text: 'محرّك SLA وتنبيهات آلية للتجاوزات' },
+    { icon: Sparkles, text: 'لوحة مقترحات وتقييم رضا العملاء' },
+];
 </script>
 
 <template>
-    <div dir="rtl" class="min-h-screen bg-background lg:grid lg:grid-cols-2">
+    <div dir="rtl" class="min-h-screen bg-background lg:grid lg:grid-cols-[1.1fr_1fr] xl:grid-cols-[1.25fr_1fr]">
         <!-- Brand panel -->
-        <div class="relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between p-12 text-white"
-            style="background-image: var(--gradient-hero);">
-            <div class="absolute inset-0 opacity-20"
-                style="background-image: radial-gradient(closest-side at 70% 20%, rgba(255,255,255,.5), transparent);"></div>
-            <div class="relative flex items-center gap-3">
-                <div class="flex size-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm font-bold text-lg">ط</div>
-                <div class="leading-tight">
-                    <p class="font-bold">نظام إدارة طلبات العملاء</p>
-                    <p class="text-sm text-white/70">TTS — بوابة الخدمة الموحّدة</p>
-                </div>
+        <div class="hidden flex-col justify-between bg-brand-panel p-12 text-brand-panel-foreground lg:flex">
+            <div class="flex items-center gap-3">
+                <span class="flex size-11 items-center justify-center rounded-lg bg-white/12 text-xl font-bold">ط</span>
+                <span class="leading-tight">
+                    <span class="block font-bold">نظام إدارة طلبات العملاء</span>
+                    <span class="block text-sm text-brand-panel-foreground/60">TTS — بوابة الخدمة الموحّدة</span>
+                </span>
             </div>
 
-            <div class="relative space-y-6">
-                <h1 class="text-3xl font-bold leading-snug">منصّة موحّدة لإدارة الطلبات<br />ومتابعة الخدمة والرضا</h1>
-                <ul class="space-y-3 text-white/85">
-                    <li class="flex items-center gap-3"><ShieldCheck class="size-5" /> مسارات عمل متخصّصة واعتماد إشرافي</li>
-                    <li class="flex items-center gap-3"><Clock class="size-5" /> محرّك SLA وتنبيهات آلية للتجاوزات</li>
-                    <li class="flex items-center gap-3"><Sparkles class="size-5" /> لوحة مقترحات وتقييم رضا العملاء</li>
+            <div class="max-w-md space-y-7">
+                <h2 class="text-3xl font-bold leading-snug">
+                    منصّة موحّدة لإدارة الطلبات<br />ومتابعة الخدمة والرضا
+                </h2>
+                <ul class="space-y-4">
+                    <li v-for="(item, i) in highlights" :key="i" class="flex items-start gap-3 text-brand-panel-foreground/85">
+                        <span class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-white/12" aria-hidden="true">
+                            <component :is="item.icon" class="size-4" />
+                        </span>
+                        <span class="text-base">{{ item.text }}</span>
+                    </li>
                 </ul>
             </div>
 
-            <p class="relative text-xs text-white/50">© {{ new Date().getFullYear() }} جميع الحقوق محفوظة</p>
+            <p class="text-xs text-brand-panel-foreground/45">© {{ new Date().getFullYear() }} جميع الحقوق محفوظة</p>
         </div>
 
         <!-- Form panel -->
-        <div class="flex min-h-screen flex-col items-center justify-center p-6 lg:min-h-0">
+        <div class="flex min-h-screen flex-col items-center justify-center p-5 sm:p-8 lg:min-h-0">
             <div class="w-full max-w-md">
-                <div class="mb-8 flex items-center justify-center gap-3 lg:hidden">
-                    <div class="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold">ط</div>
-                    <p class="font-bold text-lg">نظام إدارة طلبات العملاء</p>
+                <div class="mb-7 flex items-center justify-center gap-3 lg:hidden">
+                    <span class="flex size-10 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">ط</span>
+                    <span class="text-lg font-bold">نظام إدارة طلبات العملاء</span>
                 </div>
-                <div class="rounded-2xl border border-border bg-card p-7 shadow-elevated">
+
+                <div class="rounded-xl border border-border bg-card p-6 sm:p-7">
                     <slot />
                 </div>
             </div>

@@ -36,7 +36,7 @@ function reset() {
     <div class="rounded-lg border border-border bg-card p-3">
         <div class="mb-2 flex items-center justify-between gap-2">
             <code class="rounded bg-muted px-2 py-0.5 font-mono text-xs text-foreground" dir="ltr">{{ settingKey }}</code>
-            <Badge v-if="isObject" variant="muted" class="text-[10px]">JSON</Badge>
+            <Badge v-if="isObject" variant="muted" class="text-2xs">JSON</Badge>
         </div>
         <Textarea v-if="isObject" v-model="form.value" dir="ltr" rows="4" class="font-mono text-xs" />
         <Input v-else v-model="form.value" dir="ltr" class="text-sm" />

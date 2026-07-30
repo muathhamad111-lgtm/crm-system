@@ -11,6 +11,7 @@ import SortableTh from '@/Components/ui/SortableTh.vue';
 import { timeAgoAr } from '@/lib/date';
 import { REQUEST_STATUS, IDEA_STAGE, statusLabel } from '@/lib/labels';
 import { useClientSort } from '@/lib/useSort';
+import PageHeader from '@/Components/PageHeader.vue';
 import {
     Lightbulb, Plus, Search, Sparkles, Hourglass, CheckCircle2,
     Package, Clock, ChevronLeft, MessageSquare, Star,
@@ -64,28 +65,24 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => filtered.value,
     <AppShell>
         <div class="space-y-4">
             <!-- Gradient hero -->
-            <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-elevated" style="background-image: var(--gradient-hero);">
-                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(closest-side at 75% 20%, rgba(255,255,255,.4), transparent);"></div>
-                <div class="relative flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p class="text-xs text-white/60">مقترحاتي · لوحة المتابعة</p>
-                        <h1 class="mt-1 text-2xl font-bold">مقترحاتي</h1>
-                        <p class="mt-1 max-w-xl text-sm text-white/80">تابع الأفكار التي شاركتها، تفاعل الفريق معها، وحالة كل مقترح في مكان واحد.</p>
+            <PageHeader title="مقترحاتي"
+                subtitle="تابع الأفكار التي شاركتها، تفاعل الفريق معها، وحالة كل مقترح في مكان واحد.">
+                <template #actions>
+                    <Button :href="route('suggestions.create')"><Plus class="size-4" /> مقترح جديد</Button>
+                </template>
+
+                <div class="table-scroll -mx-1 px-1">
+                    <div class="flex w-max min-w-full items-center gap-1.5">
+                        <button v-for="k in kpiChips" :key="k.key" type="button" @click="kpi = k.key"
+                            :data-active="kpi === k.key" :aria-pressed="kpi === k.key"
+                            class="inline-flex shrink-0 items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground data-[active=true]:border-transparent data-[active=true]:bg-primary data-[active=true]:text-primary-foreground">
+                            <component :is="k.icon" class="size-3.5" aria-hidden="true" />
+                            <span>{{ k.label }}</span>
+                            <span class="rounded-full bg-current/15 px-1.5 text-xs font-bold tabular-nums">{{ k.value }}</span>
+                        </button>
                     </div>
-                    <Button :href="route('suggestions.create')" class="bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm">
-                        <Plus class="size-4" /> مقترح جديد
-                    </Button>
                 </div>
-                <!-- KPI chips -->
-                <div class="relative mt-5 flex flex-wrap gap-2">
-                    <button v-for="k in kpiChips" :key="k.key" @click="kpi = k.key" :data-active="kpi === k.key"
-                        class="group flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-sm backdrop-blur-sm transition-all hover:bg-white/20 data-[active=true]:bg-white data-[active=true]:text-primary">
-                        <component :is="k.icon" class="size-4 opacity-80" />
-                        <span>{{ k.label }}</span>
-                        <span class="rounded-full bg-black/20 px-1.5 text-xs font-bold tabular-nums group-data-[active=true]:bg-primary/10 group-data-[active=true]:text-primary">{{ k.value }}</span>
-                    </button>
-                </div>
-            </div>
+            </PageHeader>
 
             <!-- Filter bar -->
             <Card class="p-3">
@@ -123,10 +120,10 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => filtered.value,
                                 <td class="px-3 py-3">
                                     <div class="flex items-center gap-2">
                                         <span class="w-1 self-stretch rounded-full" :style="{ background: r.category_color || 'var(--primary)', minHeight: '24px' }"></span>
-                                        <span class="rounded bg-primary-soft px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-primary">{{ r.request_number }}</span>
+                                        <span class="rounded bg-primary-soft px-1.5 py-0.5 text-xs font-bold tabular-nums text-primary">{{ r.request_number }}</span>
                                         <span class="max-w-[18rem] truncate font-medium group-hover:text-primary">{{ r.title }}</span>
                                     </div>
-                                    <div class="mt-1 flex items-center gap-2 pr-4 text-[11px] text-muted-foreground">
+                                    <div class="mt-1 flex items-center gap-2 pr-4 text-xs text-muted-foreground">
                                         <span v-if="r.comments_count" class="inline-flex items-center gap-0.5"><MessageSquare class="size-3" /> {{ r.comments_count }}</span>
                                         <span v-if="r.avg_stars" class="inline-flex items-center gap-0.5 text-warning"><Star class="size-3 fill-current" /> {{ r.avg_stars }}</span>
                                     </div>
@@ -135,7 +132,7 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => filtered.value,
                                     <Badge :variant="statusLabel(REQUEST_STATUS, visStatus(r.status)).tone">{{ statusLabel(REQUEST_STATUS, visStatus(r.status)).label }}</Badge>
                                 </td>
                                 <td class="px-3 py-3">
-                                    <Badge :variant="statusLabel(IDEA_STAGE, r.idea_stage).tone" class="text-[10px]">{{ statusLabel(IDEA_STAGE, r.idea_stage).label }}</Badge>
+                                    <Badge :variant="statusLabel(IDEA_STAGE, r.idea_stage).tone" class="text-2xs">{{ statusLabel(IDEA_STAGE, r.idea_stage).label }}</Badge>
                                 </td>
                                 <td class="px-3 py-3">
                                     <span v-if="r.category" class="inline-flex items-center gap-1.5 text-sm">
@@ -157,7 +154,7 @@ const { sorted, sortKey, sortDir, toggle } = useClientSort(() => filtered.value,
                             </tr>
                             <tr v-if="!sorted.length">
                                 <td colspan="7" class="py-14 text-center">
-                                    <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
+                                    <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-lg bg-primary-soft text-primary">
                                         <Lightbulb class="size-7" />
                                     </div>
                                     <div class="font-medium text-foreground">{{ suggestions.length ? 'لا توجد مقترحات مطابقة' : 'لم تشارك أي مقترح بعد' }}</div>

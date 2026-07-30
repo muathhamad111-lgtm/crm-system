@@ -114,10 +114,10 @@ const items = computed(() => {
                             <div class="min-w-0 flex-1">
                                 <div class="flex flex-wrap items-center justify-between gap-2">
                                     <div class="truncate text-sm font-medium text-foreground">{{ i.title }}</div>
-                                    <Badge v-if="i.badge" variant="outline" class="text-[10px]">{{ i.badge }}</Badge>
+                                    <Badge v-if="i.badge" variant="outline" class="text-2xs">{{ i.badge }}</Badge>
                                 </div>
                                 <div v-if="i.body" class="mt-1 line-clamp-2 text-xs text-muted-foreground">{{ i.body }}</div>
-                                <div class="mt-1 flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground">
+                                <div class="mt-1 flex flex-wrap items-center gap-2 text-2xs text-muted-foreground">
                                     <span>{{ timeAgoAr(i.at) }}</span>
                                     <span v-if="i.meta">· {{ i.meta }}</span>
                                 </div>

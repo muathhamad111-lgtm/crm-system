@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import AppShell from '@/Layouts/AppShell.vue';
-import PageHero from '@/Components/PageHero.vue';
+import PageHeader from '@/Components/PageHeader.vue';
 import Card from '@/Components/ui/Card.vue';
 import CardHeader from '@/Components/ui/CardHeader.vue';
 import CardTitle from '@/Components/ui/CardTitle.vue';
@@ -29,11 +29,12 @@ const roles = computed(() => page.props.auth.roles ?? []);
 <template>
     <Head title="حسابي" />
     <AppShell>
-        <div class="mx-auto max-w-3xl space-y-6">
-            <PageHero title="حسابي" subtitle="إدارة بياناتك الشخصية وكلمة المرور" :icon="UserCircle" />
+        <div class="mx-auto max-w-3xl">
+            <PageHeader title="حسابي" subtitle="إدارة بياناتك الشخصية وكلمة المرور" />
 
+            <div class="space-y-4">
             <Card>
-                <CardContent class="flex items-center gap-4 pt-6">
+                <CardContent class="flex flex-wrap items-center gap-4">
                     <Avatar :name="user?.full_name ?? user?.name" class="size-14 text-lg" />
                     <div class="min-w-0">
                         <p class="text-lg font-bold">{{ user?.full_name ?? user?.name }}</p>
@@ -75,6 +76,7 @@ const roles = computed(() => page.props.auth.roles ?? []);
                     <DeleteUserForm />
                 </CardContent>
             </Card>
+            </div>
         </div>
     </AppShell>
 </template>

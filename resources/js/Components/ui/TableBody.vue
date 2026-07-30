@@ -1,1 +1,5 @@
-<template><tbody class="[&_tr:last-child]:border-0"><slot /></tbody></template>
+<script setup>
+import { cn } from '@/lib/utils';
+const props = defineProps({ class: { type: [String, Array, Object], default: '' } });
+</script>
+<template><tbody :class="cn('[&_tr:last-child]:border-0', props.class)"><slot /></tbody></template>
